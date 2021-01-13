@@ -1,0 +1,14 @@
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.VersionSweeper\bin\Debug\netcoreapp3.1\DotNet.VersionSweeper.exe
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.VersionSweeper\bin\Debug\netcoreapp3.1\DotNet.VersionSweeper.deps.json
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.VersionSweeper\bin\Debug\netcoreapp3.1\DotNet.VersionSweeper.runtimeconfig.json
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.VersionSweeper\bin\Debug\netcoreapp3.1\DotNet.VersionSweeper.runtimeconfig.dev.json
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.VersionSweeper\bin\Debug\netcoreapp3.1\DotNet.VersionSweeper.dll
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.VersionSweeper\bin\Debug\netcoreapp3.1\DotNet.VersionSweeper.pdb
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.VersionSweeper\bin\Debug\netcoreapp3.1\CommandLine.dll
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.VersionSweeper\obj\Debug\netcoreapp3.1\DotNet.VersionSweeper.AssemblyInfoInputs.cache
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.VersionSweeper\obj\Debug\netcoreapp3.1\DotNet.VersionSweeper.AssemblyInfo.cs
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.VersionSweeper\obj\Debug\netcoreapp3.1\DotNet.VersionSweeper.csproj.CoreCompileInputs.cache
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.VersionSweeper\obj\Debug\netcoreapp3.1\DotNet.VersionSweeper.csproj.CopyComplete
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.VersionSweeper\obj\Debug\netcoreapp3.1\DotNet.VersionSweeper.dll
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.VersionSweeper\obj\Debug\netcoreapp3.1\DotNet.VersionSweeper.pdb
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.VersionSweeper\obj\Debug\netcoreapp3.1\DotNet.VersionSweeper.genruntimeconfig.cache

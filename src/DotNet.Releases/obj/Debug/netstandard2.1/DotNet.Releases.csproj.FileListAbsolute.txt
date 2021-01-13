@@ -1,0 +1,4 @@
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.Releases\obj\Debug\netstandard2.1\DotNet.Releases.csprojAssemblyReference.cache
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.Releases\obj\Debug\netstandard2.1\DotNet.Releases.AssemblyInfoInputs.cache
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.Releases\obj\Debug\netstandard2.1\DotNet.Releases.AssemblyInfo.cs
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.Releases\obj\Debug\netstandard2.1\DotNet.Releases.csproj.CoreCompileInputs.cache

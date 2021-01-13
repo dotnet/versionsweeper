@@ -1,0 +1,12 @@
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.Releases\bin\Debug\net5.0\DotNet.Releases.deps.json
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.Releases\bin\Debug\net5.0\DotNet.Releases.dll
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.Releases\bin\Debug\net5.0\ref\DotNet.Releases.dll
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.Releases\bin\Debug\net5.0\DotNet.Releases.pdb
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.Releases\obj\Debug\net5.0\DotNet.Releases.csprojAssemblyReference.cache
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.Releases\obj\Debug\net5.0\DotNet.Releases.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.Releases\obj\Debug\net5.0\DotNet.Releases.AssemblyInfoInputs.cache
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.Releases\obj\Debug\net5.0\DotNet.Releases.AssemblyInfo.cs
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.Releases\obj\Debug\net5.0\DotNet.Releases.csproj.CoreCompileInputs.cache
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.Releases\obj\Debug\net5.0\DotNet.Releases.dll
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.Releases\obj\Debug\net5.0\ref\DotNet.Releases.dll
+C:\Users\dapine\source\repos\DotNet.VersionSweeper\DotNet.Releases\obj\Debug\net5.0\DotNet.Releases.pdb
