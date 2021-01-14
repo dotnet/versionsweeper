@@ -16,21 +16,21 @@ namespace DotNet.Versions
             HttpClient httpClient, IMemoryCache cache, ReleaseIndexService indexService) =>
             (_httpClient, _cache, _indexService) = (httpClient, cache, indexService);
 
-        public async IAsyncEnumerable<ReleaseDetails?> GetAllReleasesAsync()
+        public async IAsyncEnumerable<CoreReleaseDetails?> GetAllReleasesAsync()
         {
             var releases = await _indexService.GetReleaesAsync();
             foreach (var release in releases?.ReleasesIndex ?? Enumerable.Empty<ReleasesIndex>())
             {
-                var releaseDetails =
+                var coreReleaseDetails =
                     await _cache.GetOrCreateAsync(
                         release.ReleasesJson,
-                        async _ =>
+                        async entry =>
                         {
-                            var releaseJson = await _httpClient.GetStringAsync(release.ReleasesJson);
-                            return releaseJson.FromJson<ReleaseDetails>();
+                            var releaseJson = await _httpClient.GetStringAsync(entry.Key.ToString());
+                            return releaseJson.FromJson<CoreReleaseDetails>();
                         });
 
-                yield return releaseDetails;
+                yield return coreReleaseDetails;
             }
         }
     }

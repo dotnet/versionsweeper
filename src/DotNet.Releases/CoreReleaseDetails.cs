@@ -2,16 +2,16 @@
 
 namespace DotNet.Versions
 {
-    public record ReleaseDetails(
-        string ChannelVersion,
+    public record CoreReleaseDetails(
+        string ChannelVersion, // Do not call .AsSemanticVersion() on this, "major.minor".
         string LatestRelease,
         string LatestReleaseDate,
         string LatestRuntime,
         string LatestSdk,
-        string SupportPhase,
-        string LifeCyclePolicy,
+        SupportPhase SupportPhase,
+        string LifecyclePolicy,
         IEnumerable<Release> Releases,
-        IntelliSense IntelliSense);
+        IntelliSense Intellisense);
 
     public record IntelliSense(
         string Version,

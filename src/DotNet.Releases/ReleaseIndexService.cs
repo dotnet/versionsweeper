@@ -17,17 +17,13 @@ namespace DotNet.Versions
             HttpClient httpClient, IMemoryCache cache) =>
             (_httpClient, _cache) = (httpClient, cache);
 
-        public async Task<Releases?> GetReleaesAsync()
-        {
-            var releases = await _cache.GetOrCreateAsync(
+        public Task<CoreReleases?> GetReleaesAsync() =>
+            _cache.GetOrCreateAsync(
                 ReleaseIndex,
-                async _ =>
+                async entry =>
                 {
-                    var releases = await _httpClient.GetStringAsync(ReleaseIndex);
-                    return releases.FromJson<Releases>();
+                    var coreReleasesJson = await _httpClient.GetStringAsync(entry.Key.ToString());
+                    return coreReleasesJson.FromJson<CoreReleases>();
                 });
-
-            return releases;
-        }
     }
 }

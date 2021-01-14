@@ -15,7 +15,8 @@ namespace DotNet.VersionSweeper
             var service = host.Services.GetRequiredService<ReleaseService>();
             await foreach (var release in service.GetAllReleasesAsync())
             {
-                Console.WriteLine($"Version: {release!.ChannelVersion}");
+                Console.WriteLine($"Version: {release}");
+                Console.WriteLine();
             }
 
             await host.RunAsync();
