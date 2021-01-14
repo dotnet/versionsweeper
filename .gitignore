@@ -1,0 +1,391 @@
+syntax: glob
+
+### VisualStudio ###
+
+# Tool Runtime Dir
+.dotnet/
+.dotnet-mono/
+.packages/
+.tools/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+artifacts/
+.idea/
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+bld/
+[Bb]in/
+[Oo]bj/
+msbuild.log
+msbuild.err
+msbuild.wrn
+*.binlog
+.deps/
+.dirstamp
+.libs/
+*.lo
+*.o
+
+# Cross building rootfs
+cross/rootfs/
+cross/android-rootfs/
+
+# Visual Studio
+.vs/
+
+# Ionide
+.ionide/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+#NUNIT
+*.VisualState.xml
+TestResult.xml
+testResults.xml
+
+# Build Results of an ATL Project
+[Dd]ebugPS/
+[Rr]eleasePS/
+dlldata.c
+
+*_i.c
+*_p.c
+*.ilk
+*.meta
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+# Chutzpah Test files
+_Chutzpah*
+
+# Visual C++ cache files
+ipch/
+*.aps
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.cachefile
+*.VC.db
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+
+# TFS 2012 Local Workspace
+$tf/
+
+# Guidance Automation Toolkit
+*.gpState
+
+# ReSharper is a .NET coding add-in
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# JustCode is a .NET coding addin-in
+.JustCode
+
+# TeamCity is a build add-in
+_TeamCity*
+
+# DotCover is a Code Coverage Tool
+*.dotCover
+
+# NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+
+# MightyMoose
+*.mm.*
+AutoTest.Net/
+
+# Web workbench (sass)
+.sass-cache/
+
+# Installshield output folder
+[Ee]xpress/
+
+# DocProject is a documentation generator add-in
+DocProject/buildhelp/
+DocProject/Help/*.HxT
+DocProject/Help/*.HxC
+DocProject/Help/*.hhc
+DocProject/Help/*.hhk
+DocProject/Help/*.hhp
+DocProject/Help/Html2
+DocProject/Help/html
+
+# Publish Web Output
+*.[Pp]ublish.xml
+*.azurePubxml
+*.pubxml
+*.publishproj
+
+# NuGet Packages
+*.nupkg
+*.nuget.g.props
+*.nuget.g.targets
+*.nuget.cache
+**/packages/*
+project.lock.json
+project.assets.json
+*.nuget.dgspec.json
+
+# Windows Azure Build Output
+csx/
+*.build.csdef
+
+# Windows Store app package directory
+AppPackages/
+
+# Others
+*.Cache
+ClientBin/
+[Ss]tyle[Cc]op.*
+~$*
+*.dbmdl
+*.dbproj.schemaview
+*.pfx
+*.publishsettings
+node_modules/
+*.metaproj
+*.metaproj.tmp
+bin.localpkg/
+
+# RIA/Silverlight projects
+Generated_Code/
+
+# Backup & report files from converting an old project file
+# to a newer Visual Studio version. Backup files are not needed,
+# because we have git ;-)
+_UpgradeReport_Files/
+Backup*/
+UpgradeLog*.XML
+UpgradeLog*.htm
+
+# SQL Server files
+*.mdf
+*.ldf
+
+# Business Intelligence projects
+*.rdl.data
+*.bim.layout
+*.bim_*.settings
+
+# Microsoft Fakes
+FakesAssemblies/
+
+# C/C++ extension for Visual Studio Code
+browse.VC.db
+# Local settings folder for Visual Studio Code
+**/.vscode/**
+!**/.vscode/c_cpp_properties.json
+
+### MonoDevelop ###
+*.userprefs
+
+### Windows ###
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+### Linux ###
+
+*~
+
+# KDE directory preferences
+.directory
+
+### OSX ###
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# vim temporary files
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+
+# Visual Studio Code
+.vscode/
+.devcontainer/
+
+# Private test configuration and binaries.
+config.ps1
+**/IISApplications
+
+# VS debug support files
+launchSettings.json
+
+# Snapcraft files
+.snapcraft
+*.snap
+parts/
+prime/
+stage/
+
+# CLR prebuilt generated files
+!src/pal/prebuilt/idl/*_i.c
+
+# Valid 'debug' folder, that contains CLR debugging code
+!src/debug
+
+# Ignore folders created by the CLR test build
+TestWrappers_x64_[d|D]ebug
+TestWrappers_x64_[c|C]hecked
+TestWrappers_x64_[r|R]elease
+TestWrappers_x86_[d|D]ebug
+TestWrappers_x86_[c|C]hecked
+TestWrappers_x86_[r|R]elease
+TestWrappers_arm_[d|D]ebug
+TestWrappers_arm_[c|C]hecked
+TestWrappers_arm_[r|R]elease
+TestWrappers_arm64_[d|D]ebug
+TestWrappers_arm64_[c|C]hecked
+TestWrappers_arm64_[r|R]elease
+tests/src/common/test_runtime/project.json
+
+Vagrantfile
+.vagrant
+
+# CMake files
+CMakeFiles/
+cmake_install.cmake
+CMakeCache.txt
+Makefile
+
+# Cross compilation
+cross/rootfs/*
+cross/android-rootfs/*
+# add x86 as it is ignored in 'Build results'
+!cross/x86
+
+#python import files
+*.pyc
+
+# JIT32 files
+src/jit32
+
+# performance testing sandbox
+sandbox
+
+#IL linker for testing
+linker
+
+# Symbolic link for the shared portion of CoreLib to make grep/findstr work for runtime devs
+#
+# On Windows, make your own by running these commands from the repo root:
+# mklink /D src\coreclr\src\System.Private.CoreLib\shared %CD%\src\libraries\System.Private.CoreLib\src
+# mklink /D src\coreclr\src\System.Private.CoreLib\common %CD%\src\libraries\Common\src
+#
+# On Unix, make your own by running these commands from the repo root:
+# ln -s $(pwd)/src/libraries/System.Private.CoreLib/src src/coreclr/src/System.Private.CoreLib/shared
+# ln -s $(pwd)/src/libraries/Common/src src/coreclr/src/System.Private.CoreLib/common
+src/coreclr/src/System.Private.CoreLib/shared
+src/coreclr/src/System.Private.CoreLib/common
+
+# The debug directory should not be ignored
+!src/coreclr/src/debug
+
+/DotNetDocs.Web/fbc4e88f-9efc-4aeb-8bf1-0da80f253f69.json
+/DotNetDocs.Web/faa153e7-616e-4190-bd18-50147005e88b.json
+/DotNetDocs.Web/f4e3d88c-ab87-4df4-aa21-977a490917f7.json
+/DotNetDocs.Web/e6ccab7e-553f-43de-9869-ef45eff2863d.json
+/DotNetDocs.Web/db8a4f82-2c11-42b6-88c2-760ad2f38814.json
+/DotNetDocs.Web/d2752cfa-0018-47f2-a058-d1c154e1b889.json
+/DotNetDocs.Web/c0caa9b1-bec1-4b5a-a7f7-5ee1a2d988dd.json
+/DotNetDocs.Web/bcd53d53-7038-48ed-893f-c07175df1caf.json
+/DotNetDocs.Web/af7ea802-8237-4366-b516-53f93c144e1c.json
+/DotNetDocs.Web/ae63fe12-8ad2-4fa1-b9b4-ade742059b10.json
+/DotNetDocs.Web/a5106823-c40b-440c-a608-567fb0b67c1b.json
+/DotNetDocs.Web/a505a2f7-5780-4f0e-a9f2-674093f65ed6.json
+/DotNetDocs.Web/8ecb543d-e02f-496a-bcb3-20720721e76c.json
+/DotNetDocs.Web/8b6e0598-6736-4666-88f2-41082c782f9f.json
+/DotNetDocs.Web/81dfb045-c29c-43f5-84eb-d2c17fa0ae44.json
+/DotNetDocs.Web/8065674b-7704-4361-89df-79d61c8c8280.json
+/DotNetDocs.Web/7eafcabf-0296-4c3b-8826-ca833cddf98e.json
+/DotNetDocs.Web/777c9daa-539f-405e-8e41-35241311caee.json
+/DotNetDocs.Web/75d58566-0fff-4617-9474-6401f0cf1106.json
+/DotNetDocs.Web/7584c630-1dfa-44c6-90d4-1427351cf5d5.json
+/DotNetDocs.Web/754f063f-7b83-44e0-813d-ef22c02739e9.json
+/DotNetDocs.Web/745ce3da-3057-498f-a1d8-a94d4093b4fd.json
+/DotNetDocs.Web/6fc4b38a-e289-46bc-bca8-5af3164a1ae9.json
+/DotNetDocs.Web/6a00d939-36e8-4e38-a288-2618219b04a4.json
+/DotNetDocs.Web/689fc4e9-68a6-4a23-b4f4-3b2517a27585.json
+/DotNetDocs.Web/666ea402-928c-4ec7-b54c-412c0e79e68b.json
+/DotNetDocs.Web/53027c96-667c-4d24-86d8-8044620b4d78.json
+/DotNetDocs.Web/3ea33bdb-3463-45d3-99df-298f7330ebaf.json
+/DotNetDocs.Web/3b4e03b6-a235-438d-9840-b582ff6df2b5.json
+/DotNetDocs.Web/36ddcd2a-b9a6-4e9d-afba-d47cd597cef9.json
+/DotNetDocs.Web/25e60d9f-8c23-498f-9772-06191cbdb351.json
+/DotNetDocs.Web/23f8f6f6-e4c9-4696-b1e9-9e14d8c51ac0.json
+/DotNetDocs.Web/1584a738-c04c-414f-a814-cf937e6a137d.json
+/DotNetDocs.Web/142f7ac5-22a0-4057-b998-894b3dad61ae.json
+/DotNetDocs.Web/1255c2fa-bcb8-4095-83b3-d0f1355b734a.json
+/DotNetDocs.Web/0e9ea257-d8cb-4d91-884a-abacf6700d41.json
+/DotNetDocs.Web/00d41360-6b6d-46ee-a51e-d41f42f3d8da.json
