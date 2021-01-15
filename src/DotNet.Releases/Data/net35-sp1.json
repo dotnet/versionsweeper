@@ -1,0 +1,10 @@
+{
+    "Version": "3.5.0-sp1",
+    "Released": "2008-11-18",
+    "EndOfLife": "2028-10-10",
+    "ReleaseNotesUrl": "https://docs.microsoft.com/previous-versions/dotnet/netframework-3.5/w0x726c2(v=vs.90)",
+    "IncludedIn": "",
+    "Runtime": {
+        "WebInstaller": "https://download.microsoft.com/download/2/0/E/20E90413-712F-438C-988E-FDAA79A8AC3D/dotnetfx35.exe"
+    }
+}

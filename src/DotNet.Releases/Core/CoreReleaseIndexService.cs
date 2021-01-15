@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DotNet.Versions
 {
-    public class ReleaseIndexService
+    internal class CoreReleaseIndexService : ICoreReleaseIndexService
     {
         const string ReleaseIndex =
             "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json";
@@ -13,11 +13,11 @@ namespace DotNet.Versions
         readonly HttpClient _httpClient;
         readonly IMemoryCache _cache;
 
-        public ReleaseIndexService(
+        public CoreReleaseIndexService(
             HttpClient httpClient, IMemoryCache cache) =>
             (_httpClient, _cache) = (httpClient, cache);
 
-        public Task<CoreReleases?> GetReleaesAsync() =>
+        Task<CoreReleases?> ICoreReleaseIndexService.GetReleaesAsync() =>
             _cache.GetOrCreateAsync(
                 ReleaseIndex,
                 async entry =>

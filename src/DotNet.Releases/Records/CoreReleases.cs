@@ -8,6 +8,14 @@ namespace DotNet.Versions
 
     public class ReleasesIndex
     {
+        public string TargetFrameworkMoniker => Product switch
+        {
+            ".NET" => $"net{ChannelVersion}",
+            ".NET Core" => $"netcoreapp{ChannelVersion}",
+
+            _ => ChannelVersion
+        };
+
         /// <summary>
         /// Do not call .AsSemanticVersion() on the channel version, it is not a SemVer.
         /// It only has "major.minor".

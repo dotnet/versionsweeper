@@ -11,9 +11,9 @@ namespace DotNet.Versions
         SupportPhase SupportPhase,
         string LifecyclePolicy,
         IEnumerable<Release> Releases,
-        IntelliSense Intellisense);
+        Intellisense Intellisense);
 
-    public record IntelliSense(
+    public record Intellisense(
         string Version,
         string VersionDisplay,
         IEnumerable<File> Files);
@@ -24,7 +24,7 @@ namespace DotNet.Versions
         string Rid,
         string Url,
         string Hash,
-        string AkaMs);
+        string Akams);
 
     public record Release(
         string ReleaseDate,
@@ -36,7 +36,7 @@ namespace DotNet.Versions
         Sdk Sdk,
         IEnumerable<Sdk> Sdks,
         AspnetcoreRuntime AspnetcoreRuntime,
-        WindowsDesktop WindowsDesktop,
+        WindowsDesktop Windowsdesktop,
         Symbols Symbols);
 
     public record Runtime(
@@ -54,15 +54,15 @@ namespace DotNet.Versions
         string VsMacVersion,
         string VsSupport,
         string VsMacSupport,
-        string CSharpVersion,
-        string FSharpVersion,
-        string VBVersion,
+        string CsharpVersion,
+        string FsharpVersion,
+        string VbVersion,
         IEnumerable<File> Files);
 
     public record AspnetcoreRuntime(
         string Version,
         string VersionDisplay,
-        IEnumerable<string> VersionAspNetCoreModule,
+        IEnumerable<string> VersionAspnetcoremodule,
         string VsVersion,
         IEnumerable<File> Files);
 

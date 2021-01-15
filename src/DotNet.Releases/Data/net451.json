@@ -1,0 +1,39 @@
+{
+    "Version": "4.5.1",
+    "Released": "2013-10-17",
+    "ReleaseNotesUrl": "https://devblogs.microsoft.com/dotnet/net-framework-4-5-1-rtm-start-coding/",
+    "IncludedIn": "",
+    "EndOfLife": "2016-01-12",
+    "Runtime": {
+        "WebInstaller": "https://go.microsoft.com/fwlink/?LinkId=322115",
+        "OfflineInstaller": "https://go.microsoft.com/fwlink/?LinkId=322116",
+        "LanguagePacks": {
+            "ARA": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x401",
+            "CHS": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x804",
+            "CHT": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x404",
+            "CSY": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x405",
+            "DAN": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x406",
+            "DEU": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x407",
+            "ELL": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x408",
+            "ESN": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0xc0a",
+            "FIN": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x40b",
+            "FRA": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x40c",
+            "HEB": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x40d",
+            "HUN": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x40e",
+            "ITA": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x410",
+            "JPN": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x411",
+            "KOR": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x412",
+            "NLD": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x413",
+            "NOR": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x414",
+            "PLK": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x415",
+            "PTB": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x416",
+            "PTG": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x816",
+            "RUS": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x419",
+            "SVE": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x41d",
+            "TRK": "https://go.microsoft.com/fwlink/?LinkId=321330&clcid=0x41f"
+        }
+    },
+    "DeveloperPack": {
+        "OfflineInstaller": "https://go.microsoft.com/fwlink/?linkid=321335&clcid=0x409"
+    }
+}

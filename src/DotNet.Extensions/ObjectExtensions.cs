@@ -21,16 +21,16 @@ namespace DotNet.Extensions
 
         static readonly SemanticVersion _versionZero = new(0, 0, 0);
 
-        public static string? ToJson(this object value) =>
-            value is null ? null : Serialize(value, _lazyOptions.Value);
+        public static string? ToJson(this object value, JsonSerializerOptions? options = default) =>
+            value is null ? null : Serialize(value, options ?? _lazyOptions.Value);
 
-        public static T? FromJson<T>(this string? json) =>
-            string.IsNullOrWhiteSpace(json) ? default : Deserialize<T>(json, _lazyOptions.Value);
+        public static T? FromJson<T>(this string? json, JsonSerializerOptions? options = default) =>
+            string.IsNullOrWhiteSpace(json) ? default : Deserialize<T>(json, options ?? _lazyOptions.Value);
 
         public static SemanticVersion AsSemanticVersion(this string value) =>
             SemanticVersion.TryParse(value, out var result) ? result : _versionZero;
 
-        public static DateTime ToDateTime(this string value) =>
+        public static DateTime ToDateTime(this string? value) =>
             DateTime.TryParse(value, out var dateTime) ? dateTime : default;
     }
 }

@@ -6,17 +6,17 @@ using System.Net.Http;
 
 namespace DotNet.Versions
 {
-    public class ReleaseService
+    internal class CoreReleaseService : ICoreReleaseService
     {
         readonly HttpClient _httpClient;
         readonly IMemoryCache _cache;
-        readonly ReleaseIndexService _indexService;
+        readonly ICoreReleaseIndexService _indexService;
 
-        public ReleaseService(
-            HttpClient httpClient, IMemoryCache cache, ReleaseIndexService indexService) =>
+        public CoreReleaseService(
+            HttpClient httpClient, IMemoryCache cache, ICoreReleaseIndexService indexService) =>
             (_httpClient, _cache, _indexService) = (httpClient, cache, indexService);
 
-        public async IAsyncEnumerable<CoreReleaseDetails?> GetAllReleasesAsync()
+        async IAsyncEnumerable<CoreReleaseDetails?> ICoreReleaseService.GetAllReleasesAsync()
         {
             var releases = await _indexService.GetReleaesAsync();
             foreach (var release in releases?.ReleasesIndex ?? Enumerable.Empty<ReleasesIndex>())

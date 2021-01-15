@@ -1,0 +1,10 @@
+{
+    "Version": "4.5",
+    "Released": "2012-08-15",
+    "EndOfLife": "2016-01-12",
+    "ReleaseNotesUrl": "https://docs.microsoft.com/dotnet/framework/",
+    "IncludedIn": "",
+    "Runtime": {
+        "WebInstaller": "https://download.microsoft.com/download/B/A/4/BA4A7E71-2906-4B2D-A0E1-80CF16844F5F/dotNetFx45_Full_setup.exe"
+    }
+}

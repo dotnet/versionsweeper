@@ -6,10 +6,41 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\net35-sp1.json" />
+    <None Remove="Data\net40.json" />
+    <None Remove="Data\net45.json" />
+    <None Remove="Data\net451.json" />
+    <None Remove="Data\net452.json" />
+    <None Remove="Data\net46.json" />
+    <None Remove="Data\net461.json" />
+    <None Remove="Data\net462.json" />
+    <None Remove="Data\net47.json" />
+    <None Remove="Data\net471.json" />
+    <None Remove="Data\net472.json" />
+    <None Remove="Data\net48.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Data\net35-sp1.json" />
+    <EmbeddedResource Include="Data\net40.json" />
+    <EmbeddedResource Include="Data\net45.json" />
+    <EmbeddedResource Include="Data\net451.json" />
+    <EmbeddedResource Include="Data\net452.json" />
+    <EmbeddedResource Include="Data\net46.json" />
+    <EmbeddedResource Include="Data\net461.json" />
+    <EmbeddedResource Include="Data\net462.json" />
+    <EmbeddedResource Include="Data\net47.json" />
+    <EmbeddedResource Include="Data\net471.json" />
+    <EmbeddedResource Include="Data\net472.json" />
+    <EmbeddedResource Include="Data\net48.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
+    <PackageReference Include="ServiceStack.Text" Version="5.10.4" />
   </ItemGroup>
 
   <ItemGroup>

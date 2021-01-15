@@ -1,0 +1,53 @@
+{
+    "Version": "4.7.1",
+    "Released": "2017-10-17",
+    "ReleaseNotesUrl": "https://devblogs.microsoft.com/dotnet/announcing-the-net-framework-4-7-1/",
+    "IncludedIn": "",
+    "Runtime": {
+        "WebInstaller": "https://go.microsoft.com/fwlink/?LinkId=852092",
+        "OfflineInstaller": "https://go.microsoft.com/fwlink/?LinkID=2099383",
+        "LanguagePacks": {
+            "ARA": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x401",
+            "CHS": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x804",
+            "CHT": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x404",
+            "CSY": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x405",
+            "DAN": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x406",
+            "DEU": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x407",
+            "ELL": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x408",
+            "ESN": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0xc0a",
+            "FIN": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x40b",
+            "FRA": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x40c",
+            "HEB": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x40d",
+            "HUN": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x40e",
+            "ITA": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x410",
+            "JPN": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x411",
+            "KOR": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x412",
+            "NLD": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x413",
+            "NOR": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x414",
+            "PLK": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x415",
+            "PTB": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x416",
+            "PTG": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x816",
+            "RUS": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x419",
+            "SVE": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x41d",
+            "TRK": "https://go.microsoft.com/fwlink/?LinkId=852086&clcid=0x41f"
+        }
+    },
+    "DeveloperPack": {
+        "OfflineInstaller": "https://go.microsoft.com/fwlink/?linkid=2099382",
+        "LanguagePacks": {
+            "CHS": "https://go.microsoft.com/fwlink/?LinkId=852102&clcid=0x804",
+            "CHT": "https://go.microsoft.com/fwlink/?LinkId=852102&clcid=0x404",
+            "CSY": "https://go.microsoft.com/fwlink/?LinkId=852102&clcid=0x405",
+            "DEU": "https://go.microsoft.com/fwlink/?LinkId=852102&clcid=0x407",
+            "ESN": "https://go.microsoft.com/fwlink/?LinkId=852102&clcid=0xc0a",
+            "FRA": "https://go.microsoft.com/fwlink/?LinkId=852102&clcid=0x40c",
+            "ITA": "https://go.microsoft.com/fwlink/?LinkId=852102&clcid=0x410",
+            "JPN": "https://go.microsoft.com/fwlink/?LinkId=852102&clcid=0x411",
+            "KOR": "https://go.microsoft.com/fwlink/?LinkId=852102&clcid=0x412",
+            "PLK": "https://go.microsoft.com/fwlink/?LinkId=852102&clcid=0x415",
+            "PTB": "https://go.microsoft.com/fwlink/?LinkId=852102&clcid=0x416",
+            "RUS": "https://go.microsoft.com/fwlink/?LinkId=852102&clcid=0x419",
+            "TRK": "https://go.microsoft.com/fwlink/?LinkId=852102&clcid=0x41f"
+        }
+    }
+}
