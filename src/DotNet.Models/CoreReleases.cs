@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using DotNet.Extensions;
+using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace DotNet.Versions
+namespace DotNet.Models
 {
     public record CoreReleases(
         IEnumerable<ReleasesIndex> ReleasesIndex);
 
-    public class ReleasesIndex
+    public class ReleasesIndex : IRelease
     {
         public string TargetFrameworkMoniker => Product switch
         {
@@ -35,6 +37,8 @@ namespace DotNet.Versions
         /// When <see cref="SupportPhase.Current"/>, this is <see cref="null"/>.
         /// </summary>
         public string? EolDate { get; init; }
+
+        public DateTime? EndOfLifeDate => EolDate.ToDateTime();
 
         /// <summary>
         /// A value indicating whether or not security patches are maintained.

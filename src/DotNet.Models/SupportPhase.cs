@@ -1,4 +1,4 @@
-﻿namespace DotNet.Versions
+﻿namespace DotNet.Models
 {
     public enum SupportPhase
     {

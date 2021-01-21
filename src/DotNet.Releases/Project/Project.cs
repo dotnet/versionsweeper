@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace DotNet.Versions.Records
+namespace DotNet.Versions
 {
     [XmlRoot]
     public class Project

@@ -1,9 +1,6 @@
-﻿using DotNet.Versions.Records;
-using System;
-using System.IO;
+﻿using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 using SystemFile = System.IO.File;
 
 namespace DotNet.Versions

@@ -44,6 +44,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DotNet.Extensions\DotNet.Extensions.csproj" />
+    <ProjectReference Include="..\DotNet.Models\DotNet.Models.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,5 @@
-﻿using DotNet.Extensions;
+﻿using DotNet.Models;
 using DotNet.Versions.Extensions;
-using DotNet.Versions.Records;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,8 +22,9 @@ namespace DotNet.Versions
             {
                 var tfmSupports =
                     tfms.Select(
-                        tfm => TryEvaluateCoreSupport(
-                            tfm, coreRelease, out var tfmSupport) ? tfmSupport : null)
+                        tfm => TryEvaluateReleaseSupport(
+                            tfm, coreRelease.ChannelVersion, coreRelease, out var tfmSupport)
+                                ? tfmSupport : null)
                         .Where(tfmSupport => tfmSupport is not null);
 
                 if (tfmSupports.Any())
@@ -37,8 +37,9 @@ namespace DotNet.Versions
             {
                 var tfmSupports =
                     tfms.Select(
-                        tfm => TryEvaluateFrameworkSupport(
-                            tfm, frameworkRelease, out var tfmSupport) ? tfmSupport : null)
+                        tfm => TryEvaluateReleaseSupport(
+                            tfm, frameworkRelease!.Version, frameworkRelease, out var tfmSupport)
+                                ? tfmSupport : null)
                         .Where(tfmSupport => tfmSupport is not null);
 
                 if (tfmSupports.Any())
@@ -48,27 +49,13 @@ namespace DotNet.Versions
             }
         }
 
-        static bool TryEvaluateCoreSupport(
-            string tfm, ReleasesIndex? release, out TargetFrameworkMonikerSupport? tfmSupport)
+        static bool TryEvaluateReleaseSupport(
+            string tfm, string version, IRelease? release, out TargetFrameworkMonikerSupport? tfmSupport)
         {
             if (release?.TargetFrameworkMoniker == tfm)
             {
-                var isSupported = release.SupportPhase.IsSupported(release!.EolDate.ToDateTime());
-                tfmSupport = new(tfm, release.ChannelVersion, !isSupported);
-                return true;
-            }
-
-            tfmSupport = default;
-            return false;
-        }
-
-        static bool TryEvaluateFrameworkSupport(
-            string tfm, FrameworkRelease? release, out TargetFrameworkMonikerSupport? tfmSupport)
-        {
-            if (release?.TargetFrameworkMoniker == tfm)
-            {
-                var isSupported = release.SupportPhase.IsSupported(release!.EndOfLife.ToDateTime());
-                tfmSupport = new(tfm, release.Version, !isSupported);
+                var isSupported = release.SupportPhase.IsSupported(release!.EndOfLifeDate ?? default);
+                tfmSupport = new(tfm, version, !isSupported, release);
                 return true;
             }
 

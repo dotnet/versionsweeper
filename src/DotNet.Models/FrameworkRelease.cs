@@ -1,7 +1,8 @@
 ﻿using DotNet.Extensions;
+using System;
 using System.Collections.Generic;
 
-namespace DotNet.Versions.Records
+namespace DotNet.Models
 {
     public record FrameworkRelease(
         string Version,
@@ -9,8 +10,8 @@ namespace DotNet.Versions.Records
         string ReleaseNotesUrl,
         string IncludedIn,
         string EndOfLife,
-        Runtime Runtime,
-        Developerpack DeveloperPack)
+        FrameworkRuntime Runtime,
+        Developerpack DeveloperPack) : IRelease
     {
         public string TargetFrameworkMoniker => $"v{Version}";
 
@@ -21,9 +22,11 @@ namespace DotNet.Versions.Records
 
             _ => SupportPhase.EndOfLife
         };
+
+        public DateTime? EndOfLifeDate => EndOfLife.ToDateTime();
     }
 
-    public record Runtime(
+    public record FrameworkRuntime(
         string WebInstaller,
         string OfflineInstaller,
         Dictionary<string, string> LanguagePacks);

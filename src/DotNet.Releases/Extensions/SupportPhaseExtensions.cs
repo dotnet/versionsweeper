@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotNet.Models;
+using System;
 
 namespace DotNet.Versions.Extensions
 {

@@ -1,4 +1,5 @@
 ﻿using DotNet.Extensions;
+using DotNet.Models;
 using System.Linq;
 using Xunit;
 
@@ -41,11 +42,25 @@ namespace DotNet.Versions.Tests
             var versionOne = coreReleases.ReleasesIndex.First(release => release.ChannelVersion == "1.0");
             var versionFive = coreReleases.ReleasesIndex.First(release => release.ChannelVersion == "5.0");
 
-            Assert.Equal(
+            static void AssertHasSameValues(
+                ReleasesIndex expected, ReleasesIndex actual)
+            {
+                Assert.Equal(expected.ChannelVersion, actual.ChannelVersion);
+                Assert.Equal(expected.LatestRelease, actual.LatestRelease);
+                Assert.Equal(expected.LatestReleaseDate, actual.LatestReleaseDate);
+                Assert.Equal(expected.Security, actual.Security);
+                Assert.Equal(expected.LatestRuntime, actual.LatestRuntime);
+                Assert.Equal(expected.LatestSdk, actual.LatestSdk);
+                Assert.Equal(expected.Product, actual.Product);
+                Assert.Equal(expected.SupportPhase, actual.SupportPhase);
+                Assert.Equal(expected.ReleasesJson, actual.ReleasesJson);
+            }
+
+            var expectedVersionOne =
                 new ReleasesIndex
                 {
                     ChannelVersion = "1.0",
-                    LatestRelease = "1.0.6",
+                    LatestRelease = "1.0.16",
                     LatestReleaseDate = "2019-05-14",
                     Security = true,
                     LatestRuntime = "1.0.16",
@@ -54,10 +69,9 @@ namespace DotNet.Versions.Tests
                     SupportPhase = SupportPhase.EndOfLife,
                     EolDate = "2019-06-27",
                     ReleasesJson = "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/1.0/releases.json"
-                },
-                versionOne);
+                };
 
-            Assert.Equal(
+            var expectedVersionFive =
                 new ReleasesIndex
                 {
                     ChannelVersion = "5.0",
@@ -70,8 +84,10 @@ namespace DotNet.Versions.Tests
                     SupportPhase = SupportPhase.Current,
                     EolDate = "2019-06-27",
                     ReleasesJson = "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/5.0/releases.json"
-                },
-                versionOne);
+                };
+
+            AssertHasSameValues(expectedVersionOne, versionOne);
+            AssertHasSameValues(expectedVersionFive, versionFive);
         }
     }
 }

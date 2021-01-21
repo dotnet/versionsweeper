@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DotNet.Versions
+namespace DotNet.Models
 {
     public record CoreReleaseDetails(
         string ChannelVersion, // Do not call .AsSemanticVersion() on this, "major.minor".

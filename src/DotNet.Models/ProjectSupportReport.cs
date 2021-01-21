@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DotNet.Versions
+namespace DotNet.Models
 {
     public record ProjectSupportReport(
         string ProjectPath,
@@ -9,5 +9,6 @@ namespace DotNet.Versions
     public record TargetFrameworkMonikerSupport(
         string TargetFrameworkMoniker,
         string Version,
-        bool IsUnsupported);
+        bool IsUnsupported,
+        IRelease Release);
 }
