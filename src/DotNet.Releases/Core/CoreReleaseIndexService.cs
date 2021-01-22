@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DotNet.Versions
 {
-    internal class CoreReleaseIndexService : ICoreReleaseIndexService
+    public class CoreReleaseIndexService : ICoreReleaseIndexService
     {
         const string ReleaseIndex =
             "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json";

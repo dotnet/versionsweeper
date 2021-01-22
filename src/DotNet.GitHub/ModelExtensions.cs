@@ -24,14 +24,20 @@ namespace DotNet.GitHub
             document.AppendTable(
                 new MarkdownTableHeader(
                     new MarkdownTableHeaderCell("Target Version"),
-                    new MarkdownTableHeaderCell("End of life")),
-                tfms.Where(_ => _.IsUnsupported).
-                    Select(tfm =>
+                    new MarkdownTableHeaderCell("End of life"),
+                    new MarkdownTableHeaderCell("Release notes")),
+                tfms.Where(_ => _.IsUnsupported)
+                    .Select(tfm =>
                     {
                         var (target, version, _, release) = tfm;
                         return new MarkdownTableRow(
-                            target, $"{release.EndOfLifeDate:MMMM, dd yyyy}");
+                            target,
+                            $"{release.EndOfLifeDate:MMMM, dd yyyy}",
+                            );
                     }));
+
+            document.AppendParagraph(
+                "Consider upgrading the project to either the current release, or the next closest LTS version.");
 
             return document.ToString();
         }

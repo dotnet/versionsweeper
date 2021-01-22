@@ -5,10 +5,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
     <PublishSingleFile>true</PublishSingleFile>
-    <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
-    <SelfContained>true</SelfContained>
-    <PublishTrimmed>true</PublishTrimmed>
-    <PublishReadyToRun>true</PublishReadyToRun>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>

@@ -7,5 +7,6 @@ namespace DotNet.Models
         string TargetFrameworkMoniker { get; }
         SupportPhase SupportPhase { get; }
         DateTime? EndOfLifeDate { get; }
+        string ReleaseNotesUrl { get; }
     }
 }
