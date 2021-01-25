@@ -28,7 +28,9 @@ namespace DotNet.Extensions
             string.IsNullOrWhiteSpace(json) ? default : Deserialize<T>(json, options ?? _lazyOptions.Value);
 
         public static SemanticVersion AsSemanticVersion(this string value) =>
-            SemanticVersion.TryParse(value, out var result) ? result : _versionZero;
+            Version.TryParse(value, out var version)
+                ? new SemanticVersion(version.Major, version.Minor, Math.Max(version.Build, 0))
+                : SemanticVersion.TryParse(value, out var result) ? result : _versionZero;
 
         public static DateTime ToDateTime(this string? value) =>
             DateTime.TryParse(value, out var dateTime) ? dateTime : default;

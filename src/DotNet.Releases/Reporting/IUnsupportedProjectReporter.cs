@@ -1,7 +1,7 @@
 ﻿using DotNet.Models;
 using System.Collections.Generic;
 
-namespace DotNet.Versions
+namespace DotNet.Releases
 {
     public interface IUnsupportedProjectReporter
     {

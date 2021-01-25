@@ -7,7 +7,7 @@ namespace DotNet.GitHub
 {
     public static class ModelExtensions
     {
-        public static string ToIssueBody(
+        public static string ToMarkdownBody(
             this ProjectSupportReport projectSupportReport)
         {
             IMarkdownDocument document = new MarkdownDocument();
@@ -25,7 +25,8 @@ namespace DotNet.GitHub
                 new MarkdownTableHeader(
                     new MarkdownTableHeaderCell("Target Version"),
                     new MarkdownTableHeaderCell("End of life"),
-                    new MarkdownTableHeaderCell("Release notes")),
+                    new MarkdownTableHeaderCell("Release notes"),
+                    new MarkdownTableHeaderCell("Nearest LTS Version")),
                 tfms.Where(_ => _.IsUnsupported)
                     .Select(tfm =>
                     {
@@ -33,7 +34,10 @@ namespace DotNet.GitHub
                         return new MarkdownTableRow(
                             target,
                             $"{release.EndOfLifeDate:MMMM, dd yyyy}",
-                            );
+                            new MarkdownLink(
+                                "Release notes URL", release.ReleaseNotesUrl)
+                                .ToString(),
+                            tfm.NearestLtsVersion);
                     }));
 
             document.AppendParagraph(

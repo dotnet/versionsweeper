@@ -10,5 +10,8 @@ namespace DotNet.Models
         string TargetFrameworkMoniker,
         string Version,
         bool IsUnsupported,
-        IRelease Release);
+        IRelease Release)
+    {
+        public string NearestLtsVersion { get; set; }
+    }
 }

@@ -1,4 +1,4 @@
-﻿using DotNet.Versions;
+﻿using DotNet.Releases;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

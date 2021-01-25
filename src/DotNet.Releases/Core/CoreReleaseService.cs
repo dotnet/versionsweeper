@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace DotNet.Versions
+namespace DotNet.Releases
 {
     internal class CoreReleaseService : ICoreReleaseService
     {
@@ -15,10 +15,13 @@ namespace DotNet.Versions
         readonly ICoreReleaseIndexService _indexService;
 
         public CoreReleaseService(
-            HttpClient httpClient, IMemoryCache cache, ICoreReleaseIndexService indexService) =>
-            (_httpClient, _cache, _indexService) = (httpClient, cache, indexService);
+            HttpClient httpClient,
+            IMemoryCache cache,
+            ICoreReleaseIndexService indexService) =>
+            (_httpClient, _cache, _indexService) =
+                (httpClient, cache, indexService);
 
-        async IAsyncEnumerable<CoreReleaseDetails?> ICoreReleaseService.GetAllReleasesAsync()
+        async IAsyncEnumerable<(ReleasesIndex Index, CoreReleaseDetails Details)> ICoreReleaseService.GetAllReleasesAsync()
         {
             var releases = await _indexService.GetReleaesAsync();
             foreach (var release in releases?.ReleasesIndex ?? Enumerable.Empty<ReleasesIndex>())
@@ -32,7 +35,14 @@ namespace DotNet.Versions
                             return releaseJson.FromJson<CoreReleaseDetails>();
                         });
 
-                yield return coreReleaseDetails;
+                release.ReleaseNotesUrl =
+                    coreReleaseDetails!
+                        .Releases
+                        .OrderBy(r => r.ReleaseDate.ToDateTime())
+                        .FirstOrDefault()
+                        ?.ReleaseNotes ?? release.ReleasesJson;
+
+                yield return (release, coreReleaseDetails!);
             }
         }
     }

@@ -1,10 +1,10 @@
 ﻿using DotNet.Extensions;
 using DotNet.Models;
-using DotNet.Versions.Extensions;
+using DotNet.Releases.Extensions;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DotNet.Versions
+namespace DotNet.Releases
 {
     public interface ICoreReleaseIndexService
     {

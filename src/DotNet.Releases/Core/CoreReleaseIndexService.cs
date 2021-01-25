@@ -4,7 +4,7 @@ using Microsoft.Extensions.Caching.Memory;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace DotNet.Versions
+namespace DotNet.Releases
 {
     public class CoreReleaseIndexService : ICoreReleaseIndexService
     {
@@ -15,7 +15,8 @@ namespace DotNet.Versions
         readonly IMemoryCache _cache;
 
         public CoreReleaseIndexService(
-            HttpClient httpClient, IMemoryCache cache) =>
+            HttpClient httpClient,
+            IMemoryCache cache) =>
             (_httpClient, _cache) = (httpClient, cache);
 
         Task<CoreReleases?> ICoreReleaseIndexService.GetReleaesAsync() =>

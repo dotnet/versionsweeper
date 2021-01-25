@@ -1,10 +1,10 @@
 ﻿using DotNet.Models;
 using System.Collections.Generic;
 
-namespace DotNet.Versions
+namespace DotNet.Releases
 {
     public interface ICoreReleaseService
     {
-        IAsyncEnumerable<CoreReleaseDetails?> GetAllReleasesAsync();
+        IAsyncEnumerable<(ReleasesIndex Index, CoreReleaseDetails Details)> GetAllReleasesAsync();
     }
 }

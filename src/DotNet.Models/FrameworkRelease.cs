@@ -1,7 +1,6 @@
 ﻿using DotNet.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DotNet.Models
 {
@@ -14,12 +13,6 @@ namespace DotNet.Models
         FrameworkRuntime Runtime,
         Developerpack DeveloperPack) : IRelease
     {
-        public string SemanticVersion => Version.Count(character => character == '.') switch
-        {
-            1 => $"{Version}.0",
-            _ => Version
-        };
-
         public string TargetFrameworkMoniker => $"v{Version}";
 
         public SupportPhase SupportPhase => EndOfLife.ToDateTime() switch

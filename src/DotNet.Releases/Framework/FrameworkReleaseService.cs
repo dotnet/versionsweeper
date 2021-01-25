@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-namespace DotNet.Versions
+namespace DotNet.Releases
 {
     public class FrameworkReleaseService : IFrameworkReleaseService
     {
@@ -16,9 +16,10 @@ namespace DotNet.Versions
         public FrameworkReleaseService(
             IFrameworkReleaseIndexService indexService,
             IMemoryCache cache) =>
-            (_indexService, _cache, _executingAssembly) = (indexService, cache, Assembly.GetExecutingAssembly());
+            (_indexService, _cache, _executingAssembly) =
+                (indexService, cache, Assembly.GetExecutingAssembly());
 
-        async IAsyncEnumerable<FrameworkRelease?> IFrameworkReleaseService.GetAllReleasesAsync()
+        async IAsyncEnumerable<FrameworkRelease> IFrameworkReleaseService.GetAllReleasesAsync()
         {
             foreach (var releaseName in _indexService.FrameworkReseaseFileNames)
             {
@@ -28,16 +29,16 @@ namespace DotNet.Versions
                         async entry =>
                         {
                             var name = entry.Key.ToString();
-                            var resourceName = $"DotNet.Versions.Data.{name}";
+                            var resourceName = $"DotNet.Releases.Data.{name}";
                             using var stream = _executingAssembly.GetManifestResourceStream(resourceName);
                             using StreamReader reader = new(stream!);
 
                             var json = await reader.ReadToEndAsync();
 
-                            return json?.FromJson<FrameworkRelease>(new()) ?? default;
+                            return json.FromJson<FrameworkRelease>(new());
                         });
 
-                yield return frameworkRelease;
+                yield return frameworkRelease!;
             }
         }
     }

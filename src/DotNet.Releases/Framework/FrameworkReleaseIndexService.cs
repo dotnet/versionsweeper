@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace DotNet.Versions
+namespace DotNet.Releases
 {
-    internal class FrameworkReleaseIndexService : IFrameworkReleaseIndexService
+    public class FrameworkReleaseIndexService : IFrameworkReleaseIndexService
     {
         /// <summary>
         /// Private sourhttps://github.com/dotnet/website-resources/tree/master/data/dotnet-framework-releases

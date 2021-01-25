@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SystemFile = System.IO.File;
 
-namespace DotNet.Versions
+namespace DotNet.Releases
 {
     internal class ProjectFileReader : IProjectFileReader
     {

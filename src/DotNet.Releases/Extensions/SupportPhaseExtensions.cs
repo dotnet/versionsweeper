@@ -1,7 +1,7 @@
 ﻿using DotNet.Models;
 using System;
 
-namespace DotNet.Versions.Extensions
+namespace DotNet.Releases.Extensions
 {
     internal static class SupportPhaseExtensions
     {

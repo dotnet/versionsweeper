@@ -3,7 +3,7 @@ using DotNet.Models;
 using System.Linq;
 using Xunit;
 
-namespace DotNet.Versions.Tests
+namespace DotNet.Releases.Tests
 {
     public class CoreReleasesSerializationTests
     {

@@ -10,10 +10,11 @@ namespace DotNet.Extensions.Tests
     {
         public static IEnumerable<object[]> AsSemanticVersionInput = new[]
         {
-            new object[] { "5.0",     new SemanticVersion(0, 0, 0) },
+            new object[] { "5.0",     new SemanticVersion(5, 0, 0) },
             new object[] { "5.0.2",   new SemanticVersion(5, 0, 2) },
             new object[] { "3.1.405", new SemanticVersion(3, 1, 405) },
             new object[] { "2.2.207", new SemanticVersion(2, 2, 207) },
+            new object[] { "3.5.0-sp1", new SemanticVersion(3, 5, 0, "sp1") },
             new object[] { "pickles", new SemanticVersion(0, 0, 0) }
         };
 

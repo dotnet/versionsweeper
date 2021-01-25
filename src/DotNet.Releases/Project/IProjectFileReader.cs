@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace DotNet.Versions
+namespace DotNet.Releases
 {
     public interface IProjectFileReader
     {

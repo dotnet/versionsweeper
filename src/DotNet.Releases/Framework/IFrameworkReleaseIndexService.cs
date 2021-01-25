@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DotNet.Versions
+namespace DotNet.Releases
 {
     public interface IFrameworkReleaseIndexService
     {

@@ -5,7 +5,7 @@ using System.Net.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 
-namespace DotNet.Versions.Tests
+namespace DotNet.Releases.Tests
 {
     public class CoreReleaseIndexServiceTests : IDisposable
     {
@@ -14,9 +14,14 @@ namespace DotNet.Versions.Tests
 
         [
             Theory,
-            InlineData("2.2.8", "3.1")
+            InlineData("1.1", "2.1"),
+            InlineData("1.0", "2.1"),
+            InlineData("2.2.8", "3.1"),
+            InlineData("3.0.3", "3.1"),
+            InlineData("3.1.11", "5.0")
         ]
-        public async Task GetReleaesAsyncTest(string releaseVersion, string expectedVersion)
+        public async Task GetNextLtsVersionAsyncTest(
+            string releaseVersion, string expectedVersion)
         {
             ICoreReleaseIndexService service = new CoreReleaseIndexService(_client, _cache);
 

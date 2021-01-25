@@ -10,6 +10,8 @@ namespace DotNet.Models
 
     public class ReleasesIndex : IRelease
     {
+        public string ReleaseNotesUrl { get; set; } = null!;
+
         public string TargetFrameworkMoniker => Product switch
         {
             ".NET" => $"net{ChannelVersion}",

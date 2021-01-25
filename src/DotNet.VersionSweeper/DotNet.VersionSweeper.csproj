@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DotNet.GitHub\DotNet.GitHub.csproj" />
-    <ProjectReference Include="..\DotNet.Releases\DotNet.Versions.csproj" />
+    <ProjectReference Include="..\DotNet.Releases\DotNet.Releases.csproj" />
   </ItemGroup>
 
 </Project>

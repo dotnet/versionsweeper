@@ -1,7 +1,7 @@
 ﻿using CommandLine;
 using DotNet.Extensions;
 using DotNet.GitHub;
-using DotNet.Versions;
+using DotNet.Releases;
 using DotNet.VersionSweeper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -63,7 +63,7 @@ async Task StartSweeperAsync(Options options, IServiceProvider services)
                 var (proj, reports) = projectSupportReport;
                 if (reports is { Count: > 0 } && reports.Any(r => r.IsUnsupported))
                 {
-                    Console.WriteLine(projectSupportReport.ToIssueBody());
+                    Console.WriteLine(projectSupportReport.ToMarkdownBody());
                 }
             }
         }
