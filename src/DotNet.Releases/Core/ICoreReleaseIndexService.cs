@@ -10,7 +10,7 @@ namespace DotNet.Releases
     {
         Task<CoreReleases?> GetReleaesAsync();
 
-        async ValueTask<ReleasesIndex?> GetNextLtsVersionAsync(string releaseVersion)
+        async ValueTask<ReleaseIndex?> GetNextLtsVersionAsync(string releaseVersion)
         {
             var version = releaseVersion.AsSemanticVersion();
             var releases = await GetReleaesAsync();

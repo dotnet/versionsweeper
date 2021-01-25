@@ -43,7 +43,7 @@ namespace DotNet.Releases.Tests
             var versionFive = coreReleases.ReleasesIndex.First(release => release.ChannelVersion == "5.0");
 
             static void AssertHasSameValues(
-                ReleasesIndex expected, ReleasesIndex actual)
+                ReleaseIndex expected, ReleaseIndex actual)
             {
                 Assert.Equal(expected.ChannelVersion, actual.ChannelVersion);
                 Assert.Equal(expected.LatestRelease, actual.LatestRelease);
@@ -57,7 +57,7 @@ namespace DotNet.Releases.Tests
             }
 
             var expectedVersionOne =
-                new ReleasesIndex
+                new ReleaseIndex
                 {
                     ChannelVersion = "1.0",
                     LatestRelease = "1.0.16",
@@ -72,7 +72,7 @@ namespace DotNet.Releases.Tests
                 };
 
             var expectedVersionFive =
-                new ReleasesIndex
+                new ReleaseIndex
                 {
                     ChannelVersion = "5.0",
                     LatestRelease = "5.0.2",

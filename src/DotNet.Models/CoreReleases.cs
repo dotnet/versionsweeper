@@ -6,9 +6,9 @@ using System.Text.Json.Serialization;
 namespace DotNet.Models
 {
     public record CoreReleases(
-        IEnumerable<ReleasesIndex> ReleasesIndex);
+        IEnumerable<ReleaseIndex> ReleasesIndex);
 
-    public class ReleasesIndex : IRelease
+    public class ReleaseIndex : IRelease
     {
         public string ReleaseNotesUrl { get; set; } = null!;
 

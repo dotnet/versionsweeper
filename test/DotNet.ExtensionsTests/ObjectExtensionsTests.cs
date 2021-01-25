@@ -81,15 +81,15 @@ namespace DotNet.Extensions.Tests
             new object[] { "2021-01-12", new DateTime(2021, 1, 12) },
             new object[] { "2022-12-03", new DateTime(2022, 12, 3) },
             new object[] { "2019-02-12", new DateTime(2019, 2, 12) },
-            new object[] { default(string), default(DateTime) },
-            new object[] { "...", default(DateTime) },
+            new object[] { default(string), new DateTime?() },
+            new object[] { "...", null },
         };
 
         [
             Theory,
             MemberData(nameof(ToDateTimeInput))
         ]
-        public void ToDateTime(string value, DateTime expected) =>
+        public void ToDateTime(string value, DateTime? expected) =>
             Assert.Equal(expected, value.ToDateTime());
     }
 

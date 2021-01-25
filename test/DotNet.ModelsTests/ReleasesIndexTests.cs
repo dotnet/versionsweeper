@@ -7,19 +7,20 @@ namespace DotNet.ModelsTests
     {
         [
             Theory,
-            InlineData("3.5.0-sp1", "net35"),
-            InlineData("4.0", "net40"),
-            InlineData("4.5", "net45"),
-            InlineData("4.5.1", "net451"),
-            InlineData("4.5.2", "net452"),
-            InlineData("4.6", "net46"),
-            InlineData("4.8", "net48")
+            InlineData("1.0", ".NET Core", "netcoreapp1.0"),
+            InlineData("1.1", ".NET Core", "netcoreapp1.1"),
+            InlineData("2.2", ".NET Core", "netcoreapp2.2"),
+            InlineData("3.1", ".NET Core", "netcoreapp3.1"),
+            InlineData("5.0", ".NET", "net5.0")
         ]
-        public void FrameworkReleaseCorrectlyRepresentsTfm(
-            string version, string expectedTfm) =>
+        public void ReleasesIndexCorrectlyRepresentsTfm(
+            string version, string product, string expectedTfm) =>
             Assert.Equal(
                 expectedTfm,
-                new FrameworkRelease(version, null, null, null, null, null, null)
-                    .TargetFrameworkMoniker);
+                new ReleaseIndex
+                {
+                    ChannelVersion = version,
+                    Product = product
+                }.TargetFrameworkMoniker);
     }
 }

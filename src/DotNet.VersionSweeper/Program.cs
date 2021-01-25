@@ -19,7 +19,9 @@ using var host = Host.CreateDefaultBuilder(args)
                 .AddDotNetVersionServices())
     .Build();
 
-var parser = Default.ParseArguments<Options>(args);
+var parser =
+    Default.ParseArguments<Options>(
+        args.OverrideFromEnvironmentVariables());
 
 static void HandleParseError(IEnumerable<Error> errors)
 {
@@ -35,6 +37,8 @@ async Task StartSweeperAsync(Options options, IServiceProvider services)
     DirectoryInfo directory = new(options.Directory);
     ConcurrentDictionary<string, (int, string[])> projects = new(StringComparer.OrdinalIgnoreCase);
 
+    // TODO: Add support for multiple file extensions.
+    // i.e.; SearchPattern = "*.csproj|*.fsproj|*.vbproj"
     await directory.EnumerateFiles(options.SearchPattern, SearchOption.AllDirectories)
         .ForEachAsync(
             Environment.ProcessorCount,

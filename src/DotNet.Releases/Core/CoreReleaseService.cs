@@ -21,10 +21,10 @@ namespace DotNet.Releases
             (_httpClient, _cache, _indexService) =
                 (httpClient, cache, indexService);
 
-        async IAsyncEnumerable<(ReleasesIndex Index, CoreReleaseDetails Details)> ICoreReleaseService.GetAllReleasesAsync()
+        async IAsyncEnumerable<(ReleaseIndex Index, CoreReleaseDetails Details)> ICoreReleaseService.GetAllReleasesAsync()
         {
             var releases = await _indexService.GetReleaesAsync();
-            foreach (var release in releases?.ReleasesIndex ?? Enumerable.Empty<ReleasesIndex>())
+            foreach (var release in releases?.ReleasesIndex ?? Enumerable.Empty<ReleaseIndex>())
             {
                 var coreReleaseDetails =
                     await _cache.GetOrCreateAsync(

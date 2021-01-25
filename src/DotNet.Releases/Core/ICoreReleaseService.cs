@@ -5,6 +5,6 @@ namespace DotNet.Releases
 {
     public interface ICoreReleaseService
     {
-        IAsyncEnumerable<(ReleasesIndex Index, CoreReleaseDetails Details)> GetAllReleasesAsync();
+        IAsyncEnumerable<(ReleaseIndex Index, CoreReleaseDetails Details)> GetAllReleasesAsync();
     }
 }
