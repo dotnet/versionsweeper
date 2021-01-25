@@ -59,7 +59,6 @@ async Task StartSweeperAsync(Options options, IServiceProvider services)
         var gitHubIssueService =
             services.GetRequiredService<IGitHubIssueService>();
 
-        var issued = false;
         foreach (var (projectPath, (lineNumber, tfms)) in projects)
         {
             await foreach (var projectSupportReport
@@ -68,31 +67,23 @@ async Task StartSweeperAsync(Options options, IServiceProvider services)
                 var (proj, reports) = projectSupportReport;
                 if (reports is { Count: > 0 } && reports.Any(r => r.IsUnsupported))
                 {
-                    if (issued)
+                    try
                     {
-                        Console.WriteLine(projectSupportReport.ToTitleMessage());
-                        Console.WriteLine(projectSupportReport.ToMarkdownBody(options.Directory, lineNumber));
-                    }
-                    else
-                    {
-                        issued = true;
+                        var issue =
+                            await gitHubIssueService.PostIssueAsync(
+                                options.Owner,
+                                options.Name,
+                                options.Token,
+                                new(projectSupportReport.ToTitleMessage())
+                                {
+                                    Body = projectSupportReport.ToMarkdownBody(options.Directory, lineNumber)
+                                });
 
-                        try
-                        {
-                            var issue =
-                                await gitHubIssueService.PostIssueAsync(
-                                    options.Owner,
-                                    options.Name,
-                                    options.Token,
-                                    new(projectSupportReport.ToTitleMessage())
-                                    {
-                                        Body = projectSupportReport.ToMarkdownBody(options.Directory, lineNumber)
-                                    });
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.Error.WriteLine(ex);
-                        }
+                        Console.WriteLine($"{issue.HtmlUrl}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Error.WriteLine(ex);
                     }
                 }
             }
