@@ -32,7 +32,7 @@ namespace DotNet.Extensions
                 ? new SemanticVersion(version.Major, version.Minor, Math.Max(version.Build, 0))
                 : SemanticVersion.TryParse(value, out var result) ? result : _versionZero;
 
-        public static DateTime ToDateTime(this string? value) =>
-            DateTime.TryParse(value, out var dateTime) ? dateTime : default;
+        public static DateTime? ToDateTime(this string? value) =>
+            DateTime.TryParse(value, out var dateTime) ? dateTime : null;
     }
 }

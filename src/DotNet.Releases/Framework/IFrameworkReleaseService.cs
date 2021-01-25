@@ -17,7 +17,7 @@ namespace DotNet.Releases
             var sequence = GetAllReleasesAsync();
             var releases = await sequence.ToListAsync();
 
-            return releases?
+            var orderedReleases = releases?
                 .Where(release => release is not null)
                 .Select(release =>
                     (Version: release!.Version.AsSemanticVersion(), Release: release!))
@@ -25,8 +25,9 @@ namespace DotNet.Releases
                     _.Version > releaseVersion &&
                     _.Release.SupportPhase.IsSupported(
                         _.Release.EndOfLifeDate.GetValueOrDefault()))
-                .OrderBy(_ => _.Version)
-                .Select(_ => _.Release)
+                .OrderBy(_ => _.Version);
+
+            return orderedReleases?.Select(_ => _.Release)
                 .FirstOrDefault();
         }
     }

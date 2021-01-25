@@ -8,5 +8,7 @@ namespace DotNet.Models
         SupportPhase SupportPhase { get; }
         DateTime? EndOfLifeDate { get; }
         string ReleaseNotesUrl { get; }
+
+        string ToBrandString();
     }
 }

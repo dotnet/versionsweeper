@@ -52,5 +52,7 @@ namespace DotNet.Models
         public string LatestSdk { get; init; } = null!;
 
         public string Product { get; init; } = null!;
+
+        public string ToBrandString() => $"{Product} {ChannelVersion}";
     }
 }

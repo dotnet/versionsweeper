@@ -13,18 +13,30 @@ namespace DotNet.Releases
         static readonly Regex _targetFrameworkExpression =
             new(@"TargetFramework(.*)>(?<tfm>.+?)</", _options);
 
-        async Task<string[]> IProjectFileReader.ReadProjectTfmsAsync(string filePath)
+        async Task<(int LineNumber, string[] Tfms)> IProjectFileReader.ReadProjectTfmsAsync(string filePath)
         {
             if (SystemFile.Exists(filePath))
             {
                 var projectXml = await SystemFile.ReadAllTextAsync(filePath);
                 var match = _targetFrameworkExpression.Match(projectXml);
-                var value = match.Groups["tfm"].Value;
+                var group = match.Groups["tfm"];
+                var lineNumber = GetLineNumberFromIndex(projectXml, group.Index);
+                var value = group.Value;
 
-                return value?.Split(";", StringSplitOptions.RemoveEmptyEntries) ?? _emptyArray;
+                return (lineNumber, value?.Split(";", StringSplitOptions.RemoveEmptyEntries) ?? _emptyArray);
             }
 
-            return _emptyArray;
+            return (-1, _emptyArray);
+        }
+
+        static int GetLineNumberFromIndex(string xml, int index)
+        {
+            var lineNumber = 1;
+            for (var i = 0; i < index; ++ i)
+            {
+                if (xml[i] == '\n') ++ lineNumber;
+            }
+            return lineNumber;
         }
     }
 }

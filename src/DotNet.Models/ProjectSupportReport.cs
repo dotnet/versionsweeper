@@ -12,6 +12,6 @@ namespace DotNet.Models
         bool IsUnsupported,
         IRelease Release)
     {
-        public string NearestLtsVersion { get; set; }
+        public string NearestLtsVersion { get; set; } = null!;
     }
 }

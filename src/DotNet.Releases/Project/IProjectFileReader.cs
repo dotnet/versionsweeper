@@ -4,6 +4,6 @@ namespace DotNet.Releases
 {
     public interface IProjectFileReader
     {
-        Task<string[]> ReadProjectTfmsAsync(string filePath);
+        Task<(int LineNumber, string[] Tfms)> ReadProjectTfmsAsync(string filePath);
     }
 }

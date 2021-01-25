@@ -3,6 +3,7 @@ using DotNet.Models;
 using DotNet.Releases.Extensions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DotNet.Releases
 {
@@ -35,21 +36,24 @@ namespace DotNet.Releases
 
                 if (tfmSupports.Any())
                 {
-                    foreach (var support in tfmSupports)
-                    {
-                        var release = await _coreReleaseIndexService.GetNextLtsVersionAsync(
-                            coreRelease.LatestRelease);
-                        if (support is not null && release is not null)
-                        {
-                            support.NearestLtsVersion = release.LatestRelease;
-                        }
-                    }
+                    var supports = await Task.WhenAll(
+                        tfmSupports.Where(support => support?.IsUnsupported ?? false)
+                            .Select(
+                            async support =>
+                            {
+                                var release = await _coreReleaseIndexService.GetNextLtsVersionAsync(
+                                    coreRelease.LatestRelease);
 
-                    yield return new(projectPath, tfmSupports.ToHashSet()!);
+                                return support! with { NearestLtsVersion = release!.TargetFrameworkMoniker };
+                            }));
+
+                    if (supports.Any())
+                        yield return new(projectPath, supports.ToHashSet()!);
                 }
             }
 
-            await foreach (var frameworkRelease in _frameworkReleaseService.GetAllReleasesAsync())
+            await foreach (var frameworkRelease
+                in _frameworkReleaseService.GetAllReleasesAsync())
             {
                 var tfmSupports =
                     tfms.Select(
@@ -61,17 +65,22 @@ namespace DotNet.Releases
 
                 if (tfmSupports.Any())
                 {
-                    foreach (var support in tfmSupports)
-                    {
-                        var release = await _frameworkReleaseService.GetNextLtsVersionAsync(
-                            frameworkRelease.Version.AsSemanticVersion());
-                        if (support is not null && release is not null)
-                        {
-                            support.NearestLtsVersion = release.Version;
-                        }
-                    }
+                    var supports = await Task.WhenAll(
+                        tfmSupports.Where(support => support?.IsUnsupported ?? false)
+                        .Select(
+                            async support =>
+                            {
+                                var release = await _frameworkReleaseService.GetNextLtsVersionAsync(
+                                    frameworkRelease.Version.AsSemanticVersion());
 
-                    yield return new(projectPath, tfmSupports.ToHashSet()!);
+                                return support! with
+                                {
+                                    NearestLtsVersion = release!.TargetFrameworkMoniker
+                                };
+                            }));
+
+                    if (supports.Any())
+                        yield return new(projectPath, supports.ToHashSet()!);
                 }
             }
         }

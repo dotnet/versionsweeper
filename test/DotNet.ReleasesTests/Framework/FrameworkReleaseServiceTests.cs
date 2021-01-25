@@ -15,6 +15,7 @@ namespace DotNet.Releases.Tests
             Theory,
             InlineData("4.5", "4.8"),
             InlineData("4.5.2", "4.8"),
+            InlineData("4.6.1", "4.8"),
             InlineData("4.7", "4.8"),
             InlineData("4.7.2", "4.8"),
             InlineData("4.6", "4.8")

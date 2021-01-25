@@ -10,7 +10,8 @@ namespace DotNet.Releases.Extensions
             supportPhase switch
             {
                 SupportPhase.Current => true,
-                SupportPhase.LongTermSupport when endOfLife.IsInTheFuture() => true,
+                SupportPhase.LongTermSupport
+                    when endOfLife.IsInTheFuture() => true,
 
                 _ => false
             };

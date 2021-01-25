@@ -13,17 +13,23 @@ namespace DotNet.Models
         FrameworkRuntime Runtime,
         Developerpack DeveloperPack) : IRelease
     {
-        public string TargetFrameworkMoniker => $"v{Version}";
-
-        public SupportPhase SupportPhase => EndOfLife.ToDateTime() switch
+        public string TargetFrameworkMoniker => Version switch
         {
-            var date when date.Equals(default) && Version == "4.8" => SupportPhase.Current,
-            var date when date.Equals(default) || date > DateTime.Now => SupportPhase.LongTermSupport,
+            "3.5.0-sp1" => "net35",
+            _ => $"net{Version.Replace(".", "")}"
+        };
+
+        public SupportPhase SupportPhase => EndOfLifeDate switch
+        {
+            var date when date is null && Version == "4.8" => SupportPhase.Current,
+            var date when date is null || date > DateTime.Now => SupportPhase.LongTermSupport,
 
             _ => SupportPhase.EndOfLife
         };
 
         public DateTime? EndOfLifeDate => EndOfLife.ToDateTime();
+
+        public string ToBrandString() => $".NET Framework {TargetFrameworkMoniker}";
     }
 
     public record FrameworkRuntime(
