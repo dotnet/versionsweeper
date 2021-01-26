@@ -17,7 +17,7 @@ namespace DotNet.VersionSweeper
         [Option('n', "name",
             HelpText = "The repository name, for example: \"samples\". " +
             "Assign from `github.repository`. " +
-            "Override with env var named `DOTNET_VERSIONSWEEPER_REPOSITORY`.")]
+            "Override with env var named `DOTNET_VERSIONSWEEPER_NAME`.")]
         public string Name
         {
             get => _repositoryName;
@@ -38,7 +38,7 @@ namespace DotNet.VersionSweeper
         [Option('t', "token",
             Required = true,
             HelpText = "The GitHub personal-access token (PAT), or the token from GitHub action context. " +
-            "Assign from `github.token. " +
+            "Assign from `github.token`." +
             "Override with env var named `GITHUB_TOKEN`.`")]
         public string Token { get; set; } = null!;
 

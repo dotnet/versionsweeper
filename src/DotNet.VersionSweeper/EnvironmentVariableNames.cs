@@ -1,6 +1,6 @@
 ﻿namespace DotNet.VersionSweeper
 {
-    public class EnvironmentVariableNames
+    public static class EnvironmentVariableNames
     {
         public static class GitHub
         {

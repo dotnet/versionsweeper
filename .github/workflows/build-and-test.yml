@@ -3,6 +3,12 @@ name: 'build & test'
 on:
   push:
     branches: [ main ]
+    paths:
+    - '**Dockerfile'
+    - '**.json'
+    - '**.cs'
+    - '**.csproj'
+    - '**.sln'
 
 env:
   DOTNET_VERSION: '5.0.102' # SDK version
