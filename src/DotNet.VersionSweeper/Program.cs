@@ -76,7 +76,8 @@ async Task StartSweeperAsync(Options options, IServiceProvider services)
                                 options.Token,
                                 new(projectSupportReport.ToTitleMessage())
                                 {
-                                    Body = projectSupportReport.ToMarkdownBody(options.Directory, lineNumber)
+                                    Body = projectSupportReport.ToMarkdownBody(
+                                        options.Directory, lineNumber)
                                 });
 
                         Console.WriteLine($"{issue.HtmlUrl}");

@@ -10,8 +10,8 @@ namespace DotNet.GitHub
     public static class ModelExtensions
     {
         static (string FileName, HashSet<TargetFrameworkMonikerSupport> Tfms) AsNameSetPair(
-            this ProjectSupportReport projectSupportReport) =>
-            (Path.GetFileName(projectSupportReport.ProjectPath), projectSupportReport.TargetFrameworkMonikerSupports);
+            this ProjectSupportReport psr) =>
+            (Path.GetFileName(psr.ProjectPath), psr.TargetFrameworkMonikerSupports);
 
         public static string ToTitleMessage(
             this ProjectSupportReport projectSupportReport)

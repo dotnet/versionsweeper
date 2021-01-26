@@ -1,20 +1,26 @@
 ﻿using Octokit;
+using Octokit.Extensions;
 using System.Threading.Tasks;
 
 namespace DotNet.GitHub
 {
     public class GitHubIssueService : IGitHubIssueService
     {
-        readonly GitHubClient _client;
+        readonly ResilientGitHubClientFactory _clientFactory;
 
-        public GitHubIssueService(GitHubClient client) => _client = client;
+        public GitHubIssueService(
+            ResilientGitHubClientFactory clientFactory) =>
+            _clientFactory = clientFactory;
 
-        async ValueTask<Issue> IGitHubIssueService.PostIssueAsync(
-            string owner, string name, string token, NewIssue issue)
+        public async ValueTask<Issue> PostIssueAsync(
+            string owner, string name, string token, NewIssue newIssue)
         {
-            _client.Credentials = new(token);
-            var resultingIssue = await _client.Issue.Create(owner, name, issue);
-            return resultingIssue;
+            var client = _clientFactory.Create(
+                productHeaderValue: new("dotnet-versionsweeper"),
+                credentials: new(token));
+
+            var issue = await client.Issue.Create(owner, name, newIssue);
+            return issue;
         }
     }
 }

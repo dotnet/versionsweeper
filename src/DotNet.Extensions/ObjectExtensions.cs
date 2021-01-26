@@ -34,5 +34,9 @@ namespace DotNet.Extensions
 
         public static DateTime? ToDateTime(this string? value) =>
             DateTime.TryParse(value, out var dateTime) ? dateTime : null;
+
+        public static void Deconstruct<T>(
+            this T? nullable, out bool hasValue, out T value) where T : struct =>
+            (hasValue, value) = (nullable.HasValue, nullable.GetValueOrDefault());
     }
 }
