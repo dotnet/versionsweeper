@@ -4,6 +4,7 @@ using Octokit;
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using Xunit;
 
 namespace DotNet.GitHubTests
@@ -28,8 +29,12 @@ namespace DotNet.GitHubTests
 }"
             };
 
-            var expectedJson = @"{""query"":""query {\r\n  viewer {\r\n    login\r\n  }\r\n}"",""variables"":{}}";
-            var actualJson = request.ToString();
+            var expectedJson = @"{""query"":""query {
+  viewer {
+    login
+  }
+}"",""variables"":{}}";
+            var actualJson = Regex.Unescape(request.ToString());
 
             Assert.Equal(expectedJson, actualJson);
         }
