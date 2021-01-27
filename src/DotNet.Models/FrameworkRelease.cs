@@ -14,10 +14,10 @@ namespace DotNet.Models
         Developerpack DeveloperPack) : IRelease
     {
         public string TargetFrameworkMoniker => Version switch
-        {
-            "3.5.0-sp1" => "net35",
-            _ => $"net{Version.Replace(".", "")}"
-        };
+            {
+                "3.5.0-sp1" => "net35",
+                _ => $"net{Version.Replace(".", "")}"
+            };
 
         public SupportPhase SupportPhase => EndOfLifeDate switch
         {

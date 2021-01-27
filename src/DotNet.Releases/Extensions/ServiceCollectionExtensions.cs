@@ -4,7 +4,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddDotNetVersionServices(
+        public static IServiceCollection AddDotNetReleaseServices(
             this IServiceCollection services) =>
             services
                 .AddMemoryCache()

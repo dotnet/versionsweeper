@@ -23,6 +23,8 @@ namespace DotNet.Releases
         async IAsyncEnumerable<ProjectSupportReport> IUnsupportedProjectReporter.ReportAsync(
             string projectPath, string[] tfms)
         {
+            HashSet<TargetFrameworkMonikerSupport> resultingSupports = new();
+
             await foreach (var (index, coreRelease)
                 in _coreReleaseService.GetAllReleasesAsync())
             {
@@ -47,8 +49,10 @@ namespace DotNet.Releases
                                 return support! with { NearestLtsVersion = release!.TargetFrameworkMoniker };
                             }));
 
-                    if (supports.Any())
-                        yield return new(projectPath, supports.ToHashSet()!);
+                    foreach (var support in supports)
+                    {
+                        resultingSupports.Add(support);
+                    }
                 }
             }
 
@@ -79,10 +83,15 @@ namespace DotNet.Releases
                                 };
                             }));
 
-                    if (supports.Any())
-                        yield return new(projectPath, supports.ToHashSet()!);
+                    foreach (var support in supports)
+                    {
+                        resultingSupports.Add(support);
+                    }
                 }
             }
+
+            if (resultingSupports.Any())
+                yield return new(projectPath, resultingSupports);
         }
 
         static bool TryEvaluateReleaseSupport(

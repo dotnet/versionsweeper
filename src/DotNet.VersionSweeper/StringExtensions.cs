@@ -9,9 +9,9 @@ namespace DotNet.VersionSweeper
                 ? Array.Empty<string>()
                 : (searchPattern.Contains(';'), searchPattern.Contains('|'), searchPattern.Contains(',')) switch
                 {
-                    (true, false, false) => searchPattern.Split(';', StringSplitOptions.RemoveEmptyEntries),
-                    (false, true, false) => searchPattern.Split('|', StringSplitOptions.RemoveEmptyEntries),
-                    (false, false, true) => searchPattern.Split(',', StringSplitOptions.RemoveEmptyEntries),
+                    (true, _, _) => searchPattern.Split(';', StringSplitOptions.RemoveEmptyEntries),
+                    (_, true, _) => searchPattern.Split('|', StringSplitOptions.RemoveEmptyEntries),
+                    (_, _, true) => searchPattern.Split(',', StringSplitOptions.RemoveEmptyEntries),
 
                     _ => new string[] { searchPattern }
                 };

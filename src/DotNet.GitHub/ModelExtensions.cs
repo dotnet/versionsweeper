@@ -79,6 +79,21 @@ namespace DotNet.GitHub
             document.AppendParagraph(
                 "Consider upgrading the project to either the current release, or the nearest LTS TFM version.");
 
+            document.AppendParagraph(
+                $"If this project is intentionally targeting an unsupported version, " +
+                $"you can optionally configure to ignore this automated issue. " +
+                $"Create a file at the root of the repository, named *dotnet-versionsweeper.json* and " +
+                $"add an `ignore` entry following the " +
+                $"[globbing patterns detailed here](https://docs.microsoft.com/dotnet/api/microsoft.extensions.filesystemglobbing.matcher#remarks).");
+
+            document.AppendCode("json", @$"{{
+    ""ignore"": [
+        ""**/{relativePath}""
+    ]
+}}");
+
+            // TODO: add a link to example configs, once available.
+
             return document.ToString();
         }
     }
