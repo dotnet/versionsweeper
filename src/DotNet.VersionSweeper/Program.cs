@@ -5,6 +5,7 @@ using DotNet.Releases;
 using DotNet.VersionSweeper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Octokit;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -58,6 +59,8 @@ async Task StartSweeperAsync(Options options, IServiceProvider services)
             services.GetRequiredService<IUnsupportedProjectReporter>();
         var gitHubIssueService =
             services.GetRequiredService<IGitHubIssueService>();
+        var graphQLClient =
+            services.GetRequiredService<GitHubGraphQLClient>();
 
         foreach (var (projectPath, (lineNumber, tfms)) in projects)
         {
@@ -69,18 +72,29 @@ async Task StartSweeperAsync(Options options, IServiceProvider services)
                 {
                     try
                     {
-                        var issue =
-                            await gitHubIssueService.PostIssueAsync(
-                                options.Owner,
-                                options.Name,
-                                options.Token,
-                                new(projectSupportReport.ToTitleMessage())
-                                {
-                                    Body = projectSupportReport.ToMarkdownBody(
-                                        options.Directory, lineNumber)
-                                });
+                        var title = projectSupportReport.ToTitleMessage();
+                        var existingIssue =
+                            await graphQLClient.GetIssueAsync(
+                                options.Owner, options.Name, options.Token, title);
+                        if (existingIssue?.State == ItemState.Open)
+                        {
+                            Console.WriteLine(existingIssue);
+                        }
+                        else
+                        {
+                            var issue =
+                                await gitHubIssueService.PostIssueAsync(
+                                    options.Owner,
+                                    options.Name,
+                                    options.Token,
+                                    new(projectSupportReport.ToTitleMessage())
+                                    {
+                                        Body = projectSupportReport.ToMarkdownBody(
+                                            options.Directory, lineNumber)
+                                    });
 
-                        Console.WriteLine($"{issue.HtmlUrl}");
+                            Console.WriteLine($"{issue.HtmlUrl}");
+                        }
                     }
                     catch (Exception ex)
                     {

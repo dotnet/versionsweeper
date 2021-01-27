@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet.ModelsTests", "test\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet.VersionSweeperTests", "test\DotNet.VersionSweeperTests\DotNet.VersionSweeperTests.csproj", "{FA3117CD-8600-4FFF-9B23-8DD89BE50D3A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet.GitHubTests", "test\DotNet.GitHubTests\DotNet.GitHubTests.csproj", "{92D0C554-90BD-4A2F-AD5E-2E799EBCE7A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{FA3117CD-8600-4FFF-9B23-8DD89BE50D3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA3117CD-8600-4FFF-9B23-8DD89BE50D3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA3117CD-8600-4FFF-9B23-8DD89BE50D3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92D0C554-90BD-4A2F-AD5E-2E799EBCE7A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92D0C554-90BD-4A2F-AD5E-2E799EBCE7A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92D0C554-90BD-4A2F-AD5E-2E799EBCE7A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92D0C554-90BD-4A2F-AD5E-2E799EBCE7A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,6 +93,7 @@ Global
 		{BA6248D6-CD11-45FE-89C0-39CE9422E99A} = {503A8641-B4A5-4D57-9CD2-54C5F894E88D}
 		{FF1E1353-6161-4D27-A5C5-3BF580ABFD17} = {0E68FE58-BFAB-45C8-8EB5-52C74A6ADF7E}
 		{FA3117CD-8600-4FFF-9B23-8DD89BE50D3A} = {0E68FE58-BFAB-45C8-8EB5-52C74A6ADF7E}
+		{92D0C554-90BD-4A2F-AD5E-2E799EBCE7A8} = {0E68FE58-BFAB-45C8-8EB5-52C74A6ADF7E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {70E27639-9B58-4BD1-93FB-05D76A8A32EF}
