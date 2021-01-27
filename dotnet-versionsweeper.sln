@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet.Releases", "src\DotN
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{43221688-41C3-4B33-883E-03D24D736AB3}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		.github\workflows\build-and-test.yml = .github\workflows\build-and-test.yml
 		README.md = README.md
 	EndProjectSection

@@ -24,23 +24,16 @@ var parser =
     Default.ParseArguments<Options>(
         args.OverrideFromEnvironmentVariables());
 
-static void HandleParseError(IEnumerable<Error> errors)
-{
-    foreach (var error in errors)
-    {
-        Console.WriteLine(error);
-    }
-}
+static void HandleParseError(IEnumerable<Error> errors) => errors.ForEach(Console.WriteLine);
 
 async Task StartSweeperAsync(Options options, IServiceProvider services)
 {
     var projectReader = services.GetRequiredService<IProjectFileReader>();
     DirectoryInfo directory = new(options.Directory);
     ConcurrentDictionary<string, (int, string[])> projects = new(StringComparer.OrdinalIgnoreCase);
-
-    // TODO: Add support for multiple file extensions.
-    // i.e.; SearchPattern = "*.csproj|*.fsproj|*.vbproj"
-    await directory.EnumerateFiles(options.SearchPattern, SearchOption.AllDirectories)
+    
+    var extensions = options.SearchPattern.AsMaskedExtensions();
+    await extensions.SelectMany(pattern => directory.EnumerateFiles(pattern, SearchOption.AllDirectories))
         .ForEachAsync(
             Environment.ProcessorCount,
             async fileInfo =>
@@ -55,12 +48,9 @@ async Task StartSweeperAsync(Options options, IServiceProvider services)
 
     if (projects is not { IsEmpty: true })
     {
-        var unsupportedProjectReporter =
-            services.GetRequiredService<IUnsupportedProjectReporter>();
-        var gitHubIssueService =
-            services.GetRequiredService<IGitHubIssueService>();
-        var graphQLClient =
-            services.GetRequiredService<GitHubGraphQLClient>();
+        var (unsupportedProjectReporter, issueQueue, graphQLClient) =
+           services.GetRequiredServices
+               <IUnsupportedProjectReporter, RateLimitAwareQueue, GitHubGraphQLClient>();
 
         foreach (var (projectPath, (lineNumber, tfms)) in projects)
         {
@@ -82,18 +72,13 @@ async Task StartSweeperAsync(Options options, IServiceProvider services)
                         }
                         else
                         {
-                            var issue =
-                                await gitHubIssueService.PostIssueAsync(
-                                    options.Owner,
-                                    options.Name,
-                                    options.Token,
-                                    new(projectSupportReport.ToTitleMessage())
-                                    {
-                                        Body = projectSupportReport.ToMarkdownBody(
+                            await issueQueue.EnqueueAsync(
+                                new(options.Owner, options.Name, options.Token),
+                                new(projectSupportReport.ToTitleMessage())
+                                {
+                                    Body = projectSupportReport.ToMarkdownBody(
                                             options.Directory, lineNumber)
-                                    });
-
-                            Console.WriteLine($"{issue.HtmlUrl}");
+                                });
                         }
                     }
                     catch (Exception ex)
@@ -102,6 +87,18 @@ async Task StartSweeperAsync(Options options, IServiceProvider services)
                     }
                 }
             }
+        }
+
+        try
+        {
+            await foreach (var issue in issueQueue.ExecuteAllQueuedItemsAsync())
+            {
+                Console.WriteLine($"Issue: {issue.Url}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine(ex);
         }
     }
 }

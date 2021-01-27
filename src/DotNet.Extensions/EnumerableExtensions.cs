@@ -22,5 +22,11 @@ namespace DotNet.Extensions
                         }
                     }
                 }));
+
+        public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
+        {
+            if (action is null) return;
+            foreach (var item in source) action(item);
+        }
     }
 }

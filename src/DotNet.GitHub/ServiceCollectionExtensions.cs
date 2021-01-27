@@ -13,6 +13,7 @@ namespace DotNet.GitHub
             return services
                 .AddSingleton<ResilientGitHubClientFactory>()
                 .AddSingleton<GitHubGraphQLClient>()
+                .AddSingleton<RateLimitAwareQueue>()
                 .AddSingleton<IGitHubIssueService, GitHubIssueService>();
         }
     }
