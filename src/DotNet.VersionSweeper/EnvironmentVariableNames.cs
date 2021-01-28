@@ -9,11 +9,11 @@
         
         public static class Sweeper
         {
-            public const string Owner = "DOTNET_VERSIONSWEEPER_OWNER";
-            public const string Name = "DOTNET_VERSIONSWEEPER_NAME";
-            public const string Branch = "DOTNET_VERSIONSWEEPER_BRANCH";
-            public const string Directory = "DOTNET_VERSIONSWEEPER_DIRECTORY";
-            public const string SearchPattern = "DOTNET_VERSIONSWEEPER_PATTERN";
+            public const string Owner = "OWNER";
+            public const string Name = "NAME";
+            public const string Branch = "BRANCH";
+            public const string Directory = "DIRECTORY";
+            public const string SearchPattern = "PATTERN";
         }
     }
 }

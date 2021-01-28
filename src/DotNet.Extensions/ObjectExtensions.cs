@@ -9,15 +9,14 @@ namespace DotNet.Extensions
 {
     public static class ObjectExtensions
     {
-        static readonly Lazy<JsonSerializerOptions> _lazyOptions = new(() => InitializeOptions());
-        static JsonSerializerOptions InitializeOptions() => new()
+        static readonly Lazy<JsonSerializerOptions> _lazyOptions = new(() => new()
         {
             Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
             NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString,
             PropertyNameCaseInsensitive = true,
             PropertyNamingPolicy = new HyphenatedJsonNamingPolicy()
-        };
+        });
 
         static readonly SemanticVersion _versionZero = new(0, 0, 0);
 

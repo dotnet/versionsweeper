@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotNet.GitHubActions;
+using System;
 using Xunit;
 using static DotNet.VersionSweeper.EnvironmentVariableNames.GitHub;
 using static DotNet.VersionSweeper.EnvironmentVariableNames.Sweeper;
@@ -20,10 +21,11 @@ namespace DotNet.VersionSweeper.Tests
         public void OverrideFromEnvironmentVariablesTest(
             string envVar, string token, string expectedValue)
         {
-            Environment.SetEnvironmentVariable(envVar, expectedValue);
+            Environment.SetEnvironmentVariable($"INPUT_{envVar}", expectedValue);
 
             var args = new[] { token, "this is not the value you're looking for!" };
-            Assert.Equal(expectedValue, args.OverrideFromEnvironmentVariables()[^1]);
+            JobService jobService = new();
+            Assert.Equal(expectedValue, args.OverrideFromEnvironmentVariables(jobService)[^1]);
         }
     }
 }

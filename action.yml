@@ -1,0 +1,35 @@
+name: '.NET version sweeper'
+description: 'A Github action that scans .NET projects, and creates issues that report versions that are not within long term support.'
+branding:
+  icon: alert-circle
+  color: yellow
+inputs:
+  owner:
+    description: 'The owner of the repo. Assign from `${{ github.repository_owner }}`. Example, "dotnet".'
+    required: true
+  name:
+    description: 'The repository name. Assign from `${{ github.repository }}`. Example, "samples".'
+    required: true
+  branch:
+    description: 'The branch name. Assign from `${{ github.ref }}`. Example, "main".'
+    required: true
+  dir:
+    description: 'The root directory, defaults to ".".'
+    required: false
+    default: '.'
+  pattern:
+    description: 'The search pattern, defaults to "*.csproj". Valid delimiters for lists, '','','';'', or ''|''. Example, "*.csproj,*.fsproj".'
+    required: false
+    default: '*.csproj'
+outputs:
+  summary-message:
+    description: 'A detailed summary of all the projects that were flagged.'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - '-o "${{ inputs.owner }}"'
+    - '-n "${{ inputs.name }}"'
+    - '-b "${{ inputs.branch }}"'
+    - '-d "${{ inputs.dir }}"'
+    - '-p "${{ inputs.pattern }}"'

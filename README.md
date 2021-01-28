@@ -8,11 +8,11 @@ This is intended to be used as a GitHub action that will run as a [scheduled CRO
 
 There are several required command-line switches (options) when running this action, all of which can be overridden by environment variables.
 
-| Option          | Environment variable              | Details                                                                                                      |
-|-----------------|-----------------------------------|--------------------------------------------------------------------------------------------------------------|
-| `-o`, `owner`   | `DOTNET_VERSIONSWEEPER_OWNER`     | The owner of the repo. Assign from `github.repository_owner`. Example, `"dotnet"`.                           |
-| `-n`, `name`    | `DOTNET_VERSIONSWEEPER_NAME`      | The repository name. Assign from `github.repository`. Example, `"samples"`.                                  |
-| `-b`, `branch`  | `DOTNET_VERSIONSWEEPER_BRANCH`    | The branch name. Assign from `github.ref`. Example, `"main"`.                                                |
-| `-d`, `dir`     | `DOTNET_VERSIONSWEEPER_DIRECTORY` | The root directory, defaults to `"."`.                                                                       |
-| `-p`, `pattern` | `DOTNET_VERSIONSWEEPER_PATTERN`   | The search pattern, defaults to `"*.csproj"`.                                                                |
-| `-t`, `token`   | `GITHUB_TOKEN`                    | The GitHub personal-access token (PAT), or the token from GitHub action context. Assign from `github.token`. |
+| Option          | Environment variable | Details                                                                                                      |
+|-----------------|----------------------|--------------------------------------------------------------------------------------------------------------|
+| `-o`, `owner`   | `INPUT_OWNER`        | The owner of the repo. Assign from `github.repository_owner`. Example, `"dotnet"`.                           |
+| `-n`, `name`    | `INPUT_NAME`         | The repository name. Assign from `github.repository`. Example, `"samples"`.                                  |
+| `-b`, `branch`  | `INPUT_BRANCH`       | The branch name. Assign from `github.ref`. Example, `"main"`.                                                |
+| `-d`, `dir`     | `INPUT_DIRECTORY`    | The root directory, defaults to `"."`.                                                                       |
+| `-p`, `pattern` | `INPUT_PATTERN`      | The search pattern, defaults to `"*.csproj"`.                                                                |
+| `-t`, `token`   | `GITHUB_TOKEN`       | The GitHub personal-access token (PAT), or the token from GitHub action context. Assign from `github.token`. |

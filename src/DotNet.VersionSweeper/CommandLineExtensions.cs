@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotNet.GitHubActions;
+using System;
 using System.Collections.Generic;
 using static DotNet.VersionSweeper.EnvironmentVariableNames.GitHub;
 using static DotNet.VersionSweeper.EnvironmentVariableNames.Sweeper;
@@ -19,7 +20,7 @@ namespace DotNet.VersionSweeper
             };
 
         public static string[] OverrideFromEnvironmentVariables(
-            this string[] args)
+            this string[] args, IJobService jobService)
         {
             foreach (var (environmentVariable, tokens)
                 in _environmentVariableNameToTokenMap)
@@ -27,6 +28,7 @@ namespace DotNet.VersionSweeper
                 if (TryFindReplacementValue(
                     environmentVariable,
                     args,
+                    jobService,
                     out var index,
                     out var value,
                     tokens) &&
@@ -43,11 +45,12 @@ namespace DotNet.VersionSweeper
         static bool TryFindReplacementValue(
             string environmentVariableName,
             string[] args,
+            IJobService jobService,
             out int index,
             out string? value,
             params string[] tokens)
         {
-            value = Environment.GetEnvironmentVariable(environmentVariableName);
+            value = jobService.GetInput(environmentVariableName);
             if (value is { Length: > 0})
             {
                 foreach (var token in tokens)
