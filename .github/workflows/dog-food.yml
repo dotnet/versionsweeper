@@ -1,0 +1,28 @@
+name: 'build & test'
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+    - '**.csproj'
+    - '**.vbproj'
+    - '**.fsproj'
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: .NET version sweeper
+      uses: ./
+      with:
+        owner: ${{ github.repository_owner }}
+        name: ${{ github.repository }}
+        branch: ${{ github.ref }}
+        pattern: '*.csproj|*.fsproj|*.vbproj'
