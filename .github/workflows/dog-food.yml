@@ -23,6 +23,6 @@ jobs:
       uses: ./
       with:
         owner: ${{ github.repository_owner }}
-        name: ${{ github.repository }}
+        name: 'dotnet-versionsweeper'
         branch: ${{ github.ref }}
         pattern: '*.csproj|*.fsproj|*.vbproj'
