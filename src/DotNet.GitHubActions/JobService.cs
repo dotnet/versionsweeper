@@ -41,7 +41,9 @@ namespace DotNet.GitHubActions
         public string GetInput(string name, InputOptions? options = default)
         {
             var value = Environment.GetEnvironmentVariable(
-                $"INPUT_{name.Replace(" ", "_").ToUpper()}") ?? "";
+                $"INPUT_{name.Replace(" ", "_").ToUpper()}")
+                ?? Environment.GetEnvironmentVariable(name)
+                ?? "";
 
             return options?.Required ?? false && value is { Length: 0 }
                 ? throw new($"Input required and not supplied: {name}")
