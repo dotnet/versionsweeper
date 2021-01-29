@@ -28,10 +28,26 @@ var parser =
     Default.ParseArguments<Options>(
         args.OverrideFromEnvironmentVariables(jobService));
 
-static async Task StartSweeperAsync(Options options, IServiceProvider services, IJobService jobSerivce)
+static void ReportOptions(Options options, IJobService job)
+{
+    job.SetCommandEcho(true);
+
+    if (options is not null)
+    {
+        job.Info($"owner: {options.Owner}");
+        job.Info($"name: {options.Name}");
+        job.Info($"branch: {options.Branch}");
+        job.Info($"dir: {options.Directory}");
+        job.Info($"pattern: {options.SearchPattern}");
+    }
+}
+
+static async Task StartSweeperAsync(Options options, IServiceProvider services, IJobService job)
 {
     try
     {
+        ReportOptions(options, job);
+
         var projectReader = services.GetRequiredService<IProjectFileReader>();
         DirectoryInfo directory = new(options.Directory);
         ConcurrentDictionary<string, (int, string[])> projects = new(StringComparer.OrdinalIgnoreCase);
@@ -71,7 +87,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                                 options.Owner, options.Name, options.Token, title);
                         if (existingIssue?.State == ItemState.Open)
                         {
-                            jobSerivce.Debug(existingIssue.ToString());
+                            job.Debug(existingIssue.ToString());
                         }
                         else
                         {
@@ -92,7 +108,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
     }
     catch (Exception ex)
     {
-        jobSerivce.SetFailed(ex.ToString());
+        job.SetFailed(ex.ToString());
     }
     finally
     {
