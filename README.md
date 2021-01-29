@@ -17,7 +17,8 @@ This is intended to be used as a GitHub action that will run as a [scheduled CRO
 | `-t`, `token`   | The GitHub personal-access token (PAT), or the token from GitHub action context. Assign from `${{ github.token }}`. |
 
 ## Optional inputs
-
+| Option          | Details                                                         |
+|-----------------|-----------------------------------------------------------------|
 | `-d`, `dir`     | The root directory, defaults to `"/github/workspace"`.          |
 | `-p`, `pattern` | The search pattern, defaults to `"*.csproj;*.fsproj;*.vbproj"`. |
 
