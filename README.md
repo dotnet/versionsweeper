@@ -10,15 +10,16 @@ This is intended to be used as a GitHub action that will run as a [scheduled CRO
 ## Required inputs
 
 | Option          | Details                                                                                                      |
-|-----------------|--------------------------------------------------------------------------------------------------------------|
-| `-o`, `owner`   | The owner of the repo. Assign from `${{ github.repository_owner }}`. Example, `"dotnet"`.                           |
-| `-n`, `name`    | The repository name. Assign from `${{ github.repository }}`. Example, `"dotnet/samples"`.                           |
-| `-b`, `branch`  | The branch name. Assign from `${{ github.ref }}`. Example, `"main"`.                                                |
-| `-t`, `token`   | The GitHub personal-access token (PAT), or the token from GitHub action context. Assign from `${{ github.token }}`. |
+|:----------------|:-------------------------------------------------------------------------------------------------------------|
+| `-o`, `owner`   | The owner of the repo.<br>Assign from `${{ github.repository_owner }}`. Example, `"dotnet"`.                           |
+| `-n`, `name`    | The repository name.<br>Assign from `${{ github.repository }}`. Example, `"dotnet/samples"`.                           |
+| `-b`, `branch`  | The branch name.<br>Assign from `${{ github.ref }}`. Example, `"main"`.                                                |
+| `-t`, `token`   | The GitHub personal-access token (PAT), or the token from GitHub action context.<br>Assign from `${{ github.token }}`. |
 
 ## Optional inputs
+
 | Option          | Details                                                         |
-|-----------------|-----------------------------------------------------------------|
+|:----------------|:----------------------------------------------------------------|
 | `-d`, `dir`     | The root directory, defaults to `"/github/workspace"`.          |
 | `-p`, `pattern` | The search pattern, defaults to `"*.csproj;*.fsproj;*.vbproj"`. |
 
