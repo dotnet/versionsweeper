@@ -36,5 +36,3 @@ runs:
   - ${{ inputs.dir }}
   - '-p'
   - ${{ inputs.pattern }}
-  - '-t'
-  - ${{ env.GITHUB_TOKEN }}

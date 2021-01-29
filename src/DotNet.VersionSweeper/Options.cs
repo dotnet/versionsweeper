@@ -23,7 +23,7 @@ namespace DotNet.VersionSweeper
         [Option('o', "owner",
             Required = true,
             HelpText = "The owner, for example: \"dotnet\". " +
-            "Assign from `github.repository_owner`." +
+            "Assign from `github.repository_owner`. " +
             "Override with env var named `OWNER`.")]
         public string? Owner { get; set; } = null!;
 
@@ -50,7 +50,6 @@ namespace DotNet.VersionSweeper
         }
 
         [Option('t', "token",
-            Required = true,
             HelpText = "The GitHub personal-access token (PAT), or the token from GitHub action context. " +
             "Assign from `github.token`." +
             "Override with env var named `GITHUB_TOKEN`.`")]
