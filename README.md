@@ -9,8 +9,8 @@ This is intended to be used as a GitHub action that will run as a [scheduled CRO
 
 ## Required inputs
 
-| Option          | Details                                                                                                      |
-|:----------------|:-------------------------------------------------------------------------------------------------------------|
+| Option          | Details                                                                                                                |
+|:----------------|:-----------------------------------------------------------------------------------------------------------------------|
 | `-o`, `owner`   | The owner of the repo.<br>Assign from `${{ github.repository_owner }}`. Example, `"dotnet"`.                           |
 | `-n`, `name`    | The repository name.<br>Assign from `${{ github.repository }}`. Example, `"dotnet/samples"`.                           |
 | `-b`, `branch`  | The branch name.<br>Assign from `${{ github.ref }}`. Example, `"main"`.                                                |
