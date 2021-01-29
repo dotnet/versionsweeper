@@ -1,7 +1,7 @@
 ﻿# .NET version sweeper
 
 ![build & test](https://github.com/IEvangelist/dotnet-versionsweeper/workflows/build%20&%20test/badge.svg)
-![🎯 non-lts](https://github.com/IEvangelist/dotnet-versionsweeper/workflows/.net%20version%20sweeper/badge.svg)
+![.net version sweeper](https://github.com/IEvangelist/dotnet-versionsweeper/workflows/.net%20version%20sweeper/badge.svg)
 
 ## Get started
 
