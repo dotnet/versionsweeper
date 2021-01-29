@@ -56,3 +56,15 @@ jobs:
         name: ${{ github.repository }}
         branch: ${{ github.ref }}
 ```
+
+## Configure action
+
+Create a file at the root of the repository, named *dotnet-versionsweeper.json* and add an `ignore` entry following the [globbing patterns detailed here](https://docs.microsoft.com/dotnet/api/microsoft.extensions.filesystemglobbing.matcher#remarks).
+
+```json
+{
+  "ignore": [
+    "**/*ThisShouldNeverBeFlagged.csproj"
+  ]
+}
+```
