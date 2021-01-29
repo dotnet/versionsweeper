@@ -5,14 +5,14 @@ namespace DotNet.VersionSweeper
 {
     public class Options
     {
-        string _repositoryName = "samples";
+        string _repositoryName = null!;
         string _branchName = "refs/heads/main";
 
         [Option('o', "owner",
             HelpText = "The owner, for example: \"dotnet\". " +
             "Assign from `github.repository_owner`." +
             "Override with env var named `DOTNET_VERSIONSWEEPER_OWNER`.")]
-        public string Owner { get; set; } = "dotnet";
+        public string Owner { get; set; } = null!;
 
         [Option('n', "name",
             HelpText = "The repository name, for example: \"samples\". " +
