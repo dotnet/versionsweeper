@@ -41,7 +41,8 @@ static void ReportOptionsAndDebugInfo(Options options, IJobService job)
 
     if (options.Directory is { Length: > 0 })
     {
-        var files = Directory.GetFiles(options.Directory, "*", SearchOption.AllDirectories);
+        DirectoryInfo directory = new(options.Directory);
+        var files = Directory.GetFiles(directory.FullName, "*", SearchOption.AllDirectories);
         job.Info(string.Join(Environment.NewLine, files));
     }
 }
