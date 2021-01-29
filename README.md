@@ -11,8 +11,8 @@ There are several required command-line switches (options) when running this act
 | Option          | Environment variable | Details                                                                                                      |
 |-----------------|----------------------|--------------------------------------------------------------------------------------------------------------|
 | `-o`, `owner`   | `INPUT_OWNER`        | The owner of the repo. Assign from `github.repository_owner`. Example, `"dotnet"`.                           |
-| `-n`, `name`    | `INPUT_NAME`         | The repository name. Assign from `github.repository`. Example, `"samples"`.                                  |
+| `-n`, `name`    | `INPUT_NAME`         | The repository name. Assign from `github.repository`. Example, `"dotnet/samples"`.                           |
 | `-b`, `branch`  | `INPUT_BRANCH`       | The branch name. Assign from `github.ref`. Example, `"main"`.                                                |
-| `-d`, `dir`     | `INPUT_DIRECTORY`    | The root directory, defaults to `"."`.                                                                       |
+| `-d`, `dir`     | `INPUT_DIRECTORY`    | The root directory, defaults to `"."`. Assign from `github.workspace`.                                       |
 | `-p`, `pattern` | `INPUT_PATTERN`      | The search pattern, defaults to `"*.csproj"`.                                                                |
 | `-t`, `token`   | `GITHUB_TOKEN`       | The GitHub personal-access token (PAT), or the token from GitHub action context. Assign from `github.token`. |

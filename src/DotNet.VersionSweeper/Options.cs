@@ -17,7 +17,7 @@ namespace DotNet.VersionSweeper
         [Option('n', "name",
             HelpText = "The repository name, for example: \"samples\". " +
             "Assign from `github.repository`. " +
-            "Override with env var named `DOTNET_VERSIONSWEEPER_NAME`.")]
+            "Override with env var named `NAME`.")]
         public string Name
         {
             get => _repositoryName;
@@ -28,7 +28,7 @@ namespace DotNet.VersionSweeper
             Default = "refs/heads/main",
             HelpText = "The branch name, for example: \"refs/heads/main\". " +
             "Assign from `github.ref`. " +
-            "Override with env var named `DOTNET_VERSIONSWEEPER_BRANCH`.")]
+            "Override with env var named `BRANCH`.")]
         public string Branch
         {
             get => _branchName;
@@ -44,14 +44,15 @@ namespace DotNet.VersionSweeper
 
         [Option('d', "dir",
             Default = ".",
-            HelpText = "The root directory to start recursive searching from, defaults to: \".\". " +
-            "Override with env var named `DOTNET_VERSIONSWEEPER_DIRECTORY`.")]
+            HelpText = "The root directory to start recursive searching from, defaults to: \".\"." +
+            "Assign from `github.workspace`. " +
+            "Override with env var named `DIRECTORY`.")]
         public string Directory { get; set; } = ".";
 
         [Option('p', "pattern",
             Default = "*.csproj",
             HelpText = "The search pattern to discover project files, defaults to: \"*.csproj\". " +
-            "Override with env var named `DOTNET_VERSIONSWEEPER_PATTERN`.")]
+            "Override with env var named `PATTERN`.")]
         public string SearchPattern { get; set; } = "*.csproj";
 
         static void ParseAndAssign(string value, Action<string> assign)
