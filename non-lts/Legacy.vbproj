@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFrameworks>net452;net461;netstandard1.6</TargetFrameworks>
   </PropertyGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.6' ">
     <Reference Include="System.Collections.Concurrent" />
     <Reference Include="System" />

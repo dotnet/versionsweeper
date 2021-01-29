@@ -39,10 +39,10 @@ static void ReportOptionsAndDebugInfo(Options options, IJobService job)
         options.SearchPattern?.AsMaskedExtensions().AsRecursivePatterns() ?? Array.Empty<string>());
     job.Info($"parsed patterns: {parsedPatterns}");
 
-    if (job.IsDebug() && options.Directory is { Length: > 0 })
+    if (options.Directory is { Length: > 0 })
     {
         var files = Directory.GetFiles(options.Directory, "*", SearchOption.AllDirectories);
-        Console.WriteLine(string.Join(Environment.NewLine, files));
+        job.Info(string.Join(Environment.NewLine, files));
     }
 }
 

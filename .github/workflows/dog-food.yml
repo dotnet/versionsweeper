@@ -10,7 +10,6 @@ on:
 
 env:
   DOTNET_VERSION: '5.0.102' # SDK version
-  RUNNER_DEBUG: '1'
 
 jobs:
   build:
