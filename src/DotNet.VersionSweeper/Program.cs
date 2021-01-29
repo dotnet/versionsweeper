@@ -27,7 +27,7 @@ var jobService =
 var parser =
     Default.ParseArguments<Options>(() => new(), args);
 
-static void ReportOptions(Options options, IJobService job)
+static void ReportOptionsAndDebugInfo(Options options, IJobService job)
 {
     job.SetCommandEcho(true);
 
@@ -38,13 +38,19 @@ static void ReportOptions(Options options, IJobService job)
     var parsedPatterns = string.Join(", ",
         options.SearchPattern?.AsMaskedExtensions().AsRecursivePatterns() ?? Array.Empty<string>());
     job.Info($"parsed patterns: {parsedPatterns}");
+
+    if (job.IsDebug() && options.Directory is { Length: > 0 })
+    {
+        var files = Directory.GetFiles(options.Directory, "*", SearchOption.AllDirectories);
+        Console.WriteLine(string.Join(Environment.NewLine, files));
+    }
 }
 
 static async Task StartSweeperAsync(Options options, IServiceProvider services, IJobService job)
 {
     try
     {
-        ReportOptions(options, job);
+        ReportOptionsAndDebugInfo(options, job);
 
         var projectReader = services.GetRequiredService<IProjectFileReader>();
         DirectoryInfo directory = new(options.Directory!);
@@ -111,7 +117,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
         }
         else
         {
-            job.Info($"No projects found matching: {options.SearchPattern}.{Environment.NewLine}in {options.Directory}");
+            job.Info($"No projects found matching: {options.SearchPattern}, in '{options.Directory}'.");
         }
     }
     catch (Exception ex)
