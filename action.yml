@@ -25,3 +25,14 @@ outputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  args:
+  - 'owner'
+  - ${{ inputs.owner }}
+  - 'name'
+  - ${{ inputs.name }}
+  - 'branch'
+  - ${{ inputs.branch }}
+  - 'dir'
+  - ${{ inputs.dir }}
+  - 'pattern'
+  - ${{ inputs.pattern }}

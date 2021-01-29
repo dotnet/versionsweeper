@@ -9,7 +9,6 @@ on:
     - '**.fsproj'
 
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   DOTNET_VERSION: '5.0.102' # SDK version
 
 jobs:
@@ -27,8 +26,10 @@ jobs:
     - name: .NET version sweeper
       uses: ./
       env:
-        OWNER: ${{ github.repository_owner }}
-        NAME: ${{ github.repository }}
-        BRANCH: ${{ github.ref }}
-        DIR: ${{ github.workspace }}
-        PATTERN: '*.csproj|*.fsproj|*.vbproj'
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        owner: ${{ github.repository_owner }}
+        name: ${{ github.repository }}
+        branch: ${{ github.ref }}
+        dir: ${{ github.workspace }}
+        pattern: '*.csproj|*.fsproj|*.vbproj'
