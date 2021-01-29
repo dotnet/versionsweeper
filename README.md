@@ -7,13 +7,50 @@
 
 This is intended to be used as a GitHub action that will run as a [scheduled CRON job](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#onschedule). Ideally, once every few months or as often as necessary to align with .NET version updates.
 
-There are several required command-line switches (options) when running this action, all of which can be overridden by environment variables.
+## Required inputs
 
-| Option          | Environment variable | Details                                                                                                      |
-|-----------------|----------------------|--------------------------------------------------------------------------------------------------------------|
-| `-o`, `owner`   | `INPUT_OWNER`        | The owner of the repo. Assign from `github.repository_owner`. Example, `"dotnet"`.                           |
-| `-n`, `name`    | `INPUT_NAME`         | The repository name. Assign from `github.repository`. Example, `"dotnet/samples"`.                           |
-| `-b`, `branch`  | `INPUT_BRANCH`       | The branch name. Assign from `github.ref`. Example, `"main"`.                                                |
-| `-d`, `dir`     | `INPUT_DIRECTORY`    | The root directory, defaults to `"."`. Assign from `github.workspace`.                                       |
-| `-p`, `pattern` | `INPUT_PATTERN`      | The search pattern, defaults to `"*.csproj"`.                                                                |
-| `-t`, `token`   | `GITHUB_TOKEN`       | The GitHub personal-access token (PAT), or the token from GitHub action context. Assign from `github.token`. |
+| Option          | Details                                                                                                      |
+|-----------------|--------------------------------------------------------------------------------------------------------------|
+| `-o`, `owner`   | The owner of the repo. Assign from `${{ github.repository_owner }}`. Example, `"dotnet"`.                           |
+| `-n`, `name`    | The repository name. Assign from `${{ github.repository }}`. Example, `"dotnet/samples"`.                           |
+| `-b`, `branch`  | The branch name. Assign from `${{ github.ref }}`. Example, `"main"`.                                                |
+| `-t`, `token`   | The GitHub personal-access token (PAT), or the token from GitHub action context. Assign from `${{ github.token }}`. |
+
+## Optional inputs
+
+| `-d`, `dir`     | The root directory, defaults to `"/github/workspace"`.          |
+| `-p`, `pattern` | The search pattern, defaults to `"*.csproj;*.fsproj;*.vbproj"`. |
+
+## Example workflow
+
+```yml
+name: '.net version sweeper'
+
+on:
+  schedule:
+  - cron: '0 0 1 * *' # run on the 1st of the month
+
+env:
+  DOTNET_VERSION: '5.0.102' # SDK version
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1.7.2
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: .NET version sweeper
+      uses: ./
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        owner: ${{ github.repository_owner }}
+        name: ${{ github.repository }}
+        branch: ${{ github.ref }}
+```

@@ -1,12 +1,8 @@
 name: '.net version sweeper'
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-    - '**.csproj'
-    - '**.vbproj'
-    - '**.fsproj'
+  schedule:
+  - cron: '0 0 1 * *'
 
 env:
   DOTNET_VERSION: '5.0.102' # SDK version
@@ -31,5 +27,3 @@ jobs:
         owner: ${{ github.repository_owner }}
         name: ${{ github.repository }}
         branch: ${{ github.ref }}
-        dir: '/github/workspace'
-        pattern: '*.csproj|*.fsproj|*.vbproj'
