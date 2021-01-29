@@ -26,7 +26,7 @@ outputs:
     description: 'A detailed summary of all the projects that were flagged.'
 runs:
   using: 'docker'
-  image: 'src/DotNetSweeper/Dockerfile'
+  image: './src/DotNetSweeper/Dockerfile'
   args:
     - '-o "${{ inputs.owner }}"'
     - '-n "${{ inputs.name }}"'
