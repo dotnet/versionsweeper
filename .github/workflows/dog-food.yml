@@ -26,9 +26,9 @@ jobs:
 
     - name: .NET version sweeper
       uses: ./
-      with:
-        owner: ${{ github.repository_owner }}
-        name: 'dotnet-versionsweeper'
-        branch: ${{ github.ref }}
-        dir: ${{ github.workspace }} 
-        pattern: '*.csproj|*.fsproj|*.vbproj'
+      env:
+        OWNER: ${{ github.repository_owner }}
+        NAME: 'dotnet-versionsweeper'
+        BRANCH: ${{ github.ref }}
+        DIR: ${{ github.workspace }}
+        PATTERN: '*.csproj|*.fsproj|*.vbproj'
