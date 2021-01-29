@@ -30,4 +30,5 @@ jobs:
         owner: ${{ github.repository_owner }}
         name: 'dotnet-versionsweeper'
         branch: ${{ github.ref }}
+        dir: ${{ github.workspace }} 
         pattern: '*.csproj|*.fsproj|*.vbproj'
