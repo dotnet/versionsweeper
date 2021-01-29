@@ -39,11 +39,15 @@ static void ReportOptionsAndDebugInfo(Options options, IJobService job)
         options.SearchPattern?.AsMaskedExtensions().AsRecursivePatterns() ?? Array.Empty<string>());
     job.Info($"parsed patterns: {parsedPatterns}");
 
-    if (options.Directory is { Length: > 0 })
+    if (options.Directory is { Length: > 0 } && Directory.Exists(options.Directory))
     {
         DirectoryInfo directory = new(options.Directory);
         var files = Directory.GetFiles(directory.FullName, "*", SearchOption.AllDirectories);
         job.Info(string.Join(Environment.NewLine, files));
+    }
+    else
+    {
+        job.Warning("Apparently this directory doesn't even exist?!");
     }
 }
 
