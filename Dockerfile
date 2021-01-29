@@ -9,6 +9,6 @@ LABEL com.github.actions.description="A Github action that scans .NET projects, 
 LABEL com.github.actions.icon="alert-circle"
 LABEL com.github.actions.color="yellow"
 
-COPY ../../dist/* /
+COPY dist/* /
 
 ENTRYPOINT [ "dotnet", "/DotNet.VersionSweeper.exe" ]
