@@ -31,5 +31,5 @@ jobs:
         owner: ${{ github.repository_owner }}
         name: ${{ github.repository }}
         branch: ${{ github.ref }}
-        dir: ${{ github.workspace }}
+        dir: '/github/workspace'
         pattern: '*.csproj|*.fsproj|*.vbproj'
