@@ -94,6 +94,10 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
     {
         jobSerivce.SetFailed(ex.ToString());
     }
+    finally
+    {
+        Environment.Exit(0);
+    }
 }
 
 parser.WithNotParsed(

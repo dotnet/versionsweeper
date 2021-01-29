@@ -10,7 +10,6 @@ namespace DotNet.VersionSweeper.Tests
     {
         [
             Theory,
-            InlineData(Token, "-t", "some made up value!"),
             InlineData(Owner, "owner", "I own this..."),
             InlineData(Name, "n", "This is the repo name"),
             InlineData(Branch, "-b", "main"),
@@ -26,6 +25,16 @@ namespace DotNet.VersionSweeper.Tests
             var args = new[] { token, "this is not the value you're looking for!" };
             JobService jobService = new();
             Assert.Equal(expectedValue, args.OverrideFromEnvironmentVariables(jobService)[^1]);
+        }
+
+        [Fact]
+        public void AppendsGitHubTokenTest()
+        {
+            var expectedValue = "some made up value!";
+            Environment.SetEnvironmentVariable(Token, expectedValue);
+
+            JobService jobService = new();
+            Assert.Equal(expectedValue, Array.Empty<string>().OverrideFromEnvironmentVariables(jobService)[^1]);
         }
     }
 }
