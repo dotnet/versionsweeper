@@ -1,6 +1,7 @@
 ﻿using DotNet.GitHubActions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using static DotNet.VersionSweeper.EnvironmentVariableNames.GitHub;
 using static DotNet.VersionSweeper.EnvironmentVariableNames.Sweeper;
 
@@ -8,10 +9,10 @@ namespace DotNet.VersionSweeper
 {
     public static class CommandLineExtensions
     {
+        static readonly HashSet<string> _gitHubTokens = new() { "-t", "t", "token" };
         static readonly Dictionary<string, string[]> _environmentVariableNameToTokenMap =
             new()
             {
-                [Token] = new[] { "-t", "t", "token" },
                 [Branch] = new[] { "-b", "b", "branch" },
                 [Directory] = new[] { "-d", "d", "dir" },
                 [Name] = new[] { "-n", "n", "name" },
@@ -36,6 +37,22 @@ namespace DotNet.VersionSweeper
                     value is not null)
                 {
                     args[index] = value;
+                }
+            }
+
+            // If the GitHub token was not passed in from the command-
+            // line, trying appending it from the env vars.
+            if (!args.Any(arg => _gitHubTokens.Contains(arg)))
+            {
+                var token = Environment.GetEnvironmentVariable(Token);
+                if (token is { Length: > 0 })
+                {
+                    List<string> arguments = new(args)
+                    {
+                        "-t", token
+                    };
+
+                    return arguments.ToArray();
                 }
             }
 

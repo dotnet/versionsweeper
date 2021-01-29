@@ -63,8 +63,9 @@ namespace DotNet.GitHubActions
 
         public void SetFailed(string message)
         {
-            Environment.ExitCode = (int)ExitCode.Failure;
             Error(message);
+
+            Environment.Exit((int)ExitCode.Failure);
         }
 
         public void SetOutput(string name, object? value) =>
