@@ -38,17 +38,6 @@ static void ReportOptionsAndDebugInfo(Options options, IJobService job)
     var parsedPatterns = string.Join(", ",
         options.SearchPattern?.AsMaskedExtensions().AsRecursivePatterns() ?? Array.Empty<string>());
     job.Info($"parsed patterns: {parsedPatterns}");
-
-    if (options.Directory is { Length: > 0 } && Directory.Exists(options.Directory))
-    {
-        DirectoryInfo directory = new(options.Directory);
-        var files = Directory.GetFiles(directory.FullName, "*", SearchOption.AllDirectories);
-        job.Info(string.Join(Environment.NewLine, files));
-    }
-    else
-    {
-        job.Warning("Apparently this directory doesn't even exist?!");
-    }
 }
 
 static async Task StartSweeperAsync(Options options, IServiceProvider services, IJobService job)
@@ -74,7 +63,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                     {
                         if (projects.TryAdd(path, (lineNumber, tfms)))
                         {
-                            job.Info($"Parsed TFMs '{string.Join(", ", tfms)}' on line {lineNumber} in {path}.");
+                            job.Info($"Parsed TFM(s): '{string.Join(", ", tfms)}' on line {lineNumber} in {path}.");
                         }
                     }
                 });

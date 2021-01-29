@@ -2,6 +2,7 @@
 using DotNet.GitHubActions;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
@@ -35,7 +36,8 @@ namespace DotNet.VersionSweeper
                     var configJson = await File.ReadAllTextAsync(fullPath);
                     var config = configJson.FromJson<VersionSweeperConfig>() ?? new();
 
-                    job.Info($"Read {config.Ignore.Length} patterns to ignore.");
+                    job.Info($"Read {config.Ignore.Length} patterns to ignore:");
+                    job.Info($"{string.Join(",", config.Ignore.Select(val => $"\t{val}"))}");
 
                     return config;
                 }
