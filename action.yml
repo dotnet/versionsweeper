@@ -26,13 +26,15 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-  - 'owner'
+  - '-o'
   - ${{ inputs.owner }}
-  - 'name'
+  - '-n'
   - ${{ inputs.name }}
-  - 'branch'
+  - '-b'
   - ${{ inputs.branch }}
-  - 'dir'
+  - '-d'
   - ${{ inputs.dir }}
-  - 'pattern'
+  - '-p'
   - ${{ inputs.pattern }}
+  - '-t'
+  - ${{ env.GITHUB_TOKEN }}
