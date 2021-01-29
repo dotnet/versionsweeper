@@ -31,11 +31,13 @@ static void ReportOptions(Options options, IJobService job)
 {
     job.SetCommandEcho(true);
 
-    job.Info($"owner: {options.Owner}");
-    job.Info($"name: {options.Name}");
-    job.Info($"branch: {options.Branch}");
-    job.Info($"dir: {options.Directory}");
-    job.Info($"pattern: {options.SearchPattern}");
+    job.Info($"repository owner: {options.Owner}");
+    job.Info($"repository name: {options.Name}");
+    job.Info($"current branch: {options.Branch}");
+    job.Info($"root directory to search: {options.Directory}");
+    var parsedPatterns = string.Join(", ",
+        options.SearchPattern?.AsMaskedExtensions().AsRecursivePatterns() ?? Array.Empty<string>());
+    job.Info($"parsed patterns: {parsedPatterns}");
 }
 
 static async Task StartSweeperAsync(Options options, IServiceProvider services, IJobService job)
@@ -48,7 +50,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
         DirectoryInfo directory = new(options.Directory!);
         ConcurrentDictionary<string, (int, string[])> projects = new(StringComparer.OrdinalIgnoreCase);
 
-        var config = await VersionSweeperConfig.ReadAsync(options.Directory!);
+        var config = await VersionSweeperConfig.ReadAsync(options.Directory!, job);
         var matcher = config.Ignore.GetMatcher(options.SearchPattern!);
 
         await matcher.GetResultsInFullPath(options.Directory!)
@@ -59,7 +61,10 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                     var (lineNumber, tfms) = await projectReader.ReadProjectTfmsAsync(path);
                     if (tfms is { Length: > 0 })
                     {
-                        projects.TryAdd(path, (lineNumber, tfms));
+                        if (projects.TryAdd(path, (lineNumber, tfms)))
+                        {
+                            job.Info($"Parsed TFMs '{string.Join(", ", tfms)}' on line {lineNumber} in {path}.");
+                        }
                     }
                 });
 
@@ -83,7 +88,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                                 options.Owner!, options.Name!, options.Token!, title);
                         if (existingIssue?.State == ItemState.Open)
                         {
-                            job.Debug(existingIssue.ToString());
+                            job.Info($"Re-discovered but ignoring, latent non-LTS version in {existingIssue}.");
                         }
                         else
                         {
@@ -99,7 +104,14 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                 }
             }
 
-            await foreach (var _ in issueQueue.ExecuteAllQueuedItemsAsync()) { }
+            await foreach (var issue in issueQueue.ExecuteAllQueuedItemsAsync())
+            {
+                job.Info($"Created issue: {issue.HtmlUrl}");
+            }
+        }
+        else
+        {
+            job.Info($"No projects found matching: {options.SearchPattern}.{Environment.NewLine}in {options.Directory}");
         }
     }
     catch (Exception ex)

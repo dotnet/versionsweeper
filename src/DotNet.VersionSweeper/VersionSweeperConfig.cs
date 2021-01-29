@@ -1,4 +1,5 @@
 ﻿using DotNet.Extensions;
+using DotNet.GitHubActions;
 using System;
 using System.IO;
 using System.Text.Json.Serialization;
@@ -22,20 +23,30 @@ namespace DotNet.VersionSweeper
         [JsonPropertyName("ignore")]
         public string[] Ignore { get; init; } = Array.Empty<string>();
 
-        internal static async Task<VersionSweeperConfig> ReadAsync(string root)
+        internal static async Task<VersionSweeperConfig> ReadAsync(string root, IJobService job)
         {
             try
             {
                 var fullPath = Path.Combine(root, FileName);
                 if (File.Exists(fullPath))
                 {
+                    job.Info($"Reading '{fullPath}' config file.");
+
                     var configJson = await File.ReadAllTextAsync(fullPath);
-                    return configJson.FromJson<VersionSweeperConfig>() ?? new();
+                    var config = configJson.FromJson<VersionSweeperConfig>() ?? new();
+
+                    job.Info($"Read {config.Ignore.Length} patterns to ignore.");
+
+                    return config;
+                }
+                else
+                {
+                    job.Info($"No '{fullPath}' config file to read.");
                 }
             }
             catch
             {
-                Console.Error.WriteLine($"Unable to read '{FileName}'.");
+                job.Warning($"Unable to read '{FileName}'.");
             }
 
             return new();
