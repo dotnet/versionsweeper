@@ -11,4 +11,4 @@ LABEL com.github.actions.color="yellow"
 
 COPY dist/* /
 
-ENTRYPOINT [ "dotnet", "/DotNet.VersionSweeper.exe" ]
+ENTRYPOINT [ "dotnet", "/DotNet.VersionSweeper.dll" ]

@@ -5,8 +5,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <GenerateRuntimeConfigurationFile>true</GenerateRuntimeConfigurationFile>
     <Nullable>enable</Nullable>
-    <PublishSingleFile>true</PublishSingleFile>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
