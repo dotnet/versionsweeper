@@ -14,13 +14,11 @@ inputs:
     description: 'The branch name. Assign from github.ref. Example, "main".'
     required: true
   dir:
-    description: 'The root directory, defaults to ".".'
+    description: 'The root directory'
     required: false
-    default: '.'
   pattern:
     description: 'The search pattern, defaults to "*.csproj". Valid delimiters for lists, '','','';'', or ''|''. Example, "*.csproj,*.fsproj".'
     required: false
-    default: '*.csproj'
 outputs:
   summary-message:
     description: 'A detailed summary of all the projects that were flagged.'

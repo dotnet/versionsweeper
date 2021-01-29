@@ -12,7 +12,7 @@
             public const string Owner = "OWNER";
             public const string Name = "NAME";
             public const string Branch = "BRANCH";
-            public const string Directory = "DIRECTORY";
+            public const string Directory = "DIR";
             public const string SearchPattern = "PATTERN";
         }
     }

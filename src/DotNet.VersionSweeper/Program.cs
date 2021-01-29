@@ -25,21 +25,17 @@ using var host = Host.CreateDefaultBuilder(args)
 var jobService =
     host.Services.GetRequiredService<IJobService>();
 var parser =
-    Default.ParseArguments<Options>(
-        args.OverrideFromEnvironmentVariables(jobService));
+    Default.ParseArguments<Options>(() => new(), args);
 
 static void ReportOptions(Options options, IJobService job)
 {
     job.SetCommandEcho(true);
 
-    if (options is not null)
-    {
-        job.Info($"owner: {options.Owner}");
-        job.Info($"name: {options.Name}");
-        job.Info($"branch: {options.Branch}");
-        job.Info($"dir: {options.Directory}");
-        job.Info($"pattern: {options.SearchPattern}");
-    }
+    job.Info($"owner: {options.Owner}");
+    job.Info($"name: {options.Name}");
+    job.Info($"branch: {options.Branch}");
+    job.Info($"dir: {options.Directory}");
+    job.Info($"pattern: {options.SearchPattern}");
 }
 
 static async Task StartSweeperAsync(Options options, IServiceProvider services, IJobService job)
@@ -49,13 +45,13 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
         ReportOptions(options, job);
 
         var projectReader = services.GetRequiredService<IProjectFileReader>();
-        DirectoryInfo directory = new(options.Directory);
+        DirectoryInfo directory = new(options.Directory!);
         ConcurrentDictionary<string, (int, string[])> projects = new(StringComparer.OrdinalIgnoreCase);
 
-        var config = await VersionSweeperConfig.ReadAsync(options.Directory);
-        var matcher = config.Ignore.GetMatcher(options.SearchPattern);
+        var config = await VersionSweeperConfig.ReadAsync(options.Directory!);
+        var matcher = config.Ignore.GetMatcher(options.SearchPattern!);
 
-        await matcher.GetResultsInFullPath(options.Directory)
+        await matcher.GetResultsInFullPath(options.Directory!)
             .ForEachAsync(
                 Environment.ProcessorCount,
                 async path =>
@@ -84,7 +80,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                         var title = projectSupportReport.ToTitleMessage();
                         var existingIssue =
                             await graphQLClient.GetIssueAsync(
-                                options.Owner, options.Name, options.Token, title);
+                                options.Owner!, options.Name!, options.Token!, title);
                         if (existingIssue?.State == ItemState.Open)
                         {
                             job.Debug(existingIssue.ToString());
@@ -92,11 +88,11 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                         else
                         {
                             await issueQueue.EnqueueAsync(
-                                new(options.Owner, options.Name, options.Token),
+                                new(options.Owner!, options.Name!, options.Token!),
                                 new(projectSupportReport.ToTitleMessage())
                                 {
                                     Body = projectSupportReport.ToMarkdownBody(
-                                            options.Directory, lineNumber)
+                                            options.Directory!, lineNumber)
                                 });
                         }
                     }
