@@ -49,8 +49,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dist", "dist", "{60197F2F-5
 		dist\DotNet.GitHubActions.pdb = dist\DotNet.GitHubActions.pdb
 		dist\DotNet.Models.pdb = dist\DotNet.Models.pdb
 		dist\DotNet.Releases.pdb = dist\DotNet.Releases.pdb
+		DotNet.Sweeper.runtimeconfig.json = DotNet.Sweeper.runtimeconfig.json
+		dist\DotNet.VersionSweeper.deps.json = dist\DotNet.VersionSweeper.deps.json
 		dist\DotNet.VersionSweeper.exe = dist\DotNet.VersionSweeper.exe
 		dist\DotNet.VersionSweeper.pdb = dist\DotNet.VersionSweeper.pdb
+		dist\DotNet.VersionSweeper.runtimeconfig.json = dist\DotNet.VersionSweeper.runtimeconfig.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "non-lts", "non-lts", "{3241C58C-62C0-40DD-9B85-43A50641A3FA}"
