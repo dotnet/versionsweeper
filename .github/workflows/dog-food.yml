@@ -1,4 +1,4 @@
-name: 'build & test'
+name: '.net version sweeper'
 
 on:
   push:
