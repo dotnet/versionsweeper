@@ -5,13 +5,13 @@ branding:
   color: yellow
 inputs:
   owner:
-    description: 'The owner of the repo. Assign from `${{ github.repository_owner }}`. Example, "dotnet".'
+    description: 'The owner of the repo. Assign from github.repository_owner. Example, "dotnet".'
     required: true
   name:
-    description: 'The repository name. Assign from `${{ github.repository }}`. Example, "samples".'
+    description: 'The repository name. Example, "samples".'
     required: true
   branch:
-    description: 'The branch name. Assign from `${{ github.ref }}`. Example, "main".'
+    description: 'The branch name. Assign from github.ref. Example, "main".'
     required: true
   dir:
     description: 'The root directory, defaults to ".".'
