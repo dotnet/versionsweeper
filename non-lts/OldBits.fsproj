@@ -4,5 +4,6 @@
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp2.2</TargetFrameworks>
   </PropertyGroup>
+  
 
 </Project>
