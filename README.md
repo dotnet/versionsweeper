@@ -71,11 +71,11 @@ Create a file at the root of the repository, named *dotnet-versionsweeper.json* 
 
 ## Acknowledgements
 
-| NuGet Package | URL | License |
-|:-|:-|:-|
-| `CommandLineParser` | <https://www.nuget.org/packages/CommandLineParser> | <https://www.nuget.org/packages/CommandLineParser/2.8.0/License> |
-| `Nito.AsyncEx` | <https://www.nuget.org/packages/Nito.AsyncEx/> | <https://licenses.nuget.org/MIT> |
-| `MarkdownBuilder` | <https://www.nuget.org/packages/MarkdownBuilder> | <https://licenses.nuget.org/MIT> |
-| `NuGet.Versioning` | <https://www.nuget.org/packages/NuGet.Versioning> | <https://licenses.nuget.org/Apache-2.0> |
-| `Octokit` | <https://www.nuget.org/packages/Octokit> | <https://licenses.nuget.org/MIT> |
-| `Octokit.Extensions` | <https://www.nuget.org/packages/Octokit.Extensions> | <https://github.com/mirsaeedi/octokit.net.Extensions/blob/master/LICENSE> |
+| NuGet Package | URL & License |
+|:-|:-|
+| `CommandLineParser` | [URL](https://www.nuget.org/packages/CommandLineParser) - [MIT](https://www.nuget.org/packages/CommandLineParser/2.8.0/License) |
+| `Nito.AsyncEx` | [URL](https://www.nuget.org/packages/Nito.AsyncEx) - [MIT](https://licenses.nuget.org/MIT) |
+| `MarkdownBuilder` | [URL](https://www.nuget.org/packages/MarkdownBuilder) - [MIT](https://licenses.nuget.org/MIT) |
+| `NuGet.Versioning` | [URL](https://www.nuget.org/packages/NuGet.Versioning) - [Apache-2.0](https://licenses.nuget.org/Apache-2.0) |
+| `Octokit` | [URL](https://www.nuget.org/packages/Octokit) - [MIT](https://licenses.nuget.org/MIT) |
+| `Octokit.Extensions` | [URL](https://www.nuget.org/packages/Octokit.Extensions) - [MIT](https://github.com/mirsaeedi/octokit.net.Extensions/blob/master/LICENSE) |
