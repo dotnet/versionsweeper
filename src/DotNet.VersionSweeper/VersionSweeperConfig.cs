@@ -36,7 +36,7 @@ namespace DotNet.VersionSweeper
                     var configJson = await File.ReadAllTextAsync(fullPath);
                     var config = configJson.FromJson<VersionSweeperConfig>() ?? new();
 
-                    job.Info($"Read {config.Ignore.Length} patterns to ignore:");
+                    job.Info($"Read {config.Ignore.Length} pattern(s) to ignore:");
                     job.Info($"{string.Join(",", config.Ignore.Select(val => $"\t{val}"))}");
 
                     return config;

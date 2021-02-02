@@ -12,7 +12,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -21,7 +20,7 @@ jobs:
     - name: 'Print manual run reason'
       if: ${{ github.event_name == 'workflow_dispatch' }}
       run: |
-        echo "Reason: ${{ github.event.inputs.reason }}"
+        echo 'Reason: ${{ github.event.inputs.reason }}'
 
     - name: .NET version sweeper
       id: dotnet-version-sweeper

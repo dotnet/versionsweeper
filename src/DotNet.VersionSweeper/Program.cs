@@ -12,6 +12,7 @@ using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using static CommandLine.Parser;
 
@@ -31,13 +32,16 @@ static void ReportOptionsAndDebugInfo(Options options, IJobService job)
 {
     job.SetCommandEcho(true);
 
-    job.Info($"repository owner: {options.Owner}");
-    job.Info($"repository name: {options.Name}");
-    job.Info($"current branch: {options.Branch}");
-    job.Info($"root directory to search: {options.Directory}");
+    StringBuilder builder = new();
+    builder.Append($"repository owner: {options.Owner}");
+    builder.Append($"repository name: {options.Name}");
+    builder.Append($"current branch: {options.Branch}");
+    builder.Append($"root directory to search: {options.Directory}");
     var parsedPatterns = string.Join(", ",
         options.SearchPattern?.AsMaskedExtensions().AsRecursivePatterns() ?? Array.Empty<string>());
-    job.Info($"parsed patterns: {parsedPatterns}");
+    builder.Append($"parsed patterns: {parsedPatterns}");
+
+    job.Info(builder.ToString());
 }
 
 static async Task StartSweeperAsync(Options options, IServiceProvider services, IJobService job)
