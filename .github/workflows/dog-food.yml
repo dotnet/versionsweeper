@@ -4,9 +4,6 @@ on:
   schedule:
   - cron: '0 0 1 * *'
 
-env:
-  DOTNET_VERSION: '5.0.102' # SDK version
-
 jobs:
   build:
 
@@ -14,12 +11,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1.7.2
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: .NET version sweeper
+      id: dotnet-version-sweeper
       uses: ./
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

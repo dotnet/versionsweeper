@@ -13,7 +13,7 @@ namespace DotNet.Releases
         static readonly Regex _targetFrameworkExpression =
             new(@"TargetFramework(.*)>(?<tfm>.+?)</", _options);
 
-        async Task<(int LineNumber, string[] Tfms)> IProjectFileReader.ReadProjectTfmsAsync(string filePath)
+        async ValueTask<(int LineNumber, string[] Tfms)> IProjectFileReader.ReadProjectTfmsAsync(string filePath)
         {
             if (SystemFile.Exists(filePath))
             {
