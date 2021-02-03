@@ -1,8 +1,7 @@
 ﻿# 🎯 LTS - .NET version sweeper
 
-![👌 build & test](https://github.com/IEvangelist/dotnet-versionsweeper/workflows/build%20&%20test/badge.svg)
-![🧹 .net version sweeper](https://github.com/IEvangelist/dotnet-versionsweeper/workflows/.net%20version%20sweeper/badge.svg)
-![🔒 code ql](https://github.com/IEvangelist/dotnet-versionsweeper/workflows/%F0%9F%94%92%20code%20ql/badge.svg)
+![build & test](https://github.com/IEvangelist/dotnet-versionsweeper/workflows/build%20&%20test/badge.svg)
+![target supported version](https://github.com/IEvangelist/dotnet-versionsweeper/workflows/target%20supported%20version/badge.svg)
 
 ## Get started
 
