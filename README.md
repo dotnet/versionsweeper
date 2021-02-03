@@ -5,7 +5,7 @@
 
 ## Get started
 
-This is intended to be used as a GitHub action that will run as a [scheduled CRON job](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#onschedule). Ideally, once every few months or as often as necessary to align with .NET version updates.
+The .NET version sweeper is designed to alert repositories that there are projects targeting versions that are no longer supported. For example, target .NET Core 3.0, or .NET Framework 4.5.1. This is intended to be used as a GitHub action that will run as a [scheduled CRON job](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#onschedule). Ideally, once every few months or as often as necessary to align with .NET version updates.
 
 ## Required inputs
 
