@@ -5,7 +5,7 @@
 
 ## Get started
 
-The .NET version sweeper is designed to alert repositories that there are projects targeting versions that are no longer supported. For example, target .NET Core 3.0, or .NET Framework 4.5.1. This is intended to be used as a GitHub action that will run as a [scheduled CRON job](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#onschedule). Ideally, once every few months or as often as necessary to align with .NET version updates.
+The .NET version sweeper is designed to alert repositories that there are projects targeting versions that are no longer supported. For example, projects targeting .NET Core 3.0, or .NET Framework 4.5.1 would trigger an issue to be created to update these non-LTS or current versions. For example issues, see [issues created in this repo based on the *non-lts* directory](https://github.com/IEvangelist/dotnet-versionsweeper/issues?q=is%3Aissue+is%3Aopen+Update+%28or+current%29+version). This is intended to be used as a GitHub action that will run as a [scheduled CRON job](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#onschedule). Ideally, once every few months or as often as necessary to align with .NET version updates.
 
 ## Required inputs
 
