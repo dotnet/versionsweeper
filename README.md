@@ -1,4 +1,5 @@
-﻿# 🎯 LTS - .NET version sweeper
+﻿# 🎯 LTS (or current) versions
+ ## .NET version sweeper
 
 ![build & test](https://github.com/IEvangelist/dotnet-versionsweeper/workflows/build%20&%20test/badge.svg)
 ![target supported version](https://github.com/IEvangelist/dotnet-versionsweeper/workflows/target%20supported%20version/badge.svg)
