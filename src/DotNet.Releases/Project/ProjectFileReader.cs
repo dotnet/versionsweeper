@@ -5,7 +5,7 @@ using SystemFile = System.IO.File;
 
 namespace DotNet.Releases
 {
-    internal class ProjectFileReader : IProjectFileReader
+    public class ProjectFileReader : IProjectFileReader
     {
         static readonly string[] _emptyArray = Array.Empty<string>();
         static readonly RegexOptions _options =
@@ -13,7 +13,7 @@ namespace DotNet.Releases
         static readonly Regex _targetFrameworkExpression =
             new(@"TargetFramework(.*)>(?<tfm>.+?)</", _options);
 
-        async ValueTask<(int LineNumber, string[] Tfms)> IProjectFileReader.ReadProjectTfmsAsync(string filePath)
+        public async ValueTask<(int LineNumber, string[] Tfms)> ReadProjectTfmsAsync(string filePath)
         {
             if (SystemFile.Exists(filePath))
             {
