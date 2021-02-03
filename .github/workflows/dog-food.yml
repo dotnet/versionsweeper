@@ -1,4 +1,4 @@
-name: '.net version sweeper'
+name: '🧹 .net version sweeper'
 
 on:
   schedule:
