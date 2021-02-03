@@ -34,6 +34,7 @@ namespace DotNet.Releases.Solution
                     var name = match.Groups["Name"].Value;
                     var path = match.Groups["Path"].Value;
                     var fullPath = Path.Combine(solutionDirectory!, path);
+
                     if (SystemFile.Exists(fullPath) is false ||
                         SystemFile.GetAttributes(fullPath).HasFlag(FileAttributes.Directory))
                     {
