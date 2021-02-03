@@ -1,4 +1,4 @@
-name: '👌 build & test'
+name: '👌 VERIFY'
 
 on:
   push:
