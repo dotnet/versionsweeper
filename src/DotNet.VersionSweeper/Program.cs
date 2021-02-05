@@ -37,71 +37,64 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                 services.GetRequiredServices
                     <IUnsupportedProjectReporter, RateLimitAwareQueue, GitHubGraphQLClient>();
 
+        static async Task CreateAndEnqueueAsync(
+            GitHubGraphQLClient client,
+            RateLimitAwareQueue queue,
+            IJobService job,
+            string title, Options options, Func<Options, string> getBody)
+        {
+            var existingIssue =
+                await client.GetIssueAsync(
+                    options.Owner, options.Name, options.Token, title);
+            if (existingIssue?.State == ItemState.Open)
+            {
+                job.Info($"Re-discovered but ignoring, latent non-LTS version in {existingIssue}.");
+            }
+            else
+            {
+                queue.Enqueue(
+                    new(options.Owner, options.Name, options.Token),
+                    new(title)
+                    {
+                        Body = getBody(options)
+                    });
+            }
+        }
+
         foreach (var solution in solutions.Where(sln => sln is not null))
         {
             SolutionSupportReport solutionSupportReport = new(solution);
 
             foreach (var project in solution.Projects)
             {
-                await foreach (var projectSupportReport
-                    in unsupportedProjectReporter.ReportAsync(project))
+                await foreach (var psr in unsupportedProjectReporter.ReportAsync(project))
                 {
-                    solutionSupportReport.ProjectSupportReports.Add(projectSupportReport);
+                    solutionSupportReport.ProjectSupportReports.Add(psr);
                 }
             }
 
             var reports = solutionSupportReport.ProjectSupportReports;
-
             if (reports is { Count: > 0 } &&
                 reports.Any(r => r.TargetFrameworkMonikerSupports.Any(s => s.IsUnsupported)))
             {
-                var title = solutionSupportReport.ToTitleMessage();
-                var existingIssue =
-                    await graphQLClient.GetIssueAsync(
-                        options.Owner, options.Name, options.Token, title);
-                if (existingIssue?.State == ItemState.Open)
-                {
-                    job.Info($"Re-discovered but ignoring, latent non-LTS version in {existingIssue}.");
-                }
-                else
-                {
-                    issueQueue.Enqueue(
-                        new(options.Owner, options.Name, options.Token),
-                        new(solutionSupportReport.ToTitleMessage())
-                        {
-                            Body = solutionSupportReport.ToMarkdownBody(
-                                    options.Directory, options.Branch)
-                        });
-                }
+                await CreateAndEnqueueAsync(
+                    graphQLClient, issueQueue, job,
+                    solutionSupportReport.ToTitleMessage(),
+                    options, o => solutionSupportReport.ToMarkdownBody(o.Directory, o.Branch));
             }
         }
 
         foreach (var orphanedProject in orphanedProjects)
         {
-            await foreach (var projectSupportReport
-                in unsupportedProjectReporter.ReportAsync(orphanedProject))
+            await foreach (var psr in unsupportedProjectReporter.ReportAsync(orphanedProject))
             {
-                var (project, reports) = projectSupportReport;
+                var (project, reports) = psr;
                 if (reports is { Count: > 0 } && reports.Any(r => r.IsUnsupported))
                 {
-                    var title = projectSupportReport.ToTitleMessage();
-                    var existingIssue =
-                        await graphQLClient.GetIssueAsync(
-                            options.Owner, options.Name, options.Token, title);
-                    if (existingIssue?.State == ItemState.Open)
-                    {
-                        job.Info($"Re-discovered but ignoring, latent non-LTS version in {existingIssue}.");
-                    }
-                    else
-                    {
-                        issueQueue.Enqueue(
-                            new(options.Owner, options.Name, options.Token),
-                            new(projectSupportReport.ToTitleMessage())
-                            {
-                                Body = projectSupportReport.ToMarkdownBody(
-                                        options.Directory, options.Branch)
-                            });
-                    }
+                    await CreateAndEnqueueAsync(
+                        graphQLClient, issueQueue, job,
+                        psr.ToTitleMessage(),
+                        options, o => psr.ToMarkdownBody(o.Directory, o.Branch));
                 }
             }
         }

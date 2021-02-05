@@ -98,7 +98,7 @@ namespace DotNet.Releases
             IRelease release,
             out TargetFrameworkMonikerSupport? tfmSupport)
         {
-            if (release.TargetFrameworkMoniker == tfm)
+            if (TargetFrameworkMonikerMap.RawMapsToKnown(tfm, release.TargetFrameworkMoniker))
             {
                 var isSupported = release.SupportPhase.IsSupported(
                     release!.EndOfLifeDate ?? default);

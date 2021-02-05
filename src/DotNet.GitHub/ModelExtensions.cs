@@ -1,5 +1,6 @@
 ﻿using DotNet.Models;
 using Markdown;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -42,25 +43,6 @@ namespace DotNet.GitHub
             var (fileName, cnt) = solutionSupportReport.AsNameSetPair();
             return $"Update {cnt} projects in {fileName} to LTS (or current) version";
         }
-        
-        public static IMarkdownDocument StartMarkdown() => new MarkdownDocument();
-
-        public static IMarkdownDocument AppendHeader(this IMarkdownDocument document)
-        {
-            return document;
-        }
-
-        public static IMarkdownDocument AppendBody(this IMarkdownDocument document)
-        {
-            return document;
-        }
-
-        public static IMarkdownDocument AppendFooter(this IMarkdownDocument document)
-        {
-            return document;
-        }
-
-        public static string EndMarkdown(this IMarkdownDocument document) => document.ToString();
 
         public static string ToMarkdownBody(
             this SolutionSupportReport solutionSupportReport,
@@ -69,59 +51,62 @@ namespace DotNet.GitHub
         {
             IMarkdownDocument document = new MarkdownDocument();
 
-//            var (fileName, cnt) = solutionSupportReport.AsNameSetPair();
+            var (fileName, cnt) = solutionSupportReport.AsNameSetPair();
 
-//            document.AppendParagraph(
-//                $"There are {cnt} projects in *{fileName}* that target a .NET version which is no longer supported. " +
-//                "This is an auto-generated issue, detailed and discussed in [dotnet/docs#22271](https://github.com/dotnet/docs/issues/22271).");
+            document.AppendParagraph(
+                $"There are {cnt} projects in *{fileName}* that target a .NET version which is no longer supported. " +
+                "This is an auto-generated issue, detailed and discussed in [dotnet/docs#22271](https://github.com/dotnet/docs/issues/22271).");
 
-//            foreach (var projectSupportReport 
-//                in solutionSupportReport.ProjectSupportReports)
-//            {
-//                var relativePath =
-//                    Path.GetRelativePath(rootDirectory, projectSupportReport.FullPath)
-//                        .Replace("\\", "/");
+            HashSet<string> relativePaths = new(StringComparer.OrdinalIgnoreCase);
+            foreach (var psr in solutionSupportReport.ProjectSupportReports)
+            {
+                var project = psr.Project;
+                var relativePath =
+                    Path.GetRelativePath(rootDirectory, project.FullPath)
+                        .Replace("\\", "/");
+                relativePaths.Add(relativePath);
 
-//                var lineNumberFileReference =
-//                    $"../blob/{branch}/{relativePath}#L{tfmLineNumber}";
+                var lineNumberFileReference =
+                    $"../blob/{branch}/{relativePath}#L{project.TfmLineNumber}";
 
-//                document.AppendParagraph(
-//                    $"See line {tfmLineNumber} in [{relativePath}]({lineNumberFileReference}).");
+                var tfms = psr.TargetFrameworkMonikerSupports;
+                document.AppendTable(
+                    new MarkdownTableHeader(
+                        new MarkdownTableHeaderCell("Line number"),
+                        new MarkdownTableHeaderCell("Target version"),
+                        new MarkdownTableHeaderCell("End of life"),
+                        new MarkdownTableHeaderCell("Release notes"),
+                        new MarkdownTableHeaderCell("Nearest LTS TFM version")),
+                    tfms.Where(_ => _.IsUnsupported)
+                        .Select(tfm =>
+                        {
+                            var (target, version, _, release) = tfm;
+                            return new MarkdownTableRow(
+                                $"Line {project.TfmLineNumber} in [{relativePath}]({lineNumberFileReference})",
+                                target,
+                                release.EndOfLifeDate.HasValue ? $"{release.EndOfLifeDate:MMMM, dd yyyy}" : "N/A",
+                                new MarkdownLink(
+                                    $"{target} release notes", release.ReleaseNotesUrl)
+                                    .ToString(),
+                                $"`{tfm.NearestLtsVersion}`");
+                        }));
+            }
 
-//                document.AppendTable(
-//                    new MarkdownTableHeader(
-//                        new MarkdownTableHeaderCell("Target version"),
-//                        new MarkdownTableHeaderCell("End of life"),
-//                        new MarkdownTableHeaderCell("Release notes"),
-//                        new MarkdownTableHeaderCell("Nearest LTS TFM version")),
-//                    tfms.Where(_ => _.IsUnsupported)
-//                        .Select(tfm =>
-//                        {
-//                            var (target, version, _, release) = tfm;
-//                            return new MarkdownTableRow(
-//                                target,
-//                                release.EndOfLifeDate.HasValue ? $"{release.EndOfLifeDate:MMMM, dd yyyy}" : "N/A",
-//                                new MarkdownLink(
-//                                    $"{target} release notes", release.ReleaseNotesUrl)
-//                                    .ToString(),
-//                                $"`{tfm.NearestLtsVersion}`");
-//                        }));
-//            }
+            document.AppendParagraph(
+                "Consider upgrading to either the current release, or the nearest LTS TFM version.");
 
-//            document.AppendParagraph(
-//                "Consider upgrading the project to either the current release, or the nearest LTS TFM version.");
+            document.AppendParagraph(
+                $"If any of these projects are intentionally targeting an unsupported version, " +
+                $"you can optionally configure to ignore this automated issue. " +
+                $"Create a file at the root of the repository, named *dotnet-versionsweeper.json* and " +
+                $"add an `ignore` entry following the " +
+                $"[globbing patterns detailed here](https://docs.microsoft.com/dotnet/api/microsoft.extensions.filesystemglobbing.matcher#remarks).");
 
-//            document.AppendParagraph(
-//                $"If this project is intentionally targeting an unsupported version, " +
-//                $"you can optionally configure to ignore this automated issue. " +
-//                $"Create a file at the root of the repository, named *dotnet-versionsweeper.json* and " +
-//                $"add an `ignore` entry following the " +
-//                $"[globbing patterns detailed here](https://docs.microsoft.com/dotnet/api/microsoft.extensions.filesystemglobbing.matcher#remarks).");
 
-//            document.AppendCode("json", @$"{{
-//    ""ignore"": [
-//        ""**/{relativePath}""
-//    ]
+            document.AppendCode("json", @$"{{
+    ""ignore"": [
+        {string.Join(Environment.NewLine, relativePaths.Select(relativePath => $"        \"**/{relativePath}\""))}
+    ]
 //}}");
 
             return document.ToString();

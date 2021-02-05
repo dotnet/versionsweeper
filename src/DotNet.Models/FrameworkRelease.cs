@@ -13,11 +13,15 @@ namespace DotNet.Models
         FrameworkRuntime Runtime,
         Developerpack DeveloperPack) : IRelease
     {
+        // TODO: fix this... it needs to align with,
+        // https://docs.microsoft.com/dotnet/standard/frameworks#supported-target-frameworks
+        // but there multiple ways to refer to a TFM.
         public string TargetFrameworkMoniker => Version switch
-            {
-                "3.5.0-sp1" => "net35",
-                _ => $"net{Version.Replace(".", "")}"
-            };
+        {
+            "3.5.0-sp1" => "net35",
+            var v when v.StartsWith("v", StringComparison.OrdinalIgnoreCase) => $"net{Version[1..].Replace(".", "")}",
+            _ => $"net{Version.Replace(".", "")}"
+        };
 
         public SupportPhase SupportPhase => EndOfLifeDate switch
         {

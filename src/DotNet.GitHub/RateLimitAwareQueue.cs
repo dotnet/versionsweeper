@@ -20,7 +20,7 @@ namespace DotNet.GitHub
 
         public async IAsyncEnumerable<Issue> ExecuteAllQueuedItemsAsync()
         {
-            while (_issuesQueue is not { IsEmpty: true }
+            while (_issuesQueue is { IsEmpty: false }
                 && _issuesQueue.TryDequeue(out var item))
             {
                 var (args, newIssue) = item;
