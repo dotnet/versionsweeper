@@ -91,6 +91,10 @@ To configure the action, you can create a file at the root of the repository nam
 
 For an example config file, see [dotnet/samples/dotnet-versionsweeper.json](https://github.com/dotnet/samples/blob/master/dotnet-versionsweeper.json).
 
+## Example issues
+
+This repo serves as a sample, as it contains a directory *non-lts* with projects and solutions that are intentionally targeting unsupported versions. There are issues created against these to exemplify how they render. For more information, see [these issues](https://github.com/IEvangelist/dotnet-versionsweeper/issues?q=is%3Aopen+is%3Aissue+label%3Aexample-issue).
+
 ## Acknowledgements
 
 | Name | NuGet package URL & license |
