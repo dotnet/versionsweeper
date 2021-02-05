@@ -426,102 +426,6 @@
           "System.Security.Principal.Windows": "5.0.0"
         }
       },
-      "Nito.AsyncEx/5.1.0": {
-        "dependencies": {
-          "Nito.AsyncEx.Context": "5.1.0",
-          "Nito.AsyncEx.Coordination": "5.1.0",
-          "Nito.AsyncEx.Interop.WaitHandles": "5.1.0",
-          "Nito.AsyncEx.Oop": "5.1.0",
-          "Nito.AsyncEx.Tasks": "5.1.0",
-          "Nito.Cancellation": "1.1.0"
-        }
-      },
-      "Nito.AsyncEx.Context/5.1.0": {
-        "dependencies": {
-          "Nito.AsyncEx.Tasks": "5.1.0"
-        },
-        "runtime": {
-          "lib/netstandard2.0/Nito.AsyncEx.Context.dll": {
-            "assemblyVersion": "5.1.0.0",
-            "fileVersion": "5.1.0.0"
-          }
-        }
-      },
-      "Nito.AsyncEx.Coordination/5.1.0": {
-        "dependencies": {
-          "Nito.AsyncEx.Tasks": "5.1.0",
-          "Nito.Collections.Deque": "1.1.0"
-        },
-        "runtime": {
-          "lib/netstandard2.0/Nito.AsyncEx.Coordination.dll": {
-            "assemblyVersion": "5.1.0.0",
-            "fileVersion": "5.1.0.0"
-          }
-        }
-      },
-      "Nito.AsyncEx.Interop.WaitHandles/5.1.0": {
-        "dependencies": {
-          "Nito.AsyncEx.Tasks": "5.1.0"
-        },
-        "runtime": {
-          "lib/netstandard2.0/Nito.AsyncEx.Interop.WaitHandles.dll": {
-            "assemblyVersion": "5.1.0.0",
-            "fileVersion": "5.1.0.0"
-          }
-        }
-      },
-      "Nito.AsyncEx.Oop/5.1.0": {
-        "dependencies": {
-          "Nito.AsyncEx.Coordination": "5.1.0"
-        },
-        "runtime": {
-          "lib/netstandard2.0/Nito.AsyncEx.Oop.dll": {
-            "assemblyVersion": "5.1.0.0",
-            "fileVersion": "5.1.0.0"
-          }
-        }
-      },
-      "Nito.AsyncEx.Tasks/5.1.0": {
-        "dependencies": {
-          "Nito.Disposables": "2.2.0"
-        },
-        "runtime": {
-          "lib/netstandard2.0/Nito.AsyncEx.Tasks.dll": {
-            "assemblyVersion": "5.1.0.0",
-            "fileVersion": "5.1.0.0"
-          }
-        }
-      },
-      "Nito.Cancellation/1.1.0": {
-        "dependencies": {
-          "Nito.Disposables": "2.2.0"
-        },
-        "runtime": {
-          "lib/netstandard2.0/Nito.Cancellation.dll": {
-            "assemblyVersion": "1.1.0.0",
-            "fileVersion": "1.1.0.0"
-          }
-        }
-      },
-      "Nito.Collections.Deque/1.1.0": {
-        "runtime": {
-          "lib/netstandard2.0/Nito.Collections.Deque.dll": {
-            "assemblyVersion": "1.1.0.0",
-            "fileVersion": "1.1.0.0"
-          }
-        }
-      },
-      "Nito.Disposables/2.2.0": {
-        "dependencies": {
-          "System.Collections.Immutable": "1.4.0"
-        },
-        "runtime": {
-          "lib/netstandard2.1/Nito.Disposables.dll": {
-            "assemblyVersion": "2.2.0.0",
-            "fileVersion": "2.2.0.0"
-          }
-        }
-      },
       "NuGet.Versioning/5.8.0": {
         "runtime": {
           "lib/netstandard2.0/NuGet.Versioning.dll": {
@@ -561,7 +465,6 @@
           }
         }
       },
-      "System.Collections.Immutable/1.4.0": {},
       "System.Diagnostics.EventLog/5.0.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "5.0.0",
@@ -614,7 +517,6 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "5.0.0",
           "Microsoft.Extensions.Http": "5.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "5.0.0",
-          "Nito.AsyncEx": "5.1.0",
           "Octokit": "0.48.0",
           "Octokit.Extensions": "1.0.7"
         },
@@ -898,69 +800,6 @@
       "path": "microsoft.win32.registry/5.0.0",
       "hashPath": "microsoft.win32.registry.5.0.0.nupkg.sha512"
     },
-    "Nito.AsyncEx/5.1.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-KOahZdW0fRLnoym5lGtyWpFUZ94I5s0wLgYF5RHhK8RUhXpCiEX+185qjNvkse3H9WJV2/pFfPlKZHv8Eej7Hw==",
-      "path": "nito.asyncex/5.1.0",
-      "hashPath": "nito.asyncex.5.1.0.nupkg.sha512"
-    },
-    "Nito.AsyncEx.Context/5.1.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-EE7M37c5E/kvulzEkpUR6v1AnK34b2wysOLJHSjl78p/3hL7grte0XCPRqCfLZDwq98AD9GHMTCRfZy7TEeHhw==",
-      "path": "nito.asyncex.context/5.1.0",
-      "hashPath": "nito.asyncex.context.5.1.0.nupkg.sha512"
-    },
-    "Nito.AsyncEx.Coordination/5.1.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Nv+oA+cSxidjOImiKcz2FJgMIDxiK0A6xormKmsUklUBjTNqQpjtdJsACMgTQG56PkTHdbMi5QijPTTUsmcCeg==",
-      "path": "nito.asyncex.coordination/5.1.0",
-      "hashPath": "nito.asyncex.coordination.5.1.0.nupkg.sha512"
-    },
-    "Nito.AsyncEx.Interop.WaitHandles/5.1.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-wFm3lrXXNPBtZHjLI21xhcADoh5CzO5KKNO38ybLO/CcL9zMUWWfsNiAFbw8JGp/wHoxhfdEUlThBnY3XaLR/w==",
-      "path": "nito.asyncex.interop.waithandles/5.1.0",
-      "hashPath": "nito.asyncex.interop.waithandles.5.1.0.nupkg.sha512"
-    },
-    "Nito.AsyncEx.Oop/5.1.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-J5DVgQrmE9qMNhK2eEMsuEw7V7cw7MIPrv3jqqQWolzDXkOxJFFYKUK+4dnC6UAEmum3xRVD2oBAoXg0vdYDDQ==",
-      "path": "nito.asyncex.oop/5.1.0",
-      "hashPath": "nito.asyncex.oop.5.1.0.nupkg.sha512"
-    },
-    "Nito.AsyncEx.Tasks/5.1.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-tU3Ib4zs8ivM+uS8n7F7ReWZlA3mODyLqwPE+v+WJI94hZ8xLXl+a9npfj/IcmeXo9a6fGKLWkswKQHOeTWqwA==",
-      "path": "nito.asyncex.tasks/5.1.0",
-      "hashPath": "nito.asyncex.tasks.5.1.0.nupkg.sha512"
-    },
-    "Nito.Cancellation/1.1.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-BSezc6jsEEAoa8UtVjQ6Qr/D5xX+FozlDKFHAvDeTv24I7ZZmmfbFxEmdjaSLnrboz1WMRjUKCQwZw7Gf4+WcA==",
-      "path": "nito.cancellation/1.1.0",
-      "hashPath": "nito.cancellation.1.1.0.nupkg.sha512"
-    },
-    "Nito.Collections.Deque/1.1.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-RXHe531Oaw2IathDr0Q2kbid0iuudBxtgZsfBZ2eUPuFI8I1P7HMiuUeaIefqYykcDYFTDQsFAPAljduIjihLA==",
-      "path": "nito.collections.deque/1.1.0",
-      "hashPath": "nito.collections.deque.1.1.0.nupkg.sha512"
-    },
-    "Nito.Disposables/2.2.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-QcL+uBwUCEoK8GKp/WzjdCiG8/3G1WLlVNJgLJUNG7bIIVAcEV+Mro4s53VT4Nd8xMSplv0gy+Priw44vRvLaA==",
-      "path": "nito.disposables/2.2.0",
-      "hashPath": "nito.disposables.2.2.0.nupkg.sha512"
-    },
     "NuGet.Versioning/5.8.0": {
       "type": "package",
       "serviceable": true,
@@ -988,13 +827,6 @@
       "sha512": "sha512-qEbkPKwPjV+/Yho5VWRDBnvqeEbfNpLpF7UxNlUploVCorbHTDazCl/aOsJqspH4q6Bskm8jActOavV5//OQRQ==",
       "path": "polly/6.1.0",
       "hashPath": "polly.6.1.0.nupkg.sha512"
-    },
-    "System.Collections.Immutable/1.4.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-71hw5RUJRu5+q/geUY69gpXD8Upd12cH+F3MwpXV2zle7Bqqkrmc1JblOTuvUcgmdnUtQvBlV5e1d6RH+H2lvA==",
-      "path": "system.collections.immutable/1.4.0",
-      "hashPath": "system.collections.immutable.1.4.0.nupkg.sha512"
     },
     "System.Diagnostics.EventLog/5.0.0": {
       "type": "package",
