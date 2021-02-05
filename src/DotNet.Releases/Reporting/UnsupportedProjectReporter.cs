@@ -20,8 +20,7 @@ namespace DotNet.Releases
             (_coreReleaseService, _coreReleaseIndexService, _frameworkReleaseService) =
                 (coreReleaseService, coreReleaseIndexService, frameworkReleaseService);
 
-        async IAsyncEnumerable<ProjectSupportReport> IUnsupportedProjectReporter.ReportAsync(
-            string projectPath, string[] tfms)
+        async IAsyncEnumerable<ProjectSupportReport> IUnsupportedProjectReporter.ReportAsync(Project project)
         {
             HashSet<TargetFrameworkMonikerSupport> resultingSupports = new();
 
@@ -29,7 +28,7 @@ namespace DotNet.Releases
                 in _coreReleaseService.GetAllReleasesAsync())
             {
                 var tfmSupports =
-                    tfms.Select(
+                    project.Tfms.Select(
                         tfm => TryEvaluateReleaseSupport(
                             tfm, coreRelease.ChannelVersion,
                             index, out var tfmSupport)
@@ -60,7 +59,7 @@ namespace DotNet.Releases
                 in _frameworkReleaseService.GetAllReleasesAsync())
             {
                 var tfmSupports =
-                    tfms.Select(
+                    project.Tfms.Select(
                         tfm => TryEvaluateReleaseSupport(
                             tfm, frameworkRelease!.Version,
                             frameworkRelease, out var tfmSupport)
@@ -91,7 +90,7 @@ namespace DotNet.Releases
             }
 
             if (resultingSupports.Any())
-                yield return new(projectPath, resultingSupports);
+                yield return new(project, resultingSupports);
         }
 
         static bool TryEvaluateReleaseSupport(
@@ -99,7 +98,7 @@ namespace DotNet.Releases
             IRelease release,
             out TargetFrameworkMonikerSupport? tfmSupport)
         {
-            if (release.TargetFrameworkMoniker == tfm)
+            if (TargetFrameworkMonikerMap.RawMapsToKnown(tfm, release.TargetFrameworkMoniker))
             {
                 var isSupported = release.SupportPhase.IsSupported(
                     release!.EndOfLifeDate ?? default);

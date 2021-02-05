@@ -18,11 +18,11 @@ if (args is { Length: 1 })
         T Get<T>() => host.Services.GetRequiredService<T>();
 
         var projectReader = Get<IProjectFileReader>();
-        var (lineNumber, tfms) = await projectReader.ReadProjectTfmsAsync(projectPath);
-        if (tfms is { Length: > 0 })
+        var project = await projectReader.ReadProjectAsync(projectPath);
+        if (project is { TfmLineNumber: > -1 })
         {
             var reporter = Get<IUnsupportedProjectReporter>();
-            await foreach (var projectSupportReport in reporter.ReportAsync(projectPath, tfms))
+            await foreach (var projectSupportReport in reporter.ReportAsync(project))
             {
                 var (proj, reports) = projectSupportReport;
                 if (reports is { Count: > 0 } && reports.Any(r => r.IsUnsupported))
@@ -31,7 +31,7 @@ if (args is { Length: 1 })
                     foreach (var report in reports)
                     {
                         Console.WriteLine(
-                            $"Line number {lineNumber} targets '{report.TargetFrameworkMoniker}' which is unsupported. " +
+                            $"Line number {project.TfmLineNumber} targets '{report.TargetFrameworkMoniker}' which is unsupported. " +
                             $"The next nearest LTS (or current) version is '{report.NearestLtsVersion}'");
                     }
 

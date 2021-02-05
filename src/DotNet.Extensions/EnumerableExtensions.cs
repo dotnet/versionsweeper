@@ -28,5 +28,10 @@ namespace DotNet.Extensions
             if (action is null) return;
             foreach (var item in source) action(item);
         }
+
+        public static Dictionary<string, string> AsReverseMap(
+            this Dictionary<string, string> dictionary) =>
+            dictionary.Concat(dictionary.ToDictionary(kvp => kvp.Value, kvp => kvp.Key))
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
     }
 }

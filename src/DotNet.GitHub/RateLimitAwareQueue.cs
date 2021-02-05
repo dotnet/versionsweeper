@@ -1,5 +1,5 @@
-﻿using Nito.AsyncEx;
-using Octokit;
+﻿using Octokit;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,31 +9,27 @@ namespace DotNet.GitHub
     {
         const int DelayBetweenPostCalls = 1_000;
 
-        readonly AsyncProducerConsumerQueue<(GitHubApiArgs, NewIssue)> _issuesQueue = new();
+        readonly ConcurrentQueue<(GitHubApiArgs, NewIssue)> _issuesQueue = new();
         readonly IGitHubIssueService _gitHubIssueService;
 
         public RateLimitAwareQueue(IGitHubIssueService gitHubIssueService) =>
             _gitHubIssueService = gitHubIssueService;
 
-
-        public Task EnqueueAsync(GitHubApiArgs args, NewIssue issue) =>
-            _issuesQueue.EnqueueAsync((args, issue));
+        public void Enqueue(GitHubApiArgs args, NewIssue issue) =>
+            _issuesQueue.Enqueue((args, issue));
 
         public async IAsyncEnumerable<Issue> ExecuteAllQueuedItemsAsync()
         {
-            _issuesQueue.CompleteAdding();
-
-            var hasItems = await _issuesQueue.OutputAvailableAsync();
-            while (hasItems)
+            while (_issuesQueue is { IsEmpty: false }
+                && _issuesQueue.TryDequeue(out var item))
             {
-                var (args, newIssue) = await _issuesQueue.DequeueAsync();
+                var (args, newIssue) = item;
                 var issue = await _gitHubIssueService.PostIssueAsync(
-                    args.Owner, args.Name, args.Token, newIssue);
+                    args.Owner, args.RepoName, args.Token, newIssue);
 
                 yield return issue;
 
                 await Task.Delay(DelayBetweenPostCalls);
-                hasItems = await _issuesQueue.OutputAvailableAsync();
             }
         }
     }

@@ -1,9 +1,10 @@
-﻿using System.IO;
+﻿using DotNet.Models;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SystemFile = System.IO.File;
 
-namespace DotNet.Releases.Solution
+namespace DotNet.Releases
 {
     public class SolutionFileReader : ISolutionFileReader
     {
@@ -18,20 +19,24 @@ namespace DotNet.Releases.Solution
                 @"EndProject(\n|\r)",
                 _options);
 
+        readonly IProjectFileReader _projectFileReader;
+
+        public SolutionFileReader(IProjectFileReader projectFileReader) =>
+            _projectFileReader = projectFileReader;
+
         public async ValueTask<Solution> ReadSolutionAsync(string solutionPath)
         {
             Solution solution = new();
 
             if (SystemFile.Exists(solutionPath))
             {
-                solution.Path = Path.GetFullPath(solutionPath);
-                var solutionDirectory = Path.GetDirectoryName(solution.Path);
-                var solutionText = await SystemFile.ReadAllTextAsync(solution.Path);
+                solution.FullPath = Path.GetFullPath(solutionPath);
+                var solutionDirectory = Path.GetDirectoryName(solution.FullPath);
+                var solutionText = await SystemFile.ReadAllTextAsync(solution.FullPath);
                 var matches = _solutionProjectsExpression.Matches(solutionText);
                 
                 foreach (Match match in matches)
                 {
-                    var name = match.Groups["Name"].Value;
                     var path = match.Groups["Path"].Value;
                     var fullPath = Path.Combine(solutionDirectory!, path);
 
@@ -40,8 +45,9 @@ namespace DotNet.Releases.Solution
                     {
                         continue;
                     }
-                    
-                    solution.Projects[name] = fullPath;
+
+                    var project = await _projectFileReader.ReadProjectAsync(fullPath);
+                    solution.Projects.Add(project);
                 }
             }
 

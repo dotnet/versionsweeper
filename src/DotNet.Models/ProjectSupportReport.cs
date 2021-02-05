@@ -3,7 +3,7 @@
 namespace DotNet.Models
 {
     public record ProjectSupportReport(
-        string ProjectPath,
+        Project Project,
         HashSet<TargetFrameworkMonikerSupport> TargetFrameworkMonikerSupports);
 
     public record TargetFrameworkMonikerSupport(

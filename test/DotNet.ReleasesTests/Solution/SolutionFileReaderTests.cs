@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.IO;
 
-namespace DotNet.Releases.Solution.Tests
+namespace DotNet.Releases.Tests
 {
     public class SolutionFileReaderTests
     {
@@ -13,12 +13,12 @@ namespace DotNet.Releases.Solution.Tests
 #pragma warning restore xUnit1004 // Test methods should not be skipped
         public async Task ReadSolutionAsyncTest()
         {
-            ISolutionFileReader sut = new SolutionFileReader();
+            ISolutionFileReader sut = new SolutionFileReader(new ProjectFileReader());
             var solutionPath = "../../../../../dotnet-versionsweeper.sln";
 
             var solution = await sut.ReadSolutionAsync(solutionPath);
             Assert.NotNull(solution);
-            Assert.Equal(Path.GetFullPath(solutionPath), solution.Path);
+            Assert.Equal(Path.GetFullPath(solutionPath), solution.FullPath);
             Assert.NotEmpty(solution.Projects);
         }
     }

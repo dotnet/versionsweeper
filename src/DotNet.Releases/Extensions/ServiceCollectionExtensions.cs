@@ -14,6 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddSingleton<IFrameworkReleaseIndexService, FrameworkReleaseIndexService>()
                 .AddSingleton<IFrameworkReleaseService, FrameworkReleaseService>()
                 .AddSingleton<IProjectFileReader, ProjectFileReader>()
+                .AddSingleton<ISolutionFileReader, SolutionFileReader>()
                 .AddSingleton<IUnsupportedProjectReporter, UnsupportedProjectReporter>();
     }
 }

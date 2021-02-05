@@ -10,7 +10,6 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
-    <PackageReference Include="Nito.AsyncEx" Version="5.1.0" />
     <PackageReference Include="Octokit" Version="0.48.0" />
     <PackageReference Include="Octokit.Extensions" Version="1.0.7" />
   </ItemGroup>

@@ -1,6 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using DotNet.Models;
+using System.Threading.Tasks;
 
-namespace DotNet.Releases.Solution
+namespace DotNet.Releases
 {
     public interface ISolutionFileReader
     {
