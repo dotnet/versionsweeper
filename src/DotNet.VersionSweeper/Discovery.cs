@@ -6,6 +6,7 @@ using Microsoft.Extensions.FileSystemGlobbing;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -58,10 +59,26 @@ namespace DotNet.VersionSweeper
                             var solution = await solutionReader.ReadSolutionAsync(path);
                             if (solution is not null && solution.Projects is not null)
                             {
-                                if (solution.Projects.Any(proj => extensions.Contains(proj.Extension)))
+                                var match = projectMatcher.Match(
+                                    options.Directory,
+                                    solution.Projects.Select(proj => proj.FullPath));
+
+                                if (match.HasMatches)
                                 {
-                                    job.Info($"Read solution with {solution.Projects.Count} projects in it.");
-                                    solutions.Add(solution);
+                                    var matchingProjects =
+                                        match.Files
+                                            .Select(f => Path.GetFullPath(Path.Combine(options.Directory, f.Path)))
+                                            .Distinct()
+                                            .ToHashSet();
+
+                                    solution.Projects.RemoveWhere(
+                                        proj => !matchingProjects.Contains(proj.FullPath));
+
+                                    if (solution.Projects.Count > 0)
+                                    {
+                                        job.Info($"Read solution with {solution.Projects.Count} projects in it.");
+                                        solutions.Add(solution);
+                                    }
                                 }
                             }
                         })

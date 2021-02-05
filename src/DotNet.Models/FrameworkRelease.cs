@@ -14,11 +14,12 @@ namespace DotNet.Models
         Developerpack DeveloperPack) : IRelease
     {
         // https://docs.microsoft.com/dotnet/standard/frameworks#supported-target-frameworks
-        public string TargetFrameworkMoniker => Version switch
+        public string TargetFrameworkMoniker => Version.Split("-")[0] switch
         {
-            "3.5.0-sp1" => "net35",
-            var v when v.StartsWith("v", StringComparison.OrdinalIgnoreCase) => $"net{Version[1..].Replace(".", "")}",
-            _ => $"net{Version.Replace(".", "")}"
+            "3.5.0" => "net35",
+            var version when version.StartsWith("v", StringComparison.OrdinalIgnoreCase) => $"net{version[1..].Replace(".", "")}",
+            var version when version.StartsWith("net", StringComparison.OrdinalIgnoreCase) => version.Replace(".", ""),
+            _ => $"net{Version.Split("-")[0].Replace(".", "")}"
         };
 
         public SupportPhase SupportPhase => EndOfLifeDate switch

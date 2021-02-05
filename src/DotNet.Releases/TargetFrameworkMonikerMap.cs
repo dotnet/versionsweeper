@@ -32,10 +32,11 @@ namespace DotNet.Releases
         {
             if (_frameworkMonikers.TryGetValue(StripAtHyphen(parsedTfm), out var tfm))
             {
-                return string.Equals(knownTfm, tfm, StringComparison.OrdinalIgnoreCase);
+                return string.Equals(knownTfm, tfm, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(parsedTfm, knownTfm, StringComparison.OrdinalIgnoreCase);
             }
 
-            return parsedTfm == knownTfm;
+            return string.Equals(parsedTfm, knownTfm, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

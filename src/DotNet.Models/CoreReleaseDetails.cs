@@ -3,7 +3,7 @@
 namespace DotNet.Models
 {
     public record CoreReleaseDetails(
-        string ChannelVersion, // Do not call .AsSemanticVersion() on this, "major.minor".
+        string ChannelVersion,
         string LatestRelease,
         string LatestReleaseDate,
         string LatestRuntime,
