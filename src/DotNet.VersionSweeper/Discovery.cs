@@ -67,13 +67,17 @@ namespace DotNet.VersionSweeper
                         })
                 );
 
+            var solutionSet = solutions.ToHashSet();
+            var orphanedProjectSet =
+                projects.Except(solutions.SelectMany(sln => sln.Projects))
+                    .ToHashSet();
+
+            job.Info($"Discovered {solutionSet.Count} solutions and {orphanedProjectSet.Count} orphaned projects.");
 
             return
                 (
-                    Solutions: solutions.ToHashSet(),
-                    OrphanedProjects:
-                        projects.Except(solutions.SelectMany(sln => sln.Projects))
-                            .ToHashSet()
+                    Solutions: solutionSet,
+                    OrphanedProjects: orphanedProjectSet
                 );
         }
     }
