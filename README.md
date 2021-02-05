@@ -49,7 +49,7 @@ on:
 
 # Run on the latest version of Ubuntu
 jobs:
-  build:
+  version-sweep:
     runs-on: ubuntu-latest
 
     # Checkout the repo into the workspace within the VM

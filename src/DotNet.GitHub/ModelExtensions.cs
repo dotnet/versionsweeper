@@ -83,7 +83,7 @@ namespace DotNet.GitHub
                             var (target, version, _, release) = tfm;
                             return new MarkdownTableRow(
                                 $"[{Path.GetFileName(project.FullPath)}]({lineNumberFileReference})",
-                                target,
+                                $"`{target}`",
                                 release.EndOfLifeDate.HasValue ? $"{release.EndOfLifeDate:MMMM, dd yyyy}" : "N/A",
                                 new MarkdownLink(
                                     $"{target} release notes", release.ReleaseNotesUrl)
@@ -146,7 +146,7 @@ namespace DotNet.GitHub
                     {
                         var (target, version, _, release) = tfm;
                         return new MarkdownTableRow(
-                            target,
+                            $"`{target}`",
                             release.EndOfLifeDate.HasValue ? $"{release.EndOfLifeDate:MMMM, dd yyyy}" : "N/A",
                             new MarkdownLink(
                                 $"{target} release notes", release.ReleaseNotesUrl)
