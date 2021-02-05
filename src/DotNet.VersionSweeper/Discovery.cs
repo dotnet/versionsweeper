@@ -15,7 +15,7 @@ namespace DotNet.VersionSweeper
     {
         /// <summary>
         /// Returns a list of solutions, each solution contains projects. Also returns a mapping
-        /// of orphaned
+        /// of orphaned projects that do not belong to solutions, but match the search patterns.
         /// </summary>
         internal static async Task<(ISet<Solution> Solutions, ISet<Project> OrphanedProjects)>
             FindSolutionsAndProjectsAsync(
