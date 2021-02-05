@@ -49,6 +49,31 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                     solutionSupportReport.ProjectSupportReports.Add(projectSupportReport);
                 }
             }
+
+            var reports = solutionSupportReport.ProjectSupportReports;
+
+            if (reports is { Count: > 0 } &&
+                reports.Any(r => r.TargetFrameworkMonikerSupports.Any(s => s.IsUnsupported)))
+            {
+                var title = solutionSupportReport.ToTitleMessage();
+                var existingIssue =
+                    await graphQLClient.GetIssueAsync(
+                        options.Owner, options.Name, options.Token, title);
+                if (existingIssue?.State == ItemState.Open)
+                {
+                    job.Info($"Re-discovered but ignoring, latent non-LTS version in {existingIssue}.");
+                }
+                else
+                {
+                    issueQueue.Enqueue(
+                        new(options.Owner, options.Name, options.Token),
+                        new(solutionSupportReport.ToTitleMessage())
+                        {
+                            Body = solutionSupportReport.ToMarkdownBody(
+                                    options.Directory, options.Branch)
+                        });
+                }
+            }
         }
 
         foreach (var orphanedProject in orphanedProjects)
@@ -85,55 +110,6 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
         {
             job.Info($"Created issue: {issue.HtmlUrl}");
         }
-
-        //if (orphanedProjects is { Count: > 0 })
-        //{
-        //    var (unsupportedProjectReporter, issueQueue, graphQLClient) =
-        //       services.GetRequiredServices
-        //           <IUnsupportedProjectReporter, RateLimitAwareQueue, GitHubGraphQLClient>();
-
-        //    List<(string ProjectPath, GitHubApiArgs Args, NewIssue Issue)> newIssues = new();
-
-        //    foreach (var (projectPath, (lineNumber, tfms)) in projects)
-        //    {
-        //        await foreach (var projectSupportReport
-        //            in unsupportedProjectReporter.ReportAsync(projectPath, tfms))
-        //        {
-        //            var (_, reports) = projectSupportReport;
-        //            if (reports is { Count: > 0 } && reports.Any(r => r.IsUnsupported))
-        //            {
-        //                var title = projectSupportReport.ToTitleMessage();
-        //                var existingIssue =
-        //                    await graphQLClient.GetIssueAsync(
-        //                        options.Owner, options.Name, options.Token, title);
-        //                if (existingIssue?.State == ItemState.Open)
-        //                {
-        //                    job.Info($"Re-discovered but ignoring, latent non-LTS version in {existingIssue}.");
-        //                }
-        //                else
-        //                {
-        //                    newIssues.Add((
-        //                        ProjectPath: projectPath,
-        //                        Args: new(options.Owner, options.Name, options.Token),
-        //                        Issue: new(projectSupportReport.ToTitleMessage())
-        //                        {
-        //                            Body = projectSupportReport.ToMarkdownBody(
-        //                                    options.Directory, lineNumber, options.Branch)
-        //                        }));
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    await foreach (var issue in issueQueue.ExecuteAllQueuedItemsAsync())
-        //    {
-        //        job.Info($"Created issue: {issue.HtmlUrl}");
-        //    }
-        //}
-        //else
-        //{
-        //    job.Warning($"No projects found matching: {options.SearchPattern}, in '{options.Directory}'.");
-        //}
     }
     catch (Exception ex)
     {

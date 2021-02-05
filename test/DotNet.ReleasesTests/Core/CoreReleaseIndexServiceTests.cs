@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace DotNet.Releases.Tests
 {
-    public class CoreReleaseIndexServiceTests : IDisposable
+    public class CoreReleaseIndexServiceTests
     {
         readonly HttpClient _client = new();
         readonly MemoryCache _cache = new(Options.Create(new MemoryCacheOptions()));
@@ -28,7 +28,5 @@ namespace DotNet.Releases.Tests
             var result = await service.GetNextLtsVersionAsync(releaseVersion);
             Assert.Equal(expectedVersion, result.ChannelVersion);
         }
-
-        void IDisposable.Dispose() => _client?.Dispose();
     }
 }
