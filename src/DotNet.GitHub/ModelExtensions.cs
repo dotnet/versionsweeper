@@ -72,7 +72,7 @@ namespace DotNet.GitHub
                 var tfms = psr.TargetFrameworkMonikerSupports;
                 document.AppendTable(
                     new MarkdownTableHeader(
-                        new MarkdownTableHeaderCell("Line number"),
+                        new MarkdownTableHeaderCell("TFM in project"),
                         new MarkdownTableHeaderCell("Target version"),
                         new MarkdownTableHeaderCell("End of life"),
                         new MarkdownTableHeaderCell("Release notes"),
@@ -82,7 +82,7 @@ namespace DotNet.GitHub
                         {
                             var (target, version, _, release) = tfm;
                             return new MarkdownTableRow(
-                                $"Line {project.TfmLineNumber} in [{relativePath}]({lineNumberFileReference})",
+                                $"[{Path.GetFileName(project.FullPath)}]({lineNumberFileReference})",
                                 target,
                                 release.EndOfLifeDate.HasValue ? $"{release.EndOfLifeDate:MMMM, dd yyyy}" : "N/A",
                                 new MarkdownLink(
@@ -102,12 +102,12 @@ namespace DotNet.GitHub
                 $"add an `ignore` entry following the " +
                 $"[globbing patterns detailed here](https://docs.microsoft.com/dotnet/api/microsoft.extensions.filesystemglobbing.matcher#remarks).");
 
-
+            var total = relativePaths.Count;
             document.AppendCode("json", @$"{{
     ""ignore"": [
-        {string.Join(Environment.NewLine, relativePaths.Select(relativePath => $"        \"**/{relativePath}\""))}
+{string.Join(Environment.NewLine, relativePaths.Select((relativePath, index) => $"        \"**/{relativePath}\"{(index == total ? "," : "")}"))}
     ]
-//}}");
+}}");
 
             return document.ToString();
         }
