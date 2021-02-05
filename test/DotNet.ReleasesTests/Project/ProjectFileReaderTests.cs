@@ -11,10 +11,10 @@ namespace DotNet.Releases.Tests
             IProjectFileReader sut = new ProjectFileReader();
             var projectPath = "../../../DotNet.ReleasesTests.csproj";
 
-            var (lineNumber, tfms) = await sut.ReadProjectTfmsAsync(projectPath);
-            Assert.Equal(4, lineNumber);
-            Assert.Single(tfms);
-            Assert.Equal("net5.0", tfms[0]);
+            var project = await sut.ReadProjectAsync(projectPath);
+            Assert.Equal(4, project.TfmLineNumber);
+            Assert.Single(project.Tfms);
+            Assert.Equal("net5.0", project.Tfms[0]);
         }
     }
 }

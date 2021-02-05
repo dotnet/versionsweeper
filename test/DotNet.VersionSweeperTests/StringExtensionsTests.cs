@@ -21,6 +21,6 @@ namespace DotNet.VersionSweeper.Tests
             MemberData(nameof(AsMaskedExtensionsInput))
         ]
         public void AsMaskedExtensionsTest(string pattern, string[] expected) =>
-            Assert.Equal(expected, pattern.AsMaskedExtensions());
+            Assert.Equal(expected, pattern.SplitOnExpectedDelimiters());
     }
 }

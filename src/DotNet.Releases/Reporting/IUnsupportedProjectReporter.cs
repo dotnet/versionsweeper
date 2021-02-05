@@ -5,6 +5,6 @@ namespace DotNet.Releases
 {
     public interface IUnsupportedProjectReporter
     {
-        IAsyncEnumerable<ProjectSupportReport> ReportAsync(string projectPath, string[] tfms);
+        IAsyncEnumerable<ProjectSupportReport> ReportAsync(Project project);
     }
 }

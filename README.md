@@ -13,12 +13,12 @@ A schedule/cron job that runs on the first of every month is detailed below in t
 
 ## Required inputs
 
-| Option          | Details                                                                                                                |
-|:----------------|:-----------------------------------------------------------------------------------------------------------------------|
-| `-o`, `owner`   | The owner of the repo.<br>Assign from `${{ github.repository_owner }}`. Example, `"dotnet"`.                           |
-| `-n`, `name`    | The repository name.<br>Assign from `${{ github.repository }}`. Example, `"dotnet/samples"`.                           |
-| `-b`, `branch`  | The branch name.<br>Assign from `${{ github.ref }}`. Example, `"main"`.                                                |
-| `-t`, `token`   | The GitHub personal-access token (PAT), or the token from GitHub action context.<br>Assign from `${{ github.token }}`. |
+| Option         | Details                                                                                                                |
+|:---------------|:-----------------------------------------------------------------------------------------------------------------------|
+| `-o`, `owner`  | The owner of the repo.<br>Assign from `${{ github.repository_owner }}`. Example, `"dotnet"`.                           |
+| `-n`, `name`   | The repository name.<br>Assign from `${{ github.repository }}`. Example, `"dotnet/samples"`.                           |
+| `-b`, `branch` | The branch name.<br>Assign from `${{ github.ref }}`. Example, `"main"`.                                                |
+| `-t`, `token`  | The GitHub personal-access token (PAT), or the token from GitHub action context.<br>Assign from `${{ github.token }}`. |
 
 ## Optional inputs
 
@@ -92,11 +92,10 @@ For an example config file, see [dotnet/samples/dotnet-versionsweeper.json](http
 
 ## Acknowledgements
 
-| NuGet Package | URL & License |
+| Name | NuGet package URL & license |
 |:-|:-|
 | `CommandLineParser` | [https://www.nuget.org/packages/CommandLineParser](https://www.nuget.org/packages/CommandLineParser) ([MIT](https://www.nuget.org/packages/CommandLineParser/2.8.0/License)) |
 | `MarkdownBuilder` | [https://www.nuget.org/packages/MarkdownBuilder](https://www.nuget.org/packages/MarkdownBuilder) ([MIT](https://licenses.nuget.org/MIT)) |
-| `Nito.AsyncEx` | [https://www.nuget.org/packages/Nito.AsyncEx](https://www.nuget.org/packages/Nito.AsyncEx) ([MIT](https://licenses.nuget.org/MIT)) |
 | `NuGet.Versioning` | [https://www.nuget.org/packages/NuGet.Versioning](https://www.nuget.org/packages/NuGet.Versioning) ([Apache-2.0](https://licenses.nuget.org/Apache-2.0)) |
 | `Octokit` | [https://www.nuget.org/packages/Octokit](https://www.nuget.org/packages/Octokit) ([MIT](https://licenses.nuget.org/MIT)) |
 | `Octokit.Extensions` | [https://www.nuget.org/packages/Octokit.Extensions](https://www.nuget.org/packages/Octokit.Extensions) ([MIT](https://github.com/mirsaeedi/octokit.net.Extensions/blob/master/LICENSE)) |

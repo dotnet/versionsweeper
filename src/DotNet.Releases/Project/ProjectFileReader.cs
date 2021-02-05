@@ -1,4 +1,4 @@
-﻿using System;
+﻿using DotNet.Models;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SystemFile = System.IO.File;
@@ -7,26 +7,33 @@ namespace DotNet.Releases
 {
     public class ProjectFileReader : IProjectFileReader
     {
-        static readonly string[] _emptyArray = Array.Empty<string>();
         static readonly RegexOptions _options =
             RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.ExplicitCapture;
         static readonly Regex _targetFrameworkExpression =
             new(@"TargetFramework(.*)>(?<tfm>.+?)</", _options);
 
-        public async ValueTask<(int LineNumber, string[] Tfms)> ReadProjectTfmsAsync(string filePath)
+        public async ValueTask<Project> ReadProjectAsync(string projectPath)
         {
-            if (SystemFile.Exists(filePath))
+            if (SystemFile.Exists(projectPath))
             {
-                var projectXml = await SystemFile.ReadAllTextAsync(filePath);
+                var projectXml = await SystemFile.ReadAllTextAsync(projectPath);
                 var match = _targetFrameworkExpression.Match(projectXml);
                 var group = match.Groups["tfm"];
                 var lineNumber = GetLineNumberFromIndex(projectXml, group.Index);
-                var value = group.Value;
+                var rawTfms = group.Value;
 
-                return (lineNumber, value?.Split(";", StringSplitOptions.RemoveEmptyEntries) ?? _emptyArray);
+                return new()
+                {
+                    FullPath = projectPath,
+                    TfmLineNumber = lineNumber,
+                    RawTargetFrameworkMonikers = rawTfms,
+                };
             }
 
-            return (-1, _emptyArray);
+            return new()
+            {
+                FullPath = projectPath
+            };
         }
 
         static int GetLineNumberFromIndex(string xml, int index)

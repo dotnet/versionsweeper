@@ -1,18 +1,14 @@
 ﻿using CommandLine;
-using DotNet.Extensions;
 using DotNet.GitHub;
 using DotNet.GitHubActions;
+using DotNet.Models;
 using DotNet.Releases;
 using DotNet.VersionSweeper;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileSystemGlobbing;
 using Microsoft.Extensions.Hosting;
 using Octokit;
 using System;
-using System.Collections.Concurrent;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using static CommandLine.Parser;
 
@@ -28,95 +24,116 @@ var jobService =
 var parser =
     Default.ParseArguments<Options>(() => new(), args);
 
-static void ReportOptionsAndDebugInfo(Options options, IJobService job)
-{
-    job.SetCommandEcho(true);
-
-    StringBuilder builder = new();
-    builder.Append($"repository owner: {options.Owner}");
-    builder.Append($"repository name: {options.Name}");
-    builder.Append($"current branch: {options.Branch}");
-    builder.Append($"root directory to search: {options.Directory}");
-    var parsedPatterns = string.Join(", ",
-        options.SearchPattern?.AsMaskedExtensions().AsRecursivePatterns() ?? Array.Empty<string>());
-    builder.Append($"parsed patterns: {parsedPatterns}");
-
-    job.Info(builder.ToString());
-}
-
 static async Task StartSweeperAsync(Options options, IServiceProvider services, IJobService job)
 {
     try
     {
-        ReportOptionsAndDebugInfo(options, job);
+        options.WriteDebugInfo(job);
 
-        var projectReader = services.GetRequiredService<IProjectFileReader>();
-        DirectoryInfo directory = new(options.Directory!);
-        ConcurrentDictionary<string, (int, string[])> projects = new(StringComparer.OrdinalIgnoreCase);
+        var (solutions, orphanedProjects) =
+            await Discovery.FindSolutionsAndProjectsAsync(services, job, options);
 
-        var config = await VersionSweeperConfig.ReadAsync(options.Directory!, job);
-        var matcher = config.Ignore.GetMatcher(options.SearchPattern!);
+        var (unsupportedProjectReporter, issueQueue, graphQLClient) =
+                services.GetRequiredServices
+                    <IUnsupportedProjectReporter, RateLimitAwareQueue, GitHubGraphQLClient>();
 
-        await matcher.GetResultsInFullPath(options.Directory!)
-            .ForEachAsync(
-                Environment.ProcessorCount,
-                async path =>
-                {
-                    var (lineNumber, tfms) = await projectReader.ReadProjectTfmsAsync(path);
-                    if (tfms is { Length: > 0 })
-                    {
-                        if (projects.TryAdd(path, (lineNumber, tfms)))
-                        {
-                            job.Info($"Parsed TFM(s): '{string.Join(", ", tfms)}' on line {lineNumber} in {path}.");
-                        }
-                    }
-                });
-
-        if (projects is not { IsEmpty: true })
+        foreach (var solution in solutions.Where(sln => sln is not null))
         {
-            var (unsupportedProjectReporter, issueQueue, graphQLClient) =
-               services.GetRequiredServices
-                   <IUnsupportedProjectReporter, RateLimitAwareQueue, GitHubGraphQLClient>();
+            SolutionSupportReport solutionSupportReport = new(solution);
 
-            foreach (var (projectPath, (lineNumber, tfms)) in projects)
+            foreach (var project in solution.Projects)
             {
                 await foreach (var projectSupportReport
-                    in unsupportedProjectReporter.ReportAsync(projectPath, tfms))
+                    in unsupportedProjectReporter.ReportAsync(project))
                 {
-                    var (proj, reports) = projectSupportReport;
-                    if (reports is { Count: > 0 } && reports.Any(r => r.IsUnsupported))
+                    solutionSupportReport.ProjectSupportReports.Add(projectSupportReport);
+                }
+            }
+        }
+
+        foreach (var orphanedProject in orphanedProjects)
+        {
+            await foreach (var projectSupportReport
+                in unsupportedProjectReporter.ReportAsync(orphanedProject))
+            {
+                var (project, reports) = projectSupportReport;
+                if (reports is { Count: > 0 } && reports.Any(r => r.IsUnsupported))
+                {
+                    var title = projectSupportReport.ToTitleMessage();
+                    var existingIssue =
+                        await graphQLClient.GetIssueAsync(
+                            options.Owner, options.Name, options.Token, title);
+                    if (existingIssue?.State == ItemState.Open)
                     {
-                        var title = projectSupportReport.ToTitleMessage();
-                        var existingIssue =
-                            await graphQLClient.GetIssueAsync(
-                                options.Owner!, options.Name!, options.Token!, title);
-                        if (existingIssue?.State == ItemState.Open)
-                        {
-                            job.Info($"Re-discovered but ignoring, latent non-LTS version in {existingIssue}.");
-                        }
-                        else
-                        {
-                            await issueQueue.EnqueueAsync(
-                                new(options.Owner!, options.Name!, options.Token!),
-                                new(projectSupportReport.ToTitleMessage())
-                                {
-                                    Body = projectSupportReport.ToMarkdownBody(
-                                            options.Directory!, lineNumber)
-                                });
-                        }
+                        job.Info($"Re-discovered but ignoring, latent non-LTS version in {existingIssue}.");
+                    }
+                    else
+                    {
+                        issueQueue.Enqueue(
+                            new(options.Owner, options.Name, options.Token),
+                            new(projectSupportReport.ToTitleMessage())
+                            {
+                                Body = projectSupportReport.ToMarkdownBody(
+                                        options.Directory, options.Branch)
+                            });
                     }
                 }
             }
+        }
 
-            await foreach (var issue in issueQueue.ExecuteAllQueuedItemsAsync())
-            {
-                job.Info($"Created issue: {issue.HtmlUrl}");
-            }
-        }
-        else
+        await foreach (var issue in issueQueue.ExecuteAllQueuedItemsAsync())
         {
-            job.Info($"No projects found matching: {options.SearchPattern}, in '{options.Directory}'.");
+            job.Info($"Created issue: {issue.HtmlUrl}");
         }
+
+        //if (orphanedProjects is { Count: > 0 })
+        //{
+        //    var (unsupportedProjectReporter, issueQueue, graphQLClient) =
+        //       services.GetRequiredServices
+        //           <IUnsupportedProjectReporter, RateLimitAwareQueue, GitHubGraphQLClient>();
+
+        //    List<(string ProjectPath, GitHubApiArgs Args, NewIssue Issue)> newIssues = new();
+
+        //    foreach (var (projectPath, (lineNumber, tfms)) in projects)
+        //    {
+        //        await foreach (var projectSupportReport
+        //            in unsupportedProjectReporter.ReportAsync(projectPath, tfms))
+        //        {
+        //            var (_, reports) = projectSupportReport;
+        //            if (reports is { Count: > 0 } && reports.Any(r => r.IsUnsupported))
+        //            {
+        //                var title = projectSupportReport.ToTitleMessage();
+        //                var existingIssue =
+        //                    await graphQLClient.GetIssueAsync(
+        //                        options.Owner, options.Name, options.Token, title);
+        //                if (existingIssue?.State == ItemState.Open)
+        //                {
+        //                    job.Info($"Re-discovered but ignoring, latent non-LTS version in {existingIssue}.");
+        //                }
+        //                else
+        //                {
+        //                    newIssues.Add((
+        //                        ProjectPath: projectPath,
+        //                        Args: new(options.Owner, options.Name, options.Token),
+        //                        Issue: new(projectSupportReport.ToTitleMessage())
+        //                        {
+        //                            Body = projectSupportReport.ToMarkdownBody(
+        //                                    options.Directory, lineNumber, options.Branch)
+        //                        }));
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    await foreach (var issue in issueQueue.ExecuteAllQueuedItemsAsync())
+        //    {
+        //        job.Info($"Created issue: {issue.HtmlUrl}");
+        //    }
+        //}
+        //else
+        //{
+        //    job.Warning($"No projects found matching: {options.SearchPattern}, in '{options.Directory}'.");
+        //}
     }
     catch (Exception ex)
     {

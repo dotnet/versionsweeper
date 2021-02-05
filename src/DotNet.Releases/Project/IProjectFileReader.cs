@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using DotNet.Models;
+using System.Threading.Tasks;
 
 namespace DotNet.Releases
 {
     public interface IProjectFileReader
     {
-        ValueTask<(int LineNumber, string[] Tfms)> ReadProjectTfmsAsync(string filePath);
+        ValueTask<Project> ReadProjectAsync(string projectPath);
     }
 }
