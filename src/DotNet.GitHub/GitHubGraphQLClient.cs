@@ -46,7 +46,7 @@ namespace DotNet.GitHub
             string owner, string name, string token, string title)
         {
             try
-            {            
+            {
                 _httpClient.DefaultRequestHeaders.Authorization = new("Token", token);
                 _httpClient.DefaultRequestHeaders.UserAgent.Add(
                     new(Product.Header.Name, Product.Header.Version));
