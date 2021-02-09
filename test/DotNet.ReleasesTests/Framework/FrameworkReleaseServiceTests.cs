@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using DotNet.Extensions;
 
 namespace DotNet.Releases.Tests
 {
@@ -26,7 +25,7 @@ namespace DotNet.Releases.Tests
             IFrameworkReleaseService service =
                 new FrameworkReleaseService(_indexService, _cache);
 
-            var result = await service.GetNextLtsVersionAsync(releaseVersion.AsSemanticVersion());
+            var result = await service.GetNextLtsVersionAsync(releaseVersion);
             Assert.Equal(expectedVersion, result.Version);
         }
     }

@@ -15,6 +15,7 @@ namespace DotNet.Releases.Tests
             Assert.Equal(4, project.TfmLineNumber);
             Assert.Single(project.Tfms);
             Assert.Equal("net5.0", project.Tfms[0]);
+            Assert.Equal("Microsoft.NET.Sdk", project.Sdk);
         }
     }
 }

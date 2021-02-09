@@ -8,6 +8,8 @@ namespace DotNet.Models
     {
         string _fullPath = null!;
 
+        public string? Sdk { get; init; }
+
         public string FullPath
         {
             get => _fullPath;

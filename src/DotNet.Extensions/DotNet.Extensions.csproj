@@ -4,9 +4,5 @@
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="NuGet.Versioning" Version="5.8.0" />
-  </ItemGroup>
   
 </Project>

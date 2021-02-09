@@ -12,11 +12,11 @@ namespace DotNet.Releases
 
         async ValueTask<ReleaseIndex?> GetNextLtsVersionAsync(string releaseVersion)
         {
-            var version = releaseVersion.AsSemanticVersion();
+            var version = (LabeledVersion)releaseVersion;
             var releases = await GetReleaesAsync();
 
             return releases?.ReleasesIndex
-                .Select(release => (Version: release.LatestRelease.AsSemanticVersion(), Release: release))
+                .Select(release => (Version: (LabeledVersion)release.LatestRelease, Release: release))
                 .Where(_ =>
                     _.Version > version &&
                     _.Release.SupportPhase.IsSupported(_.Release.EndOfLifeDate.GetValueOrDefault()))

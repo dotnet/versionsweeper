@@ -101,6 +101,5 @@ This repo serves as a sample, as it contains a directory *non-lts* with projects
 |:-|:-|
 | `CommandLineParser` | [https://www.nuget.org/packages/CommandLineParser](https://www.nuget.org/packages/CommandLineParser) ([MIT](https://www.nuget.org/packages/CommandLineParser/2.8.0/License)) |
 | `MarkdownBuilder` | [https://www.nuget.org/packages/MarkdownBuilder](https://www.nuget.org/packages/MarkdownBuilder) ([MIT](https://licenses.nuget.org/MIT)) |
-| `NuGet.Versioning` | [https://www.nuget.org/packages/NuGet.Versioning](https://www.nuget.org/packages/NuGet.Versioning) ([Apache-2.0](https://licenses.nuget.org/Apache-2.0)) |
 | `Octokit` | [https://www.nuget.org/packages/Octokit](https://www.nuget.org/packages/Octokit) ([MIT](https://licenses.nuget.org/MIT)) |
 | `Octokit.Extensions` | [https://www.nuget.org/packages/Octokit.Extensions](https://www.nuget.org/packages/Octokit.Extensions) ([MIT](https://github.com/mirsaeedi/octokit.net.Extensions/blob/master/LICENSE)) |

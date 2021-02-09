@@ -43,15 +43,17 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             IJobService job,
             string title, Options options, Func<Options, string> getBody)
         {
-            var existingIssue =
-                await client.GetIssueAsync(
-                    options.Owner, options.Name, options.Token, title);
-            if (existingIssue?.State == ItemState.Open)
+            //var existingIssue =
+            //    await client.GetIssueAsync(
+            //        options.Owner, options.Name, options.Token, title);
+            //if (existingIssue?.State == ItemState.Open)
+            //{
+            //    job.Info($"Re-discovered but ignoring, latent non-LTS version in {existingIssue}.");
+            //}
+            //else
             {
-                job.Info($"Re-discovered but ignoring, latent non-LTS version in {existingIssue}.");
-            }
-            else
-            {
+                await Task.CompletedTask;
+
                 queue.Enqueue(
                     new(options.Owner, options.Name, options.Token),
                     new(title)

@@ -1,7 +1,5 @@
-﻿using DotNet.Extensions;
-using DotNet.Models;
+﻿using DotNet.Models;
 using DotNet.Releases.Extensions;
-using NuGet.Versioning;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,7 +10,7 @@ namespace DotNet.Releases
     {
         IAsyncEnumerable<FrameworkRelease> GetAllReleasesAsync();
 
-        async ValueTask<FrameworkRelease?> GetNextLtsVersionAsync(SemanticVersion releaseVersion)
+        async ValueTask<FrameworkRelease?> GetNextLtsVersionAsync(LabeledVersion releaseVersion)
         {
             var sequence = GetAllReleasesAsync();
             var releases = await sequence.ToListAsync();
@@ -20,7 +18,7 @@ namespace DotNet.Releases
             var orderedReleases = releases?
                 .Where(release => release is not null)
                 .Select(release =>
-                    (Version: release!.Version.AsSemanticVersion(), Release: release!))
+                    (Version: (LabeledVersion)release!.Version, Release: release!))
                 .Where(_ =>
                     _.Version > releaseVersion &&
                     _.Release.SupportPhase.IsSupported(

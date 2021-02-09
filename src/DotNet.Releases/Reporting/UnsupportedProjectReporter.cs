@@ -1,5 +1,4 @@
-﻿using DotNet.Extensions;
-using DotNet.Models;
+﻿using DotNet.Models;
 using DotNet.Releases.Extensions;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,7 +73,7 @@ namespace DotNet.Releases
                             async support =>
                             {
                                 var release = await _frameworkReleaseService.GetNextLtsVersionAsync(
-                                    frameworkRelease.Version.AsSemanticVersion());
+                                    (LabeledVersion)frameworkRelease.Version);
 
                                 return support! with
                                 {
