@@ -14,7 +14,8 @@ namespace DotNet.GitHub
                 .AddSingleton<ResilientGitHubClientFactory>()
                 .AddSingleton<GitHubGraphQLClient>()
                 .AddSingleton<RateLimitAwareQueue>()
-                .AddSingleton<IGitHubIssueService, GitHubIssueService>();
+                .AddSingleton<IGitHubIssueService, GitHubIssueService>()
+                .AddSingleton<IGitHubLabelService, GitHubLabelService>();
         }
     }
 }

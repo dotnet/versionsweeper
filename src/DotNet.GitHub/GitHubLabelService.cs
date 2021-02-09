@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DotNet.GitHub
 {
-    public class GitHubLabelService
+    public class GitHubLabelService : IGitHubLabelService
     {
         readonly ResilientGitHubClientFactory _clientFactory;
         readonly ILogger<GitHubLabelService> _logger;
