@@ -426,14 +426,6 @@
           "System.Security.Principal.Windows": "5.0.0"
         }
       },
-      "NuGet.Versioning/5.8.0": {
-        "runtime": {
-          "lib/netstandard2.0/NuGet.Versioning.dll": {
-            "assemblyVersion": "5.8.0.6930",
-            "fileVersion": "5.8.0.6930"
-          }
-        }
-      },
       "Octokit/0.48.0": {
         "runtime": {
           "lib/netstandard2.0/Octokit.dll": {
@@ -502,9 +494,6 @@
       },
       "System.Security.Principal.Windows/5.0.0": {},
       "DotNet.Extensions/1.0.0": {
-        "dependencies": {
-          "NuGet.Versioning": "5.8.0"
-        },
         "runtime": {
           "DotNet.Extensions.dll": {}
         }
@@ -799,13 +788,6 @@
       "sha512": "sha512-dDoKi0PnDz31yAyETfRntsLArTlVAVzUzCIvvEDsDsucrl33Dl8pIJG06ePTJTI3tGpeyHS9Cq7Foc/s4EeKcg==",
       "path": "microsoft.win32.registry/5.0.0",
       "hashPath": "microsoft.win32.registry.5.0.0.nupkg.sha512"
-    },
-    "NuGet.Versioning/5.8.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-0JqM9Tbpg3+CwXBXzLv64BMUru//UZVxfVy48ng7CQ5rNuI/4xI43jxXWkqM8MfLs6RibhadzQeNWB82gW7JDw==",
-      "path": "nuget.versioning/5.8.0",
-      "hashPath": "nuget.versioning.5.8.0.nupkg.sha512"
     },
     "Octokit/0.48.0": {
       "type": "package",
