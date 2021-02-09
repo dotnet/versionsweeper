@@ -1,5 +1,4 @@
 ﻿using Xunit;
-using System;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Microsoft.Extensions.Caching.Memory;
@@ -18,7 +17,7 @@ namespace DotNet.Releases.Tests
             InlineData("1.0", "2.1"),
             InlineData("2.2.8", "3.1"),
             InlineData("3.0.3", "3.1"),
-            InlineData("3.1.11", "5.0")
+            InlineData("3.1.11", "3.1")
         ]
         public async Task GetNextLtsVersionAsyncTest(
             string releaseVersion, string expectedVersion)
