@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.IO;
 
-namespace DotNet.Releases.Tests
+namespace DotNet.IO.Tests
 {
     public class SolutionFileReaderTests
     {

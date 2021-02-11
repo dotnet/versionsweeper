@@ -1,7 +1,7 @@
 ﻿using Xunit;
 using System.Threading.Tasks;
 
-namespace DotNet.Releases.Tests
+namespace DotNet.IO.Tests
 {
     public class ProjectFileReaderTests
     {

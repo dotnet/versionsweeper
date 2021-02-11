@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DotNet.GitHubActions\DotNet.GitHubActions.csproj" />
     <ProjectReference Include="..\DotNet.GitHub\DotNet.GitHub.csproj" />
+    <ProjectReference Include="..\DotNet.IO\DotNet.IO.csproj" />
     <ProjectReference Include="..\DotNet.Releases\DotNet.Releases.csproj" />
   </ItemGroup>
 

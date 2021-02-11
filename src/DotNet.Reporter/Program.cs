@@ -1,4 +1,5 @@
-﻿using DotNet.Releases;
+﻿using DotNet.IO;
+using DotNet.Releases;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -7,7 +8,7 @@ using System.Linq;
 
 using var host = Host.CreateDefaultBuilder(args)
     .ConfigureLogging((_, logging) => logging.ClearProviders())
-    .ConfigureServices((_, services) => services.AddDotNetReleaseServices())
+    .ConfigureServices((_, services) => services.AddDotNetReleaseServices().AddDotNetFileSystem())
     .Build();
 
 if (args is { Length: 1 })

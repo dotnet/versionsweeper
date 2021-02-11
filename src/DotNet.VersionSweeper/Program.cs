@@ -16,7 +16,8 @@ using var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((_, services) =>
         services.AddDotNetGitHubServices()
                 .AddGitHubActionServices()
-                .AddDotNetReleaseServices())
+                .AddDotNetReleaseServices()
+                .AddDotNetFileSystem())
     .Build();
 
 var jobService =

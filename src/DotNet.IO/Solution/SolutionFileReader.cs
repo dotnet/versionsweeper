@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SystemFile = System.IO.File;
 
-namespace DotNet.Releases
+namespace DotNet.IO
 {
     public class SolutionFileReader : ISolutionFileReader
     {

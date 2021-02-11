@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DotNet.IO\DotNet.IO.csproj" />
     <ProjectReference Include="..\DotNet.Releases\DotNet.Releases.csproj" />
   </ItemGroup>
 

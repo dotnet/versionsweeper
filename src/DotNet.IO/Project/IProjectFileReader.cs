@@ -1,7 +1,7 @@
 ﻿using DotNet.Models;
 using System.Threading.Tasks;
 
-namespace DotNet.Releases
+namespace DotNet.IO
 {
     public interface IProjectFileReader
     {

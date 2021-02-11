@@ -24,7 +24,8 @@ namespace DotNet.GitHub
             string owner, string name, string token)
         {
             var labelsClient = GetLabelsClient(token);
-            var labels = await _cache.GetOrCreateAsync($"{owner}/{name}/labels",
+            var labels = await _cache.GetOrCreateAsync(
+                $"{owner}/{name}/labels",
                 async _ => await labelsClient.GetAllForRepository(owner, name));
 
             static bool TryFindLabel(IReadOnlyList<Label> labels, out Label? label)
