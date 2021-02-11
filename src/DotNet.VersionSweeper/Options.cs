@@ -68,6 +68,11 @@ namespace DotNet.VersionSweeper
             "Override with env var named `PATTERN`.")]
         public string SearchPattern { get; set; }
 
+        [Option('s', "sdk-compliance",
+            HelpText = "Indicates whether or not to report projects that " +
+            "are not using the new SDK-style project format.")]
+        public bool ReportNonSdkStyleProjects { get; set; }
+
         static void ParseAndAssign(string? value, Action<string> assign)
         {
             if (value is { Length: > 0 } && assign is not null)

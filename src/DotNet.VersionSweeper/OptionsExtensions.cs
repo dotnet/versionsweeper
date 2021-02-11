@@ -63,6 +63,7 @@ namespace DotNet.VersionSweeper
             var parsedPatterns = string.Join(", ",
                 options.SearchPattern?.SplitOnExpectedDelimiters().AsRecursivePatterns() ?? Array.Empty<string>());
             builder.Append($"parsed patterns: {parsedPatterns}");
+            builder.Append($"report non-SDK style projects: {options.ReportNonSdkStyleProjects}");
 
             job.Info(builder.ToString());
         }

@@ -1,4 +1,5 @@
-﻿using DotNet.Models;
+﻿using DotNet.Extensions;
+using DotNet.Models;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SystemFile = System.IO.File;
@@ -32,7 +33,7 @@ namespace DotNet.IO
                 {
                     TfmLineNumber = lineNumber,
                     RawTargetFrameworkMonikers = rawTfms!,
-                    Sdk = sdk
+                    Sdk = sdk.NullIfEmpty()
                 };
             }
 

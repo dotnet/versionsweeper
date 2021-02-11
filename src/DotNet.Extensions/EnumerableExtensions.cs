@@ -33,5 +33,20 @@ namespace DotNet.Extensions
             this Dictionary<string, string> dictionary) =>
             dictionary.Concat(dictionary.ToDictionary(kvp => kvp.Value, kvp => kvp.Key))
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+        public static IEnumerable<TSource> DistinctBy<TSource, TKey>(
+            this IEnumerable<TSource> source,
+            Func<TSource, TKey> keySelector,
+            IEqualityComparer<TKey>? equalityComparer = default)
+        {
+            HashSet<TKey> keys = new(equalityComparer ?? EqualityComparer<TKey>.Default);
+            foreach (var element in source)
+            {
+                if (keys.Add(keySelector(element)))
+                {
+                    yield return element;
+                }
+            }
+        }
     }
 }

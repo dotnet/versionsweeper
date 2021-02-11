@@ -8,9 +8,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Octokit;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using static CommandLine.Parser;
+using Project = DotNet.Models.Project;
 
 using var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((_, services) =>
@@ -62,12 +64,19 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             }
         }
 
+        HashSet<Project> nonSdkStyleProjects = new();
+
         foreach (var solution in solutions.Where(sln => sln is not null))
         {
             SolutionSupportReport solutionSupportReport = new(solution);
 
             foreach (var project in solution.Projects)
             {
+                if (!project.IsSdkStyle)
+                {
+                    nonSdkStyleProjects.Add(project);
+                }
+
                 await foreach (var psr in unsupportedProjectReporter.ReportAsync(project))
                 {
                     solutionSupportReport.ProjectSupportReports.Add(psr);
@@ -87,6 +96,11 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
 
         foreach (var orphanedProject in orphanedProjects)
         {
+            if (!orphanedProject.IsSdkStyle)
+            {
+                nonSdkStyleProjects.Add(orphanedProject);
+            }
+
             await foreach (var psr in unsupportedProjectReporter.ReportAsync(orphanedProject))
             {
                 var (project, reports) = psr;
@@ -98,6 +112,14 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                         options, o => psr.ToMarkdownBody(o.Directory, o.Branch));
                 }
             }
+        }
+
+        if (nonSdkStyleProjects.TryCreateIssueContent(
+            options.Directory, options.Branch, out var content))
+        {
+            var (title, markdownBody) = content;
+            await CreateAndEnqueueAsync(
+                graphQLClient, issueQueue, job, title, options, _ => markdownBody);
         }
 
         await foreach (var issue in issueQueue.ExecuteAllQueuedItemsAsync())
