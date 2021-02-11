@@ -16,6 +16,11 @@ namespace DotNet.IO
 
         public async ValueTask<Project> ReadProjectAsync(string projectPath)
         {
+            Project project = new()
+            {
+                FullPath = projectPath
+            };
+
             if (SystemFile.Exists(projectPath))
             {
                 var projectXml = await SystemFile.ReadAllTextAsync(projectPath);
@@ -23,19 +28,15 @@ namespace DotNet.IO
                 var lineNumber = GetLineNumberFromIndex(projectXml, index);
                 var (_, sdk) = MatchExpression(_projectSdkExpression, projectXml, "sdk");
 
-                return new()
+                return project with
                 {
-                    FullPath = projectPath,
                     TfmLineNumber = lineNumber,
                     RawTargetFrameworkMonikers = rawTfms!,
                     Sdk = sdk
                 };
             }
 
-            return new()
-            {
-                FullPath = projectPath
-            };
+            return project;
         }
 
         static (int Index, string? Value) MatchExpression(

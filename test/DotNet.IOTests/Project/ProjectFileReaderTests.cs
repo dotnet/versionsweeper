@@ -6,10 +6,10 @@ namespace DotNet.IO.Tests
     public class ProjectFileReaderTests
     {
         [Fact]
-        public async Task ReadProjectTfmsAsyncTest()
+        public async Task ReadProjectAsyncTest()
         {
             IProjectFileReader sut = new ProjectFileReader();
-            var projectPath = "../../../DotNet.ReleasesTests.csproj";
+            var projectPath = "../../../DotNet.IOTests.csproj";
 
             var project = await sut.ReadProjectAsync(projectPath);
             Assert.Equal(4, project.TfmLineNumber);
