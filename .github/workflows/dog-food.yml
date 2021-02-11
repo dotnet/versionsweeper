@@ -31,3 +31,4 @@ jobs:
         owner: ${{ github.repository_owner }}
         name: ${{ github.repository }}
         branch: ${{ github.ref }}
+        sdkCompliance: true

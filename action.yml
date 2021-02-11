@@ -21,6 +21,10 @@ inputs:
     description: 'The search pattern, defaults to "*.csproj;*.fsproj;*.vbproj". Valid delimiters for lists, '','','';'', or ''|''. Example, "*.csproj,*.fsproj".'
     required: false
     default: '*.csproj;*.fsproj;*.vbproj'
+  sdkCompliance:
+    description: 'Whether or not to report projects that are not using the new SDK-style project format.'
+    required: false
+    default: 'false'
 outputs:
   summary-message:
     description: 'A detailed summary of all the projects that were flagged.'
@@ -38,3 +42,5 @@ runs:
   - ${{ inputs.dir }}
   - '-p'
   - ${{ inputs.pattern }}
+  - '-s'
+  - ${{ inputs.sdkCompliance }}
