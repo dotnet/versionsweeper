@@ -11,6 +11,7 @@
           "CommandLineParser": "2.8.0",
           "DotNet.GitHub": "1.0.0",
           "DotNet.GitHubActions": "1.0.0",
+          "DotNet.IO": "1.0.0",
           "DotNet.Releases": "1.0.0",
           "Microsoft.Extensions.FileSystemGlobbing": "5.0.0",
           "Microsoft.Extensions.Hosting": "5.0.0",
@@ -521,6 +522,16 @@
           "DotNet.GitHubActions.dll": {}
         }
       },
+      "DotNet.IO/1.0.0": {
+        "dependencies": {
+          "DotNet.Extensions": "1.0.0",
+          "DotNet.Models": "1.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "5.0.0"
+        },
+        "runtime": {
+          "DotNet.IO.dll": {}
+        }
+      },
       "DotNet.Models/1.0.0": {
         "dependencies": {
           "DotNet.Extensions": "1.0.0"
@@ -849,6 +860,11 @@
       "sha512": ""
     },
     "DotNet.GitHubActions/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "DotNet.IO/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
