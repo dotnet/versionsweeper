@@ -23,10 +23,11 @@ A schedule/cron job that runs on the first of every month is detailed below in t
 
 ## Optional inputs
 
-| Option          | Details                                                         |
-|:----------------|:----------------------------------------------------------------|
-| `-d`, `dir`     | The root directory, defaults to `"/github/workspace"`.          |
-| `-p`, `pattern` | The search pattern, defaults to `"*.csproj;*.fsproj;*.vbproj"`. |
+| Option                 | Details                                                                                |
+|:-----------------------|:---------------------------------------------------------------------------------------|
+| `-d`, `dir`            | The root directory, defaults to `"/github/workspace"`.                                 |
+| `-p`, `pattern`        | The search pattern, defaults to `"*.csproj;*.fsproj;*.vbproj"`.                        |
+| `-s`, `sdk-compliance` | Whether or not to report projects that are not using the new SDK-style project format. |
 
 ## Example workflow
 
@@ -73,6 +74,7 @@ jobs:
         owner: ${{ github.repository_owner }}
         name: ${{ github.repository }}
         branch: ${{ github.ref }}
+        sdkCompliance: true
 ```
 
 ## Configure action
@@ -90,6 +92,18 @@ To configure the action, you can create a file at the root of the repository nam
 ```
 
 For an example config file, see [dotnet/samples/dotnet-versionsweeper.json](https://github.com/dotnet/samples/blob/master/dotnet-versionsweeper.json).
+
+## Label auto-generation
+
+This tool will create a label named `dotnet-target-version` for easier tracking of issues and pull requests that it creates. The label is created with the following description and color by default, please do not change the name - as that is what is used to determine whether or not to create a new label.
+
+- `Description`: "Issues and PRs automatically generated from the .NET version sweeper."
+- `Color`: [Official .NET purple #512bd4](https://hexcolorcodes.org/hex-code/512BD4)
+
+### Example labels in the wild
+
+- [dotnet/doc](https://github.com/dotnet/docs/labels/dotnet-target-version)
+- [dotnet/samples](https://github.com/dotnet/samples/labels/dotnet-target-version)
 
 ## Example issues
 
