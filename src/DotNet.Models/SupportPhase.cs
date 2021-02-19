@@ -8,6 +8,8 @@
         eol = 1,
         
         LongTermSupport = 2,
-        lts = 2
+        lts = 2,
+
+        Preview = 3
     }
 }
