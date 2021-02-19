@@ -1,8 +1,9 @@
 ﻿# 🎯 LTS (or current) versions
  ## .NET version sweeper
 
-![build & test](https://github.com/IEvangelist/dotnet-versionsweeper/workflows/build%20&%20test/badge.svg)
-![target supported version](https://github.com/IEvangelist/dotnet-versionsweeper/workflows/target%20supported%20version/badge.svg)
+[![build & test](https://github.com/dotnet/versionsweeper/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/dotnet/versionsweeper/actions/workflows/build-and-test.yml)
+[![target supported version](https://github.com/dotnet/versionsweeper/actions/workflows/dog-food.yml/badge.svg)](https://github.com/dotnet/versionsweeper/actions/workflows/dog-food.yml)
+[![code-ql analysis](https://github.com/dotnet/versionsweeper/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/dotnet/versionsweeper/actions/workflows/codeql-analysis.yml)
 
 ## Get started
 
