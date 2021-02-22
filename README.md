@@ -110,6 +110,10 @@ This tool will create a label named `dotnet-target-version` for easier tracking 
 
 This repo serves as a sample, as it contains a directory *non-lts* with projects and solutions that are intentionally targeting unsupported versions. There are issues created against these to exemplify how they render. For more information, see [these issues](https://github.com/IEvangelist/dotnet-versionsweeper/issues?q=is%3Aopen+is%3Aissue+label%3Aexample-issue).
 
+## Official .NET support policies
+
+This action is intended to help determine non-LTS (or current) versions, but it is _not_ perfect. When in doubt, please refer to the [official .NET support policies](https://dotnet.microsoft.com/platform/support/policy).
+
 ## Acknowledgements
 
 | Name | NuGet package URL & license |
