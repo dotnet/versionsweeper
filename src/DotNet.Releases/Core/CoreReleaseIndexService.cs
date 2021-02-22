@@ -1,31 +1,34 @@
 ﻿using DotNet.Extensions;
-using DotNet.Models;
+using Microsoft.Deployment.DotNet.Releases;
 using Microsoft.Extensions.Caching.Memory;
-using System.Net.Http;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DotNet.Releases
 {
     public class CoreReleaseIndexService : ICoreReleaseIndexService
     {
-        const string ReleaseIndex =
-            "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json";
+        const string NetCoreKey = nameof(NetCoreKey);
 
-        readonly HttpClient _httpClient;
         readonly IMemoryCache _cache;
 
-        public CoreReleaseIndexService(
-            HttpClient httpClient,
-            IMemoryCache cache) =>
-            (_httpClient, _cache) = (httpClient, cache);
+        public CoreReleaseIndexService(IMemoryCache cache) => _cache = cache;
 
-        Task<CoreReleases?> ICoreReleaseIndexService.GetReleaesAsync() =>
+        Task<IReadOnlyDictionary<Product, IReadOnlyCollection<ProductRelease>>>
+            ICoreReleaseIndexService.GetReleasesAsync() =>
             _cache.GetOrCreateAsync(
-                ReleaseIndex,
+                NetCoreKey,
                 async entry =>
                 {
-                    var coreReleasesJson = await _httpClient.GetStringAsync(entry.Key.ToString());
-                    return coreReleasesJson.FromJson<CoreReleases>();
+                    var products = await ProductCollection.GetAsync();
+
+                    var map = new Dictionary<Product, IReadOnlyCollection<ProductRelease>>();
+                    foreach (var product in products)
+                    {
+                        map[product] = await product.GetReleasesAsync();
+                    }
+
+                    return map.AsReadOnly();
                 });
     }
 }

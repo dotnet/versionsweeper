@@ -24,7 +24,7 @@ namespace DotNet.Extensions
             string.IsNullOrWhiteSpace(json) ? default : Deserialize<T>(json, options ?? _lazyOptions.Value);
 
         public static DateTime? ToDateTime(this string? value) =>
-            DateTime.TryParse(value, out var dateTime) ? dateTime : null;
+            value is null ? default : DateTime.TryParse(value, out var dateTime) ? dateTime : null;
 
         public static void Deconstruct<T>(
             this T? nullable, out bool hasValue, out T value) where T : struct =>

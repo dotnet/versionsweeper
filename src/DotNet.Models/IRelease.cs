@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Deployment.DotNet.Releases;
 
 namespace DotNet.Models
 {

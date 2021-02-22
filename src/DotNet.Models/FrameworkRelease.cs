@@ -1,6 +1,7 @@
 ﻿using DotNet.Extensions;
 using System;
 using System.Collections.Generic;
+using Microsoft.Deployment.DotNet.Releases;
 
 namespace DotNet.Models
 {
@@ -25,9 +26,9 @@ namespace DotNet.Models
         public SupportPhase SupportPhase => EndOfLifeDate switch
         {
             var date when date is null && Version == "4.8" => SupportPhase.Current,
-            var date when date is null || date > DateTime.Now => SupportPhase.LongTermSupport,
+            var date when date > DateTime.Now => SupportPhase.LTS,
 
-            _ => SupportPhase.EndOfLife
+            _ => SupportPhase.EOL
         };
 
         public DateTime? EndOfLifeDate => EndOfLife.ToDateTime();

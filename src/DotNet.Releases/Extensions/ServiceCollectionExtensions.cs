@@ -8,9 +8,7 @@ namespace Microsoft.Extensions.DependencyInjection
             this IServiceCollection services) =>
             services
                 .AddMemoryCache()
-                .AddHttpClient()
                 .AddSingleton<ICoreReleaseIndexService, CoreReleaseIndexService>()
-                .AddSingleton<ICoreReleaseService, CoreReleaseService>()
                 .AddSingleton<IFrameworkReleaseIndexService, FrameworkReleaseIndexService>()
                 .AddSingleton<IFrameworkReleaseService, FrameworkReleaseService>()
                 .AddSingleton<IUnsupportedProjectReporter, UnsupportedProjectReporter>();
