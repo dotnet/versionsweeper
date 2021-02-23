@@ -2,17 +2,22 @@
 using Microsoft.Extensions.Logging;
 using Octokit;
 using Octokit.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DotNet.GitHub
 {
-    public class GitHubLabelService : IGitHubLabelService
+    public sealed class GitHubLabelService : IGitHubLabelService, IDisposable
     {
         readonly ResilientGitHubClientFactory _clientFactory;
         readonly ILogger<GitHubLabelService> _logger;
         readonly IMemoryCache _cache;
+
+        private readonly SemaphoreSlim _labelCreationSemaphore = new(1, 1);
+        private Label _label = null!;
 
         public GitHubLabelService(
             ResilientGitHubClientFactory clientFactory,
@@ -40,8 +45,20 @@ namespace DotNet.GitHub
             }
             else
             {
-                _logger.LogInformation($"Creating '{DefaultLabel.Name}' label.");
-                return await CreateLabelAsync(labelsClient, owner, name);
+                await _labelCreationSemaphore.WaitAsync();
+                try
+                {
+                    if (_label is null)
+                    {
+                        _logger.LogInformation($"Creating '{DefaultLabel.Name}' label.");
+                    }
+
+                    return _label ??= await CreateLabelAsync(labelsClient, owner, name);
+                }
+                finally
+                {
+                    _labelCreationSemaphore.Release();
+                }
             }
         }
 
@@ -58,5 +75,7 @@ namespace DotNet.GitHub
         static Task<Label> CreateLabelAsync(
             IIssuesLabelsClient labelsClient, string owner, string name) =>
             labelsClient.Create(owner, name, DefaultLabel.Value);
+
+        public void Dispose() => _labelCreationSemaphore.Dispose();
     }
 }
