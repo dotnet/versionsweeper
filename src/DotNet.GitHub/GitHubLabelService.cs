@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Octokit;
 using Octokit.Extensions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,7 +11,7 @@ namespace DotNet.GitHub
 {
     public sealed class GitHubLabelService : IGitHubLabelService, IDisposable
     {
-        readonly ResilientGitHubClientFactory _clientFactory;
+        readonly IResilientGitHubClientFactory _clientFactory;
         readonly ILogger<GitHubLabelService> _logger;
         readonly IMemoryCache _cache;
 
@@ -20,7 +19,7 @@ namespace DotNet.GitHub
         private Label _label = null!;
 
         public GitHubLabelService(
-            ResilientGitHubClientFactory clientFactory,
+            IResilientGitHubClientFactory clientFactory,
             ILogger<GitHubLabelService> logger,
             IMemoryCache cache) =>
             (_clientFactory, _logger, _cache) = (clientFactory, logger, cache);
@@ -29,19 +28,15 @@ namespace DotNet.GitHub
             string owner, string name, string token)
         {
             var labelsClient = GetLabelsClient(token);
+            var cacheKey = $"{owner}/{name}/labels";
             var labels = await _cache.GetOrCreateAsync(
-                $"{owner}/{name}/labels",
+                cacheKey,
                 async _ => await labelsClient.GetAllForRepository(owner, name));
 
-            static bool TryFindLabel(IReadOnlyList<Label> labels, out Label? label)
+            var label = labels?.FirstOrDefault(l => l.Name == DefaultLabel.Name);
+            if (label is not null)
             {
-                label = labels?.FirstOrDefault(l => l.Name == DefaultLabel.Name);
-                return label is not null;
-            }
-
-            if (TryFindLabel(labels, out var label))
-            {
-                return label!;
+                return _label = label;
             }
             else
             {
@@ -51,9 +46,11 @@ namespace DotNet.GitHub
                     if (_label is null)
                     {
                         _logger.LogInformation($"Creating '{DefaultLabel.Name}' label.");
+                        _label = await CreateLabelAsync(labelsClient, owner, name);
+                        _cache.Remove(cacheKey);
                     }
 
-                    return _label ??= await CreateLabelAsync(labelsClient, owner, name);
+                    return _label;
                 }
                 finally
                 {
@@ -64,10 +61,7 @@ namespace DotNet.GitHub
 
         IIssuesLabelsClient GetLabelsClient(string token)
         {
-            var client = _clientFactory.Create(
-                productHeaderValue: Product.Header,
-                credentials: new(token));
-
+            var client = _clientFactory.Create(token);
             var labelsClient = client.Issue.Labels;
             return labelsClient;
         }
