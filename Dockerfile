@@ -1,12 +1,8 @@
 ﻿FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
 
-# Copy csproj and restore as distinct layers
-COPY src/*.csproj ./
-RUN dotnet restore
-
-# Copy everything else and build
-COPY src/* ./
-RUN dotnet publish -c Release -o out
+# Copy everything and restore
+COPY . ./
+RUN dotnet publish ./src/DotNet.VersionSweeper/DotNet.VersionSweeper.csproj -c Release -o out --no-self-contained
 
 # Label the container
 LABEL maintainer="David Pine <david.pine@microsoft.com>"
