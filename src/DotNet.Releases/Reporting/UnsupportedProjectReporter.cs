@@ -1,5 +1,7 @@
 ﻿using DotNet.Models;
 using DotNet.Releases.Extensions;
+using Microsoft.Deployment.DotNet.Releases;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,29 +10,28 @@ namespace DotNet.Releases
 {
     internal class UnsupportedProjectReporter : IUnsupportedProjectReporter
     {
-        readonly ICoreReleaseService _coreReleaseService;
         readonly ICoreReleaseIndexService _coreReleaseIndexService;
         readonly IFrameworkReleaseService _frameworkReleaseService;
 
         public UnsupportedProjectReporter(
-            ICoreReleaseService coreReleaseService,
             ICoreReleaseIndexService coreReleaseIndexService,
             IFrameworkReleaseService frameworkReleaseService) =>
-            (_coreReleaseService, _coreReleaseIndexService, _frameworkReleaseService) =
-                (coreReleaseService, coreReleaseIndexService, frameworkReleaseService);
+            (_coreReleaseIndexService, _frameworkReleaseService) =
+                (coreReleaseIndexService, frameworkReleaseService);
 
         async IAsyncEnumerable<ProjectSupportReport> IUnsupportedProjectReporter.ReportAsync(Project project)
         {
             HashSet<TargetFrameworkMonikerSupport> resultingSupports = new();
 
-            await foreach (var (index, coreRelease)
-                in _coreReleaseService.GetAllReleasesAsync())
+            var products = await _coreReleaseIndexService.GetReleasesAsync();
+            foreach (var (product, release) 
+                in products.SelectMany(p => p.Value, (kvp, releases) => (kvp.Key, releases)))
             {
                 var tfmSupports =
                     project.Tfms.Select(
                         tfm => TryEvaluateReleaseSupport(
-                            tfm, coreRelease.ChannelVersion,
-                            index, out var tfmSupport)
+                            tfm, product.ProductVersion,
+                            release, out var tfmSupport)
                                 ? tfmSupport : null)
                         .Where(tfmSupport => tfmSupport is not null);
 
@@ -42,9 +43,12 @@ namespace DotNet.Releases
                             async support =>
                             {
                                 var release = await _coreReleaseIndexService.GetNextLtsVersionAsync(
-                                    coreRelease.LatestRelease);
+                                    product.LatestReleaseVersion.ToString());
 
-                                return support! with { NearestLtsVersion = release!.TargetFrameworkMoniker };
+                                return support! with
+                                {
+                                    NearestLtsVersion = release!.GetTargetFrameworkMoniker()
+                                };
                             }));
 
                     foreach (var support in supports)
@@ -94,14 +98,44 @@ namespace DotNet.Releases
 
         static bool TryEvaluateReleaseSupport(
             string tfm, string version,
+            ProductRelease productRelease,
+            out TargetFrameworkMonikerSupport? tfmSupport)
+        {
+            var product = productRelease.Product;
+            var release = ReleaseFactory.Create(
+                product,
+                pr => $"{pr.ProductName} {pr.ProductVersion}",
+                product.ProductName switch
+                {
+                    ".NET" => $"net{product.ProductVersion}",
+                    ".NET Core" => $"netcoreapp{product.ProductVersion}",
+                    _ => product.ProductVersion
+                },
+                product.SupportPhase,
+                product.EndOfLifeDate,
+                product.ReleasesJson.ToString());
+
+            if (TargetFrameworkMonikerMap.RawMapsToKnown(tfm, release.TargetFrameworkMoniker))
+            {
+                var isOutOfSupport = product.IsOutOfSupport();
+                tfmSupport = new(tfm, version, isOutOfSupport, release);
+                return true;
+            }
+
+            tfmSupport = default;
+            return false;
+        }
+
+        static bool TryEvaluateReleaseSupport(
+            string tfm, string version,
             IRelease release,
             out TargetFrameworkMonikerSupport? tfmSupport)
         {
             if (TargetFrameworkMonikerMap.RawMapsToKnown(tfm, release.TargetFrameworkMoniker))
             {
-                var isSupported = release.SupportPhase.IsSupported(
-                    release!.EndOfLifeDate ?? default);
-                tfmSupport = new(tfm, version, !isSupported, release);
+                var isOutOfSupport = release.SupportPhase == SupportPhase.EOL ||
+                    release.EndOfLifeDate?.Date <= DateTime.Now.Date;
+                tfmSupport = new(tfm, version, isOutOfSupport, release);
                 return true;
             }
 

@@ -1,6 +1,5 @@
-﻿using DotNet.Extensions;
-using DotNet.Models;
-using DotNet.Releases.Extensions;
+﻿using Microsoft.Deployment.DotNet.Releases;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,20 +7,17 @@ namespace DotNet.Releases
 {
     public interface ICoreReleaseIndexService
     {
-        Task<CoreReleases?> GetReleaesAsync();
+        Task<IReadOnlyDictionary<Product, IReadOnlyCollection<ProductRelease>>> GetReleasesAsync();
 
-        async ValueTask<ReleaseIndex?> GetNextLtsVersionAsync(string releaseVersion)
+        async ValueTask<Product?> GetNextLtsVersionAsync(string releaseVersion)
         {
-            var version = (LabeledVersion)releaseVersion;
-            var releases = await GetReleaesAsync();
+            var version = new ReleaseVersion(releaseVersion);
+            var products = await GetReleasesAsync();
 
-            return releases?.ReleasesIndex
-                .Select(release => (Version: (LabeledVersion)release.LatestRelease, Release: release))
-                .Where(_ =>
-                    _.Version > version &&
-                    _.Release.SupportPhase.IsSupported(_.Release.EndOfLifeDate.GetValueOrDefault()))
+            return products?.SelectMany(kvp => kvp.Value)
+                .Where(release => release.Version > version && !release.Product.IsOutOfSupport())
                 .OrderBy(_ => _.Version)
-                .Select(_ => _.Release)
+                .Select(_ => _.Product)
                 .FirstOrDefault();
         }
     }
