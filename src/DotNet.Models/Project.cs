@@ -1,5 +1,4 @@
 ﻿using System;
-using SystemFile = System.IO.File;
 using SystemPath = System.IO.Path;
 
 namespace DotNet.Models

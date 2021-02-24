@@ -1,8 +1,9 @@
 ﻿using Xunit;
 using System;
 using System.Collections.Generic;
+using DotNet.VersionSweeper;
 
-namespace DotNet.VersionSweeper.Tests
+namespace DotNet.VersionSweeperTests
 {
     public class StringExtensionsTests
     {

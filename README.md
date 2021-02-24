@@ -7,7 +7,7 @@
 
 ## Get started
 
-The .NET version sweeper is designed to alert repositories that there are projects targeting versions that are no longer supported. For example, projects targeting .NET Core 3.0, or .NET Framework 4.5.1 would trigger an issue to be created to update these non-LTS or current versions. For example issues, see [issues created in this repo based on the *non-lts* directory](https://github.com/IEvangelist/dotnet-versionsweeper/issues?q=is%3Aissue+is%3Aopen+Update+%28or+current%29+version).
+The .NET version sweeper is designed to alert repositories that there are projects targeting versions that are no longer supported. For example, projects targeting .NET Core 3.0, or .NET Framework 4.5.1 would trigger an issue to be created to update these non-LTS or current versions. For example issues, see [issues created in this repo based on the *non-lts* directory](https://github.com/dotnet/versionsweeper/issues?q=is%3Aopen+is%3Aissue+label%3Adotnet-target-version).
 
 This is intended to be used as a GitHub action that will run as a [scheduled CRON job](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#onschedule). Ideally, once a month or as often as necessary to align with .NET version updates.
 
@@ -27,7 +27,7 @@ A schedule/cron job that runs on the first of every month is detailed below in t
 | Option                 | Details                                                                                |
 |:-----------------------|:---------------------------------------------------------------------------------------|
 | `-d`, `dir`            | The root directory, defaults to `"/github/workspace"`.                                 |
-| `-p`, `pattern`        | The search pattern, defaults to `"*.csproj;*.fsproj;*.vbproj"`.                        |
+| `-p`, `pattern`        | The search pattern, defaults to `"*.csproj;*.fsproj;*.vbproj;*.xproj;project.json"`.   |
 | `-s`, `sdk-compliance` | Whether or not to report projects that are not using the new SDK-style project format. |
 
 ## Example workflow
@@ -77,6 +77,17 @@ jobs:
         branch: ${{ github.ref }}
         sdkCompliance: true
 ```
+
+## Project and solution discovery
+
+The .NET version sweeper currently supports reporting on all of the following types:
+
+- C# project files: `*.csproj`
+- F# project files: `*.fsproj`
+- VB project files: `*.vbproj`
+- DNX project files: `*.xproj`
+- Project JSON files: `project.json`
+- Solution files: `*.sln`
 
 ## Configure action
 

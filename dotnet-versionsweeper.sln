@@ -47,6 +47,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet.GitHubActions", "src\DotNet.GitHubActions\DotNet.GitHubActions.csproj", "{B221E8F2-3933-4111-A5A6-DA2C02498BBF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "non-lts", "non-lts", "{3241C58C-62C0-40DD-9B85-43A50641A3FA}"
+	ProjectSection(SolutionItems) = preProject
+		non-lts\project.json = non-lts\project.json
+		non-lts\ReallyOld.xproj = non-lts\ReallyOld.xproj
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultipleTargets", "non-lts\MultipleTargets.csproj", "{66C636CB-DD2A-43EF-873E-5F348F65F381}"
 EndProject

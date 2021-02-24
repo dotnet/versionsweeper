@@ -1,25 +1,63 @@
-﻿using Xunit;
+﻿using DotNet.IO;
+using System.IO;
 using System.Threading.Tasks;
+using Xunit;
 
-namespace DotNet.IO.Tests
+namespace DotNet.IOTests
 {
     public class ProjectFileReaderTests
     {
-#pragma warning disable xUnit1004 // Test methods should not be skipped
-        [Fact(Skip =
-            "This is skipped on the build server, but will run locally." +
-            "The GitHub action has issues finding the .*proj path.")]
-#pragma warning restore xUnit1004 // Test methods should not be skipped
-        public async Task ReadProjectAsyncTest()
+        [Fact]
+        public async Task ReadProjectAndParseXmlCorrectly()
         {
-            IProjectFileReader sut = new ProjectFileReader();
-            var projectPath = "../../../DotNet.IOTests.csproj";
+            var projectPath = "test.csproj";
 
-            var project = await sut.ReadProjectAsync(projectPath);
-            Assert.Equal(4, project.TfmLineNumber);
-            Assert.Single(project.Tfms);
-            Assert.Equal("net5.0", project.Tfms[0]);
-            Assert.Equal("Microsoft.NET.Sdk", project.Sdk);
+            try
+            {
+                await File.WriteAllTextAsync(projectPath, Constants.TestProjectXml);
+
+                IProjectFileReader sut = new ProjectFileReader();
+
+                var project = await sut.ReadProjectAsync(projectPath);
+                Assert.Equal(4, project.TfmLineNumber);
+                Assert.Single(project.Tfms);
+                Assert.Equal("net5.0", project.Tfms[0]);
+                Assert.Equal("Microsoft.NET.Sdk", project.Sdk);
+            }
+            finally
+            {
+                File.Delete(projectPath);
+            }
+        }
+
+        [
+            Theory,
+            InlineData("test-1.json", Constants.TestProjectJson, 18, "netcoreapp1.0"),
+            InlineData("test-2.json", Constants.TestProjectJsonMultipleTfms, 27, "dnx46", "dnxcore50")
+        ]
+        public async Task ReadProjectAndParseJsonCorrectly(
+            string projectPath, string content, int expectedLineNumber, params string[] expectedTfms)
+        {
+
+            try
+            {
+                await File.WriteAllTextAsync(projectPath, content);
+
+                IProjectFileReader sut = new ProjectFileReader();
+
+                var project = await sut.ReadProjectAsync(projectPath);
+                Assert.Equal(expectedLineNumber, project.TfmLineNumber);
+                Assert.Equal(expectedTfms.Length, project.Tfms.Length);
+                for (var i = 0; i < expectedTfms.Length; ++ i)
+                {
+                    Assert.Equal(expectedTfms[i], project.Tfms[i]);
+                }
+                Assert.Null(project.Sdk);
+            }
+            finally
+            {
+                File.Delete(projectPath);
+            }
         }
     }
 }
