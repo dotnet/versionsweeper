@@ -7,12 +7,12 @@ namespace DotNet.GitHub
 {
     public class GitHubIssueService : IGitHubIssueService
     {
-        readonly ResilientGitHubClientFactory _clientFactory;
+        readonly IResilientGitHubClientFactory _clientFactory;
         readonly IGitHubLabelService _gitHubLabelService;
         readonly ILogger<GitHubIssueService> _logger;
 
         public GitHubIssueService(
-            ResilientGitHubClientFactory clientFactory,
+            IResilientGitHubClientFactory clientFactory,
             IGitHubLabelService gitHubLabelService,
             ILogger<GitHubIssueService> logger) =>
             (_clientFactory, _gitHubLabelService, _logger) = (clientFactory, gitHubLabelService, logger);
@@ -35,10 +35,7 @@ namespace DotNet.GitHub
 
         IIssuesClient GetIssuesClient(string token)
         {
-            var client = _clientFactory.Create(
-                productHeaderValue: Product.Header,
-                credentials: new(token));
-
+            var client = _clientFactory.Create(token);
             return client.Issue;
         }
     }

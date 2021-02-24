@@ -24,14 +24,13 @@ namespace DotNet.Releases
             HashSet<TargetFrameworkMonikerSupport> resultingSupports = new();
 
             var products = await _coreReleaseIndexService.GetReleasesAsync();
-            foreach (var (product, release) 
-                in products.SelectMany(p => p.Value, (kvp, releases) => (kvp.Key, releases)))
+            foreach (var product in products.Keys)
             {
                 var tfmSupports =
                     project.Tfms.Select(
                         tfm => TryEvaluateReleaseSupport(
                             tfm, product.ProductVersion,
-                            release, out var tfmSupport)
+                            product, out var tfmSupport)
                                 ? tfmSupport : null)
                         .Where(tfmSupport => tfmSupport is not null);
 
@@ -98,10 +97,9 @@ namespace DotNet.Releases
 
         static bool TryEvaluateReleaseSupport(
             string tfm, string version,
-            ProductRelease productRelease,
+            Product product,
             out TargetFrameworkMonikerSupport? tfmSupport)
         {
-            var product = productRelease.Product;
             var release = ReleaseFactory.Create(
                 product,
                 pr => $"{pr.ProductName} {pr.ProductVersion}",

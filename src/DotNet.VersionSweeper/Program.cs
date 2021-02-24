@@ -55,11 +55,12 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             }
             else
             {
+                var markdownBody = getBody(options);
                 queue.Enqueue(
                     new(options.Owner, options.Name, options.Token),
                     new(title)
                     {
-                        Body = getBody(options)
+                        Body = markdownBody
                     });
             }
         }

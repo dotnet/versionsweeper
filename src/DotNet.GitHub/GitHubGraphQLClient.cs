@@ -49,7 +49,7 @@ namespace DotNet.GitHub
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new("Token", token);
                 _httpClient.DefaultRequestHeaders.UserAgent.Add(
-                    new(Product.Header.Name, Product.Header.Version));
+                    new(GitHubProduct.Header.Name, GitHubProduct.Header.Version));
 
                 GraphQLRequest graphQLRequest = new()
                 {
