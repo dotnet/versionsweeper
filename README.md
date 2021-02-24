@@ -68,7 +68,7 @@ jobs:
     # Issues will be automatically created for any non-ignored projects that are targeting non-LTS versions
     - name: .NET version sweeper
       id: dotnet-version-sweeper
-      uses: ./
+      uses: dotnet/versionsweeper@v1.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -105,6 +105,7 @@ This tool will create a label named `dotnet-target-version` for easier tracking 
 
 - [dotnet/doc](https://github.com/dotnet/docs/labels/dotnet-target-version)
 - [dotnet/samples](https://github.com/dotnet/samples/labels/dotnet-target-version)
+- [dotnet/versionsweeper](https://github.com/dotnet/versionsweeper/labels/dotnet-target-version)
 
 ## Example issues
 
