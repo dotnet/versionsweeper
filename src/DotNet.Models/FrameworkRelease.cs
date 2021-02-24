@@ -18,8 +18,10 @@ namespace DotNet.Models
         public string TargetFrameworkMoniker => Version.Split("-")[0] switch
         {
             "3.5.0" => "net35",
-            var version when version.StartsWith("v", StringComparison.OrdinalIgnoreCase) => $"net{version[1..].Replace(".", "")}",
-            var version when version.StartsWith("net", StringComparison.OrdinalIgnoreCase) => version.Replace(".", ""),
+            var version when version.StartsWith("v", StringComparison.OrdinalIgnoreCase) =>
+                $"net{version[1..].Replace(".", "")}",
+            var version when version.StartsWith("net", StringComparison.OrdinalIgnoreCase) =>
+                version.Replace(".", ""),
             _ => $"net{Version.Split("-")[0].Replace(".", "")}"
         };
 

@@ -27,8 +27,7 @@ namespace DotNet.GitHub
 
             var issue = await issuesClient.Create(owner, name, newIssue);
 
-            _logger.LogInformation(
-                $"Issue created: {issue.HtmlUrl}");
+            _logger.LogInformation($"Issue created: {issue.HtmlUrl}");
 
             return issue;
         }
