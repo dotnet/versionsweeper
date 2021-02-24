@@ -18,9 +18,9 @@ inputs:
     required: false
     default: '/github/workspace'
   pattern:
-    description: 'The search pattern, defaults to "*.csproj;*.fsproj;*.vbproj". Valid delimiters for lists, '','','';'', or ''|''. Example, "*.csproj,*.fsproj".'
+    description: 'The search pattern, defaults to "*.csproj;*.fsproj;*.vbproj;*.xproj;project.json". Valid delimiters for lists, '','','';'', or ''|''. Example, "*.csproj,*.fsproj".'
     required: false
-    default: '*.csproj;*.fsproj;*.vbproj'
+    default: '*.csproj;*.fsproj;*.vbproj;*.xproj;project.json'
   sdkCompliance:
     description: 'Whether or not to report projects that are not using the new SDK-style project format.'
     required: false

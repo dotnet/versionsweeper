@@ -5,9 +5,9 @@ using Microsoft.Extensions.Options;
 using DotNet.Extensions;
 using Microsoft.Deployment.DotNet.Releases;
 using DotNet.Releases.Extensions;
-using System.Text.Json;
+using DotNet.Releases;
 
-namespace DotNet.Releases.Tests
+namespace DotNet.ReleasesTests
 {
     public class CoreReleaseIndexServiceTests
     {

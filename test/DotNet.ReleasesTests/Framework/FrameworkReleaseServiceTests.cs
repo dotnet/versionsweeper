@@ -2,8 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using DotNet.Releases;
 
-namespace DotNet.Releases.Tests
+namespace DotNet.ReleasesTests
 {
     public class FrameworkReleaseServiceTests
     {

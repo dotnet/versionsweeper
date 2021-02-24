@@ -1,49 +1,57 @@
-﻿using Xunit;
-using System.Threading.Tasks;
+﻿using DotNet.IO;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Xunit;
 
-namespace DotNet.IO.Tests
+namespace DotNet.IOTests
 {
     public class SolutionFileReaderTests
     {
-#pragma warning disable xUnit1004 // Test methods should not be skipped
-        [Fact(Skip =
-            "This is skipped on the build server, but will run locally." +
-            "The GitHub action has issues finding the .sln path.")]
-#pragma warning restore xUnit1004 // Test methods should not be skipped
+        [Fact]
         public async Task ReadSolutionAsyncTest()
         {
-            ISolutionFileReader sut = new SolutionFileReader(new ProjectFileReader());
-            DirectoryInfo currentDirectory = new(Directory.GetCurrentDirectory());
-            var fileName = "dotnet-versionsweeper.sln";
-            var foundDirectory = TraverseToFile(currentDirectory, fileName);
-            var solutionPath = Path.Combine(foundDirectory.FullName, fileName);
+            var solutionPath = "test.sln";
+            Dictionary<string, string> files = new()
+            {
+                ["sln-test.csproj"] = Constants.TestProjectXml,
+                ["sln-test.json"] = Constants.TestProjectJson,
+                [solutionPath] = Constants.TestSolutionXml
+            };
 
-            var solution = await sut.ReadSolutionAsync(solutionPath);
-            Assert.NotNull(solution);
-            Assert.Equal(Path.GetFullPath(solutionPath), solution.FullPath);
-            Assert.NotEmpty(solution.Projects);
-        }
-
-        public static DirectoryInfo TraverseToFile(DirectoryInfo directory, string filename)
-        {
             try
             {
-                while (directory.GetFiles(filename, SearchOption.TopDirectoryOnly).Length == 0)
+                foreach (var (path, content) in files)
                 {
-                    directory = directory.Parent;
-                    if (directory == directory?.Root)
-                    {
-                        return null;
-                    }
+                    await File.WriteAllTextAsync(path, content);
+                }
+
+                ISolutionFileReader sut = new SolutionFileReader(new ProjectFileReader());
+
+                var solution = await sut.ReadSolutionAsync(solutionPath);
+                Assert.NotNull(solution);
+                Assert.Equal(Path.GetFullPath(solutionPath), solution.FullPath);
+                Assert.NotEmpty(solution.Projects);
+
+                var project = solution.Projects.FirstOrDefault(p => !p.IsSdkStyle);
+                Assert.Equal(18, project.TfmLineNumber);
+                Assert.Single(project.Tfms);
+                Assert.Equal("netcoreapp1.0", project.Tfms[0]);
+
+                project = solution.Projects.FirstOrDefault(p => p.IsSdkStyle);
+                Assert.Equal(4, project.TfmLineNumber);
+                Assert.Single(project.Tfms);
+                Assert.Equal("net5.0", project.Tfms[0]);
+                Assert.Equal("Microsoft.NET.Sdk", project.Sdk);
+            }
+            finally
+            {
+                foreach (var path in files.Keys)
+                {
+                    File.Delete(path);
                 }
             }
-            catch (DirectoryNotFoundException)
-            {
-                return null;
-            }
-
-            return directory;
         }
     }
 }

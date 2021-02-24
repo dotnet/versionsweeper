@@ -1,5 +1,7 @@
 ﻿using DotNet.Extensions;
 using DotNet.Models;
+using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SystemFile = System.IO.File;
@@ -24,10 +26,21 @@ namespace DotNet.IO
 
             if (SystemFile.Exists(projectPath))
             {
-                var projectXml = await SystemFile.ReadAllTextAsync(projectPath);
-                var (index, rawTfms) = MatchExpression(_targetFrameworkExpression, projectXml, "tfm");
-                var lineNumber = GetLineNumberFromIndex(projectXml, index);
-                var (_, sdk) = MatchExpression(_projectSdkExpression, projectXml, "sdk");
+                var projectContent = await SystemFile.ReadAllTextAsync(projectPath);
+                return project.Extension switch
+                {
+                    ".json" => ParseJson(project, projectContent),
+                    _ => ParseXml(project, projectContent)
+                };
+            }
+
+            return project;
+
+            static Project ParseXml(Project project, string projectContent)
+            {
+                var (index, rawTfms) = MatchExpression(_targetFrameworkExpression, projectContent, "tfm");
+                var lineNumber = GetLineNumberFromIndex(projectContent, index);
+                var (_, sdk) = MatchExpression(_projectSdkExpression, projectContent, "sdk");
 
                 return project with
                 {
@@ -37,7 +50,42 @@ namespace DotNet.IO
                 };
             }
 
-            return project;
+            static Project ParseJson(Project project, string projectContent)
+            {
+                var projectJson = projectContent.FromJson<ProjectJson>();
+                if (projectJson is null or { Frameworks: { Count: 0 } })
+                {
+                    return project;
+                }
+
+                var rawTfms = string.Join(";", projectJson.Frameworks.Keys);
+                var lineNumber = GetLineNumberFromProjectJson(
+                    projectJson.Frameworks.Keys.First(), projectContent);
+
+                return project with
+                {
+                    TfmLineNumber = lineNumber,
+                    RawTargetFrameworkMonikers = rawTfms
+                };
+            }
+        }
+
+        static int GetLineNumberFromProjectJson(string tfm, string json)
+        {
+            var lineNumber = 0;
+            if (json is { Length: > 0 })
+            {
+                var lines = json.Split('\n');
+                for (var i = 0; i < lines.Length; ++ i)
+                {
+                    if (lines[i]?.Contains(tfm, StringComparison.OrdinalIgnoreCase) ?? false)
+                    {
+                        lineNumber = i + 1;
+                        break;
+                    }
+                }
+            }
+            return lineNumber;
         }
 
         static (int Index, string? Value) MatchExpression(
