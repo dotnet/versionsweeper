@@ -27,7 +27,7 @@ namespace DotNet.Models
             set
             {
                 _fullPath = value;
-                if (value is { Length: > 0 } && SystemFile.Exists(value))
+                if (value is { Length: > 0 })
                 {
                     Extension = SystemPath.GetExtension(value);
                 }

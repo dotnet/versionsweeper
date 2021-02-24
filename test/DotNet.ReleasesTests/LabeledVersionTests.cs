@@ -7,7 +7,7 @@ namespace DotNet.Releases.Tests
     public class LabeledVersionTests
     {
         public static IEnumerable<object[]> AsLabeledVersionInput = new[]
-{
+        {
             new object[] { "5.0",     new LabeledVersion(new Version(5, 0)) },
             new object[] { "5.0.2",   new LabeledVersion(new Version(5, 0, 2)) },
             new object[] { "3.1.405", new LabeledVersion(new Version(3, 1, 405)) },

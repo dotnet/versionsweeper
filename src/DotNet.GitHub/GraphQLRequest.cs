@@ -10,7 +10,7 @@ namespace DotNet.GitHub
         public string Query { get; init; } = "";
 
         [JsonPropertyName("variables")]
-        public IDictionary<string, string> Variables { get; init; } = new Dictionary<string, string>();
+        public Dictionary<string, string> Variables { get; init; } = new();
 
         public override string ToString() => this.ToJson()!;
     }

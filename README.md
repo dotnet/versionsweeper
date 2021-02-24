@@ -121,5 +121,6 @@ This action is intended to help determine non-LTS (or current) versions, but it 
 |:-|:-|
 | `CommandLineParser` | [https://www.nuget.org/packages/CommandLineParser](https://www.nuget.org/packages/CommandLineParser) ([MIT](https://www.nuget.org/packages/CommandLineParser/2.8.0/License)) |
 | `MarkdownBuilder` | [https://www.nuget.org/packages/MarkdownBuilder](https://www.nuget.org/packages/MarkdownBuilder) ([MIT](https://licenses.nuget.org/MIT)) |
+| `NSubstitute` | [https://www.nuget.org/packages/NSubstitute](https://www.nuget.org/packages/NSubstitute) ([LICENSE](https://github.com/nsubstitute/NSubstitute/blob/master/LICENSE.txt)) |
 | `Octokit` | [https://www.nuget.org/packages/Octokit](https://www.nuget.org/packages/Octokit) ([MIT](https://licenses.nuget.org/MIT)) |
 | `Octokit.Extensions` | [https://www.nuget.org/packages/Octokit.Extensions](https://www.nuget.org/packages/Octokit.Extensions) ([MIT](https://github.com/mirsaeedi/octokit.net.Extensions/blob/master/LICENSE)) |
