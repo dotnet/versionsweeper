@@ -56,14 +56,14 @@ namespace DotNet.VersionSweeper
             job.SetCommandEcho(true);
 
             StringBuilder builder = new();
-            builder.Append($"repository owner: {options.Owner}");
-            builder.Append($"repository name: {options.Name}");
-            builder.Append($"current branch: {options.Branch}");
-            builder.Append($"root directory to search: {options.Directory}");
+            builder.AppendLine($"repository owner: {options.Owner}");
+            builder.AppendLine($"repository name: {options.Name}");
+            builder.AppendLine($"current branch: {options.Branch}");
+            builder.AppendLine($"root directory to search: {options.Directory}");
             var parsedPatterns = string.Join(", ",
                 options.SearchPattern?.SplitOnExpectedDelimiters().AsRecursivePatterns() ?? Array.Empty<string>());
-            builder.Append($"parsed patterns: {parsedPatterns}");
-            builder.Append($"report non-SDK style projects: {options.ReportNonSdkStyleProjects}");
+            builder.AppendLine($"parsed patterns: {parsedPatterns}");
+            builder.AppendLine($"report non-SDK style projects: {options.ReportNonSdkStyleProjects}");
 
             job.Info(builder.ToString());
         }

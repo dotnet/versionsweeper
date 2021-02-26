@@ -64,6 +64,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet.IO", "src\DotNet.IO\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet.IOTests", "test\DotNet.IOTests\DotNet.IOTests.csproj", "{B401F1C9-3212-490D-979A-E35B510FBDE9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet.GitHubActionsTests", "test\DotNet.GitHubActionsTests\DotNet.GitHubActionsTests.csproj", "{D41F19E7-3FC5-4E41-8F46-9ADA2B7D6EAF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -134,6 +136,10 @@ Global
 		{B401F1C9-3212-490D-979A-E35B510FBDE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B401F1C9-3212-490D-979A-E35B510FBDE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B401F1C9-3212-490D-979A-E35B510FBDE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D41F19E7-3FC5-4E41-8F46-9ADA2B7D6EAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D41F19E7-3FC5-4E41-8F46-9ADA2B7D6EAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D41F19E7-3FC5-4E41-8F46-9ADA2B7D6EAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D41F19E7-3FC5-4E41-8F46-9ADA2B7D6EAF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -157,6 +163,7 @@ Global
 		{412A1687-B123-4D37-A6C9-DD6197A214D9} = {3241C58C-62C0-40DD-9B85-43A50641A3FA}
 		{BD2148A3-7D83-4AE8-A199-437E8258289F} = {503A8641-B4A5-4D57-9CD2-54C5F894E88D}
 		{B401F1C9-3212-490D-979A-E35B510FBDE9} = {0E68FE58-BFAB-45C8-8EB5-52C74A6ADF7E}
+		{D41F19E7-3FC5-4E41-8F46-9ADA2B7D6EAF} = {0E68FE58-BFAB-45C8-8EB5-52C74A6ADF7E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {70E27639-9B58-4BD1-93FB-05D76A8A32EF}
