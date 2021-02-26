@@ -1,6 +1,9 @@
-﻿using DotNet.IO;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.IO;
 using System.Threading.Tasks;
+using DotNet.IO;
 using Xunit;
 
 namespace DotNet.IOTests
@@ -48,7 +51,7 @@ namespace DotNet.IOTests
                 var project = await sut.ReadProjectAsync(projectPath);
                 Assert.Equal(expectedLineNumber, project.TfmLineNumber);
                 Assert.Equal(expectedTfms.Length, project.Tfms.Length);
-                for (var i = 0; i < expectedTfms.Length; ++ i)
+                for (var i = 0; i < expectedTfms.Length; ++i)
                 {
                     Assert.Equal(expectedTfms[i], project.Tfms[i]);
                 }

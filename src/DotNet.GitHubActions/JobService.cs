@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -7,6 +10,7 @@ namespace DotNet.GitHubActions
 {
     public class JobService : IJobService
     {
+        /// <inheritdoc />
         public void AddPath(string inputPath)
         {
             IssueCommand(Commands.AddPath, message: inputPath);
@@ -14,13 +18,29 @@ namespace DotNet.GitHubActions
                 "PATH", $"{inputPath}{Path.PathSeparator}{Environment.GetEnvironmentVariable("PATH")}");
         }
 
-        public void Debug(string message) => IssueCommand(Commands.Debug, message: message);
+        /// <inheritdoc />
+        public bool IsDebug() => Environment.GetEnvironmentVariable("RUNNER_DEBUG") == "1";
+        /// <inheritdoc />
+        public void Info(string? message) => Console.WriteLine(message);
+        /// <inheritdoc />
+        public void Debug(string? message) => IssueCommand(Commands.Debug, message: message);
+        /// <inheritdoc />
+        public void Error(string? message) => IssueCommand(Commands.Error, message: message);
+        /// <inheritdoc />
+        public void Warning(string? message) => IssueCommand(Commands.Warning, message: message);
+        /// <inheritdoc />
+        public void SetSecret(string secret) => IssueCommand(Commands.AddMask, message: secret);
+        /// <inheritdoc />
+        public void StartGroup(string name) => IssueCommand(Commands.Group, message: name);
+        /// <inheritdoc />
+        public void EndGroup() => IssueCommand<object>(Commands.EndGroup);
+        /// <inheritdoc />
+        public void SetCommandEcho(bool enabled) => IssueCommand(Commands.Echo, message: enabled ? "on" : "off");
+        /// <inheritdoc />
+        public string GetState(string name) => Environment.GetEnvironmentVariable($"STATE_{name}") ?? "";
 
-        public void EndGroup() => IssueCommand(Commands.EndGroup);
-
-        public void Error(string message) => IssueCommand(Commands.Error, message: message);
-
-        public void ExportVariable(string name, object? value)
+        /// <inheritdoc />
+        public void ExportVariable<T>(string name, T? value)
         {
             var convertedValue = value.ToCommandValue();
             Environment.SetEnvironmentVariable(name, convertedValue);
@@ -38,6 +58,7 @@ namespace DotNet.GitHubActions
             }
         }
 
+        /// <inheritdoc />
         public string GetInput(string name, InputOptions? options = default)
         {
             var value = Environment.GetEnvironmentVariable(
@@ -48,44 +69,27 @@ namespace DotNet.GitHubActions
                 : value.Trim();
         }
 
-        public string GetState(string name) =>
-            Environment.GetEnvironmentVariable($"STATE_{name}") ?? "";
+        /// <inheritdoc />
+        public void SaveState<T>(string stateName, T? stateValue) =>
+            IssueCommand(Commands.SaveState, new() { ["name"] = stateName }, stateValue);
 
-        public void Info(string message) => Console.WriteLine(message);
-
-        public bool IsDebug() => Environment.GetEnvironmentVariable("RUNNER_DEBUG") == "1";
-
-        public void SaveState(string name, object? value) =>
-            IssueCommand(Commands.SaveState, new Dictionary<string, string>() { [nameof(name)] = name }, value);
-
-        public void SetCommandEcho(bool enabled) =>
-            IssueCommand(Commands.Echo, message: enabled ? "on" : "off");
-
-        public void SetFailed(string message)
+        /// <inheritdoc />
+        public void SetFailed(string message, int? exitCode = null)
         {
             Error(message);
-
-            Environment.Exit((int)ExitCode.Failure);
+            Environment.Exit(exitCode ?? (int)ExitCode.Failure);
         }
 
-        public void SetOutput(string name, object? value) =>
-            IssueCommand(Commands.SetOutput, new Dictionary<string, string>() { [nameof(name)] = name }, value);
+        /// <inheritdoc />
+        public void SetOutput(string? message, Dictionary<string, string>? properties = default) =>
+            IssueCommand(Commands.SetOutput, properties, message);
 
-        public void SetSecret(string secret) =>
-            IssueCommand(Commands.AddMask, message: secret);
-
-        public void StartGroup(string name) =>
-            IssueCommand(Commands.Group, message: name);
-
-        public void Warning(string message) =>
-            IssueCommand(Commands.Warning, message: message);
-
-        static void IssueCommand(
-            string command,
-            IDictionary<string, string>? commandProperties = default,
-            object? message = default)
+        static void IssueCommand<T>(
+            string commandName,
+            Dictionary<string, string>? properties = default,
+            T? message = default)
         {
-            WorkflowCommand workflowCommand = new(command, message, commandProperties);
+            WorkflowCommand<T> workflowCommand = new(commandName, message, properties);
             Console.WriteLine(workflowCommand.ToString());
         }
 

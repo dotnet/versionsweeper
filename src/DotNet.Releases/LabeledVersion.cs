@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
 
 namespace DotNet.Releases
 {
@@ -47,13 +50,13 @@ namespace DotNet.Releases
         public static bool operator >=(LabeledVersion? v1, LabeledVersion? v2) =>
             v1?._parsedVersion >= v2?._parsedVersion;
 
-        public static bool operator !=(LabeledVersion? v1, LabeledVersion? v2) => 
+        public static bool operator !=(LabeledVersion? v1, LabeledVersion? v2) =>
             v1?._parsedVersion != v2?._parsedVersion;
 
-        public static bool operator <(LabeledVersion? v1, LabeledVersion? v2) => 
+        public static bool operator <(LabeledVersion? v1, LabeledVersion? v2) =>
             v1?._parsedVersion < v2?._parsedVersion;
 
-        public static bool operator <=(LabeledVersion? v1, LabeledVersion? v2) => 
+        public static bool operator <=(LabeledVersion? v1, LabeledVersion? v2) =>
             v1?._parsedVersion <= v2?._parsedVersion;
 
         int IComparable<LabeledVersion?>.CompareTo(LabeledVersion? other) =>
@@ -62,7 +65,7 @@ namespace DotNet.Releases
 
         public override bool Equals(object? obj) =>
             ReferenceEquals(this, obj)
-            || obj is not null 
+            || obj is not null
             && obj is LabeledVersion other
             && _parsedVersion == other._parsedVersion
             && Label == other.Label;

@@ -1,8 +1,11 @@
-﻿using Xunit;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Threading.Tasks;
+using DotNet.Releases;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using DotNet.Releases;
+using Xunit;
 
 namespace DotNet.ReleasesTests
 {

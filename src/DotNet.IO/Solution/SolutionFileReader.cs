@@ -1,7 +1,10 @@
-﻿using DotNet.Models;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using DotNet.Models;
 using SystemFile = System.IO.File;
 
 namespace DotNet.IO
@@ -34,7 +37,7 @@ namespace DotNet.IO
                 var solutionDirectory = Path.GetDirectoryName(solution.FullPath);
                 var solutionText = await SystemFile.ReadAllTextAsync(solution.FullPath);
                 var matches = _solutionProjectsExpression.Matches(solutionText);
-                
+
                 foreach (Match match in matches)
                 {
                     var path = match.Groups["Path"].Value;

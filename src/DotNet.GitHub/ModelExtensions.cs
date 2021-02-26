@@ -1,11 +1,14 @@
-﻿using DotNet.Extensions;
-using DotNet.Models;
-using Markdown;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using DotNet.Extensions;
+using DotNet.Models;
+using Markdown;
 
 namespace DotNet.GitHub
 {
@@ -223,7 +226,7 @@ namespace DotNet.GitHub
                 $"Create a file at the root of the repository, named *dotnet-versionsweeper.json* and " +
                 $"add an `ignore` entry following the " +
                 $"[globbing patterns detailed here](https://docs.microsoft.com/dotnet/api/microsoft.extensions.filesystemglobbing.matcher#remarks).");
-            
+
             document.AppendCode("json", @"{
     ""ignore"": [
         ""**/Path/To/Example.csproj""
@@ -232,7 +235,7 @@ namespace DotNet.GitHub
 
             result =
                 (
-                    Title:"Upgrade project(s) to the SDK-style project format",
+                    Title: "Upgrade project(s) to the SDK-style project format",
                     MarkdownBody: document.ToString()
                 );
 

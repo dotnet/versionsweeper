@@ -1,10 +1,13 @@
-﻿using DotNet.GitHubActions;
-using Microsoft.Extensions.FileSystemGlobbing;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using DotNet.GitHubActions;
+using Microsoft.Extensions.FileSystemGlobbing;
 
 namespace DotNet.VersionSweeper
 {
@@ -56,14 +59,14 @@ namespace DotNet.VersionSweeper
             job.SetCommandEcho(true);
 
             StringBuilder builder = new();
-            builder.Append($"repository owner: {options.Owner}");
-            builder.Append($"repository name: {options.Name}");
-            builder.Append($"current branch: {options.Branch}");
-            builder.Append($"root directory to search: {options.Directory}");
+            builder.AppendLine($"repository owner: {options.Owner}");
+            builder.AppendLine($"repository name: {options.Name}");
+            builder.AppendLine($"current branch: {options.Branch}");
+            builder.AppendLine($"root directory to search: {options.Directory}");
             var parsedPatterns = string.Join(", ",
                 options.SearchPattern?.SplitOnExpectedDelimiters().AsRecursivePatterns() ?? Array.Empty<string>());
-            builder.Append($"parsed patterns: {parsedPatterns}");
-            builder.Append($"report non-SDK style projects: {options.ReportNonSdkStyleProjects}");
+            builder.AppendLine($"parsed patterns: {parsedPatterns}");
+            builder.AppendLine($"report non-SDK style projects: {options.ReportNonSdkStyleProjects}");
 
             job.Info(builder.ToString());
         }

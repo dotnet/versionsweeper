@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,27 +11,48 @@ using System.Text.Json.Serialization;
 
 namespace DotNet.GitHubActions
 {
-    public record WorkflowCommand(
-        string Command,
-        object? Message,
+    /// <summary>
+    /// {commandName} is the command name, example:
+    ///     "::set-output::"
+    ///     "::{commandName}::"
+    ///      when {commandName} is "set-output"
+    /// {message} is a string, example:
+    ///     "::set-output::Hello World!"
+    ///     "::set-output::{message}"
+    ///     when {message} is "Hello World!"
+    /// {properties} is a Dictionary{string, string}, example:
+    ///     "::set-output prop1=Value 1, value 2::Hi"
+    ///     "::set-output {properties}::{message}"
+    ///     when {message} is "Hi"
+    ///     and {properties} is
+    ///         new Dictionary{string, string}
+    ///         {
+    ///             ["prop1] = "Value 1",
+    ///             ["prop2"] = "Value 2"
+    ///         }
+    /// ::{commandName} {properties}::{message}
+    /// </summary>
+    public record WorkflowCommand<T>(
+        string CommandName,
+        T? Message,
         IDictionary<string, string>? CommandProperties = default)
     {
         const string CMD_STRING = "::";
 
         public override string ToString()
         {
-            StringBuilder builder = new($"{CMD_STRING}{Command}");
+            StringBuilder builder = new($"{CMD_STRING}{CommandName}");
 
             if (CommandProperties?.Any() ?? false)
             {
-                foreach (var (first, key, value) 
+                foreach (var (first, key, value)
                     in CommandProperties.Select((kvp, i) => (i == 0, kvp.Key, kvp.Value)))
                 {
                     if (!first)
                     {
                         builder.Append(',');
                     }
-                    builder.Append($"{key}={EscapeProperty(value)}");
+                    builder.Append($" {key}={EscapeProperty(value)}");
                 }
             }
 
@@ -37,13 +61,13 @@ namespace DotNet.GitHubActions
             return builder.ToString();
         }
 
-        static string EscapeData(object? value) =>
+        static string EscapeData<TSource>(TSource? value) =>
             value.ToCommandValue()
                 .Replace("%", "%25")
                 .Replace("\r", "%0D")
                 .Replace("\n", "%0A");
 
-        static string EscapeProperty(object? value) =>
+        static string EscapeProperty<TSource>(TSource? value) =>
             value.ToCommandValue()
                 .Replace("%", "%25")
                 .Replace("\r", "%0D")
@@ -63,6 +87,7 @@ namespace DotNet.GitHubActions
 
         internal static string ToCommandValue<T>(this T? value) => value switch
         {
+            null => string.Empty,
             string str => str,
             _ => JsonSerializer.Serialize(value, _lazyOptions.Value)
         };

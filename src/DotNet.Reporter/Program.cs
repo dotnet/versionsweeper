@@ -1,10 +1,13 @@
-﻿using DotNet.IO;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
+using System.Linq;
+using DotNet.IO;
 using DotNet.Releases;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Linq;
 
 using var host = Host.CreateDefaultBuilder(args)
     .ConfigureLogging((_, logging) => logging.ClearProviders())
