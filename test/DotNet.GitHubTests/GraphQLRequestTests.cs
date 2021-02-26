@@ -1,10 +1,13 @@
-﻿using DotNet.Extensions;
-using DotNet.GitHub;
-using Octokit;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using DotNet.Extensions;
+using DotNet.GitHub;
+using Octokit;
 using Xunit;
 
 namespace DotNet.GitHubTests

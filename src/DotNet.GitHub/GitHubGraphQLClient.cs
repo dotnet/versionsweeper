@@ -1,6 +1,6 @@
-﻿using DotNet.Extensions;
-using Microsoft.Extensions.Logging;
-using Octokit;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -8,6 +8,9 @@ using System.Net.Mime;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using DotNet.Extensions;
+using Microsoft.Extensions.Logging;
+using Octokit;
 
 namespace DotNet.GitHub
 {

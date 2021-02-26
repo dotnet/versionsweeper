@@ -1,9 +1,12 @@
-﻿using DotNet.Extensions;
-using DotNet.Models;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using DotNet.Extensions;
+using DotNet.Models;
 using SystemFile = System.IO.File;
 
 namespace DotNet.IO
@@ -76,7 +79,7 @@ namespace DotNet.IO
             if (json is { Length: > 0 })
             {
                 var lines = json.Split('\n');
-                for (var i = 0; i < lines.Length; ++ i)
+                for (var i = 0; i < lines.Length; ++i)
                 {
                     if (lines[i]?.Contains(tfm, StringComparison.OrdinalIgnoreCase) ?? false)
                     {
@@ -104,9 +107,9 @@ namespace DotNet.IO
         static int GetLineNumberFromIndex(string xml, int index)
         {
             var lineNumber = 1;
-            for (var i = 0; i < index; ++ i)
+            for (var i = 0; i < index; ++i)
             {
-                if (xml[i] == '\n') ++ lineNumber;
+                if (xml[i] == '\n') ++lineNumber;
             }
             return lineNumber;
         }

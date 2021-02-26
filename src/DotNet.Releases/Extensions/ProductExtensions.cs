@@ -1,4 +1,7 @@
-﻿using Microsoft.Deployment.DotNet.Releases;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using Microsoft.Deployment.DotNet.Releases;
 
 namespace DotNet.Releases.Extensions
 {
@@ -7,11 +10,11 @@ namespace DotNet.Releases.Extensions
         public static string GetTargetFrameworkMoniker(this Product product) =>
             product is not null
                 ? product.ProductName switch
-                  {
-                      ".NET" => $"net{product.ProductVersion}",
-                      ".NET Core" => $"netcoreapp{product.ProductVersion}",
-                      _ => product.ProductVersion
-                  }
+                {
+                    ".NET" => $"net{product.ProductVersion}",
+                    ".NET Core" => $"netcoreapp{product.ProductVersion}",
+                    _ => product.ProductVersion
+                }
                 : string.Empty;
     }
 }

@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -17,7 +20,7 @@ namespace DotNet.Extensions
         {
             private readonly IDictionary<TKey, TValue> _dictionary;
 
-            public ReadOnlyDictionaryWrapper(IDictionary<TKey, TValue> dictionary) => 
+            public ReadOnlyDictionaryWrapper(IDictionary<TKey, TValue> dictionary) =>
                 _dictionary = dictionary ?? throw new ArgumentNullException(nameof(dictionary));
 
             public bool ContainsKey(TKey key) => _dictionary.ContainsKey(key);
