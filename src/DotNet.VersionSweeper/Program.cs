@@ -49,12 +49,16 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             IJobService job,
             string title, Options options, Func<Options, string> getBody)
         {
-            var existingIssue =
+            var (isError, existingIssue) =
                 await client.GetIssueAsync(
                     options.Owner, options.Name, options.Token, title);
-            if (existingIssue?.State == ItemState.Open)
+            if (isError)
             {
-                job.Info($"Re-discovered but ignoring, latent non-LTS version in {existingIssue}.");
+                job.Debug($"Error checking for existing issue, best not to create an issue as it may be a duplicate.");
+            }
+            else if (existingIssue is { State: ItemState.Open })
+            {
+                job.Info($"Re-discovered but ignoring, latent issue: {existingIssue}.");
             }
             else
             {

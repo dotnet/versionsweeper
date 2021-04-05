@@ -33,7 +33,7 @@ namespace DotNet.GitHub
 }";
 
         readonly Uri _graphQLUri = new("https://api.github.com/graphql");
-        readonly static JsonSerializerOptions _options = new()
+        readonly static JsonSerializerOptions s_options = new()
         {
             Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
             PropertyNameCaseInsensitive = true
@@ -45,7 +45,7 @@ namespace DotNet.GitHub
         public GitHubGraphQLClient(HttpClient httpClient, ILogger<GitHubGraphQLClient> logger) =>
             (_httpClient, _logger) = (httpClient, logger);
 
-        public async Task<ExistingIssue?> GetIssueAsync(
+        public async Task<(bool IsError, ExistingIssue? Issue)> GetIssueAsync(
             string owner, string name, string token, string title)
         {
             try
@@ -68,20 +68,21 @@ namespace DotNet.GitHub
                 request.Headers.Add("Accepts", MediaTypeNames.Application.Json);
 
                 using var response = await _httpClient.PostAsync(_graphQLUri, request);
+                response.EnsureSuccessStatusCode();
 
                 var json = await response.Content.ReadAsStringAsync();
-                var result = json.FromJson<GraphQLResult<ExistingIssue>>(_options);
+                var result = json.FromJson<GraphQLResult<ExistingIssue>>(s_options);
 
-                return result?.Data?.Search?.Nodes
+                return (false, result?.Data?.Search?.Nodes
                     ?.Where(i => i.State == ItemState.Open)
                     ?.OrderByDescending(i => i.CreatedAt.GetValueOrDefault())
-                    ?.FirstOrDefault();
+                    ?.FirstOrDefault());
             }
             catch (Exception ex)
             {
                 _logger.LogWarning(ex, ex.Message);
 
-                return default;
+                return (true, default);
             }
         }
     }

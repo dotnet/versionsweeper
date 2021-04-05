@@ -58,6 +58,18 @@ namespace DotNet.GitHubActionsTests
         {
             new object[]
             {
+                new Dictionary<string, string>
+                {
+                    ["name"] = "summary"
+                },
+                "Everything worked as expected",
+                new[]
+                {
+                    $"::{Commands.SetOutput} name=summary::Everything worked as expected"
+                }
+            },
+            new object[]
+            {
                 null,
                 "deftones",
                 new[]
