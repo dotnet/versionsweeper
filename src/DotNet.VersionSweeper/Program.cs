@@ -49,10 +49,10 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             IJobService job,
             string title, Options options, Func<Options, string> getBody)
         {
-            var existingIssue =
+            var (isError, existingIssue) =
                 await client.GetIssueAsync(
                     options.Owner, options.Name, options.Token, title);
-            if (existingIssue is null)
+            if (isError)
             {
                 job.Debug($"Error checking for existing issue, best not to create an issue as it may be a duplicate.");
             }
