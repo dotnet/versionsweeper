@@ -16,6 +16,8 @@ namespace DotNet.ReleasesTests
             new object[] { "5.0.2", new LabeledVersion(new Version(5, 0, 2)) },
             new object[] { "3.1.405", new LabeledVersion(new Version(3, 1, 405)) },
             new object[] { "2.2.207", new LabeledVersion(new Version(2, 2, 207)) },
+            new object[] { "8.1.0.314-preview1", new LabeledVersion(new Version(8, 1, 0, 314), "preview1") },
+            new object[] { "7.7.84.34-beta", new LabeledVersion(new Version(7, 7, 84, 34), "beta") },
             new object[] { "3.5.0-sp1", new LabeledVersion(new Version(3, 5, 0), "sp1") },
             new object[] { "pickles", new LabeledVersion(null) }
         };

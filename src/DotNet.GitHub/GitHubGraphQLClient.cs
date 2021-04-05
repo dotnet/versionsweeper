@@ -68,6 +68,7 @@ namespace DotNet.GitHub
                 request.Headers.Add("Accepts", MediaTypeNames.Application.Json);
 
                 using var response = await _httpClient.PostAsync(_graphQLUri, request);
+                response.EnsureSuccessStatusCode();
 
                 var json = await response.Content.ReadAsStringAsync();
                 var result = json.FromJson<GraphQLResult<ExistingIssue>>(_options);

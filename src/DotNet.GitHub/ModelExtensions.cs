@@ -76,11 +76,11 @@ namespace DotNet.GitHub
                 var tfms = psr.TargetFrameworkMonikerSupports;
                 document.AppendTable(
                     new MarkdownTableHeader(
-                        new MarkdownTableHeaderCell("TFM in project"),
-                        new MarkdownTableHeaderCell("Target version"),
-                        new MarkdownTableHeaderCell("End of life"),
-                        new MarkdownTableHeaderCell("Release notes"),
-                        new MarkdownTableHeaderCell("Nearest LTS TFM version")),
+                        new("TFM in project"),
+                        new("Target version"),
+                        new("End of life"),
+                        new("Release notes"),
+                        new("Nearest LTS TFM version")),
                     tfms.Where(_ => _.IsUnsupported)
                         .Select(tfm =>
                         {
