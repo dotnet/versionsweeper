@@ -82,7 +82,7 @@ namespace DotNet.GitHub
             {
                 _logger.LogWarning(ex, ex.Message);
 
-                return default;
+                return (true, default);
             }
         }
     }
