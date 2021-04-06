@@ -58,14 +58,29 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             }
             else if (existingIssue is { State: ItemState.Open })
             {
-                job.Info($"Re-discovered but ignoring, latent issue: {existingIssue}.");
+                var markdownBody = getBody(options);
+                if (markdownBody != existingIssue.Body)
+                {
+                    // These updates will overwrite completed tasks in a check list
+                    // They'll be removed when the issue updated.
+                    queue.Enqueue(
+                        new(options.Owner, options.Name, options.Token, existingIssue.Number),
+                        new IssueUpdate
+                        {
+                            Body = markdownBody
+                        });
+                }
+                else
+                {
+                    job.Info($"Re-discovered but ignoring, latent issue: {existingIssue}.");
+                }
             }
             else
             {
                 var markdownBody = getBody(options);
                 queue.Enqueue(
                     new(options.Owner, options.Name, options.Token),
-                    new(title)
+                    new NewIssue(title)
                     {
                         Body = markdownBody
                     });
@@ -149,7 +164,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
         {
             await CreateAndEnqueueAsync(
                 graphQLClient, issueQueue, job,
-                $"Upgrade from {tfm} to LTS (or current) version",
+                $"Upgrade from `{tfm}` to LTS (or current) version",
                 options, o => projectSupportReports.ToMarkdownBody(tfm, o.Directory, o.Branch));
         }
 
@@ -161,9 +176,9 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                 graphQLClient, issueQueue, job, title, options, _ => markdownBody);
         }
 
-        await foreach (var issue in issueQueue.ExecuteAllQueuedItemsAsync())
+        await foreach (var (type, issue) in issueQueue.ExecuteAllQueuedItemsAsync())
         {
-            job.Info($"Created issue: {issue.HtmlUrl}");
+            job.Info($"{type} issue: {issue.HtmlUrl}");
         }
     }
     catch (Exception ex)

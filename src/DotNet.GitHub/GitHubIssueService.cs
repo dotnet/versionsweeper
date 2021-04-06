@@ -4,7 +4,6 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Octokit;
-using Octokit.Extensions;
 
 namespace DotNet.GitHub
 {
@@ -31,6 +30,22 @@ namespace DotNet.GitHub
             var issue = await issuesClient.Create(owner, name, newIssue);
 
             _logger.LogInformation($"Issue created: {issue.HtmlUrl}");
+
+            return issue;
+        }
+
+        public async ValueTask<Issue> UpdateIssueAsync(
+            string owner, string name, string token, long number, IssueUpdate issueUpdate)
+        {
+            var issuesClient = GetIssuesClient(token);
+
+            // The GitHub GraphQL API returns a long for the issue Id.
+            // The GitHub REST API expects an int for the issue Id.
+
+            var issue = await issuesClient.Update(
+                owner, name, unchecked((int)number), issueUpdate);
+
+            _logger.LogInformation($"Issue updated: {issue.HtmlUrl}");
 
             return issue;
         }

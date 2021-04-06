@@ -12,25 +12,41 @@ namespace DotNet.GitHub
     {
         const int DelayBetweenPostCalls = 1_000;
 
-        readonly ConcurrentQueue<(GitHubApiArgs, NewIssue)> _issuesQueue = new();
+        readonly ConcurrentQueue<(GitHubApiArgs, NewIssue)> _newIssuesQueue = new();
+        readonly ConcurrentQueue<(GitHubApiArgs, IssueUpdate)> _updateIssuesQueue = new();
         readonly IGitHubIssueService _gitHubIssueService;
 
         public RateLimitAwareQueue(IGitHubIssueService gitHubIssueService) =>
             _gitHubIssueService = gitHubIssueService;
 
         public void Enqueue(GitHubApiArgs args, NewIssue issue) =>
-            _issuesQueue.Enqueue((args, issue));
+            _newIssuesQueue.Enqueue((args, issue));
 
-        public async IAsyncEnumerable<Issue> ExecuteAllQueuedItemsAsync()
+        public void Enqueue(GitHubApiArgs args, IssueUpdate issue) =>
+            _updateIssuesQueue.Enqueue((args, issue));
+
+        public async IAsyncEnumerable<(string Type, Issue Issue)> ExecuteAllQueuedItemsAsync()
         {
-            while (_issuesQueue is { IsEmpty: false }
-                && _issuesQueue.TryDequeue(out var item))
+            while (_newIssuesQueue is { IsEmpty: false }
+                && _newIssuesQueue.TryDequeue(out var newItem))
             {
-                var (args, newIssue) = item;
+                var (args, newIssue) = newItem;
                 var issue = await _gitHubIssueService.PostIssueAsync(
                     args.Owner, args.RepoName, args.Token, newIssue);
 
-                yield return issue;
+                yield return ("Created", issue);
+
+                await Task.Delay(DelayBetweenPostCalls);
+            }
+
+            while (_updateIssuesQueue is { IsEmpty: false }
+                && _updateIssuesQueue.TryDequeue(out var updatedItem))
+            {
+                var (args, newIssue) = updatedItem;
+                var issue = await _gitHubIssueService.UpdateIssueAsync(
+                    args.Owner, args.RepoName, args.Token, args.IssueNumber, newIssue);
+
+                yield return ("Updated", issue);
 
                 await Task.Delay(DelayBetweenPostCalls);
             }

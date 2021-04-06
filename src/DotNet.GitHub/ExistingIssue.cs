@@ -12,6 +12,7 @@ namespace DotNet.GitHub
         public long Number { get; init; }
         public string? Url { get; init; }
         public ItemState State { get; init; }
+        public string? Body { get; init; }
         public DateTime? UpdatedAt { get; init; }
         public DateTime? CreatedAt { get; init; }
         public DateTime? ClosedAt { get; init; }
