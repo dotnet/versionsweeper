@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using DotNet.Extensions;
 using DotNet.Models;
 using Markdown;
@@ -18,162 +17,71 @@ namespace DotNet.GitHub
             this ProjectSupportReport psr) =>
             (Path.GetFileName(psr.Project.FullPath), psr.TargetFrameworkMonikerSupports);
 
-        static (string FileName, int ProjectsTargetingUnsupportedTfms) AsNameSetPair(
-            this SolutionSupportReport psr) =>
-            (Path.GetFileName(psr.Solution.FullPath), psr.ProjectSupportReports.Count(r => r.TargetFrameworkMonikerSupports.Any(t => t.IsUnsupported)));
-
-        public static string ToTitleMessage(
-            this ProjectSupportReport projectSupportReport)
-        {
-            StringBuilder builder = new();
-
-            var (fileName, tfms) = projectSupportReport.AsNameSetPair();
-
-            builder.Append($"Update {fileName} from ");
-            var message =
-                string.Join(
-                    ", ",
-                    tfms.Where(tfm => tfm.IsUnsupported)
-                        .Select(tfm => tfm.Release.ToBrandString()));
-            builder.Append(message);
-            builder.Append(" to LTS (or current) version");
-
-            return builder.ToString();
-        }
-
-        public static string ToTitleMessage(
-            this SolutionSupportReport solutionSupportReport)
-        {
-            var (fileName, cnt) = solutionSupportReport.AsNameSetPair();
-            return $"Update {cnt} projects in {fileName} to LTS (or current) version";
-        }
-
         public static string ToMarkdownBody(
-            this SolutionSupportReport solutionSupportReport,
+            this ISet<ProjectSupportReport> psrs,
+            string tfm,
             string rootDirectory,
             string branch)
         {
             IMarkdownDocument document = new MarkdownDocument();
 
-            var (fileName, cnt) = solutionSupportReport.AsNameSetPair();
-
             document.AppendParagraph(
-                $"There are {cnt} projects in *{fileName}* that target a .NET version which is no longer supported. " +
+                "The following project file(s) target a .NET version which is no longer supported. " +
                 "This is an auto-generated issue, detailed and discussed in [dotnet/docs#22271](https://github.com/dotnet/docs/issues/22271).");
 
-            HashSet<string> relativePaths = new(StringComparer.OrdinalIgnoreCase);
-            foreach (var psr in solutionSupportReport.ProjectSupportReports)
-            {
-                var project = psr.Project;
-                var relativePath =
-                    Path.GetRelativePath(rootDirectory, project.FullPath)
-                        .Replace("\\", "/");
-                relativePaths.Add(relativePath);
-
-                var lineNumberFileReference =
-                    $"../blob/{branch}/{relativePath}#L{project.TfmLineNumber}".EscapeUriString();
-
-                var tfms = psr.TargetFrameworkMonikerSupports;
-                document.AppendTable(
-                    new MarkdownTableHeader(
-                        new("TFM in project"),
-                        new("Target version"),
-                        new("End of life"),
-                        new("Release notes"),
-                        new("Nearest LTS TFM version")),
-                    tfms.Where(_ => _.IsUnsupported)
-                        .Select(tfm =>
-                        {
-                            var (target, version, _, release) = tfm;
-                            return new MarkdownTableRow(
-                                $"[{Path.GetFileName(project.FullPath)}]({lineNumberFileReference})",
-                                $"`{target}`",
-                                release.EndOfLifeDate.HasValue ? $"{release.EndOfLifeDate:MMMM, dd yyyy}" : "N/A",
-                                new MarkdownLink(
-                                    $"{target} release notes", release.ReleaseNotesUrl)
-                                    .ToString(),
-                                $"`{tfm.NearestLtsVersion}`");
-                        }));
-            }
-
-            document.AppendParagraph(
-                "Consider upgrading to either the current release, or the nearest LTS TFM version.");
-
-            document.AppendParagraph(
-                $"If any of these projects are intentionally targeting an unsupported version, " +
-                $"you can optionally configure to ignore this automated issue. " +
-                $"Create a file at the root of the repository, named *dotnet-versionsweeper.json* and " +
-                $"add an `ignore` entry following the " +
-                $"[globbing patterns detailed here](https://docs.microsoft.com/dotnet/api/microsoft.extensions.filesystemglobbing.matcher#remarks).");
-
-            var total = relativePaths.Count;
-            document.AppendCode("json", @$"{{
-    ""ignore"": [
-{string.Join(Environment.NewLine, relativePaths.Select((relativePath, index) => $"        \"**/{relativePath}\"{(index == total ? "," : "")}"))}
-    ]
-}}");
-
-            return document.ToString();
-        }
-
-        public static string ToMarkdownBody(
-            this ProjectSupportReport psr,
-            string rootDirectory,
-            string branch)
-        {
-            IMarkdownDocument document = new MarkdownDocument();
-
-            var (fileName, tfms) = psr.AsNameSetPair();
-
-            document.AppendParagraph(
-                $"The *{fileName}* project file targets a .NET version which is no longer supported. " +
-                "This is an auto-generated issue, detailed and discussed in [dotnet/docs#22271](https://github.com/dotnet/docs/issues/22271).");
-
-            var relativePath =
-                Path.GetRelativePath(rootDirectory, psr.Project.FullPath)
-                    .Replace("\\", "/");
-
-            var lineNumberFileReference =
-                $"../blob/{branch}/{relativePath}#L{psr.Project.TfmLineNumber}".EscapeUriString();
-
-            document.AppendParagraph(
-                $"See line {psr.Project.TfmLineNumber} in [{relativePath}]({lineNumberFileReference}).");
+            var tfmSupport =
+                psrs.First()
+                    .TargetFrameworkMonikerSupports
+                    .First(tfms => tfms.TargetFrameworkMoniker == tfm);
 
             document.AppendTable(
                 new MarkdownTableHeader(
-                    new MarkdownTableHeaderCell("Target version"),
-                    new MarkdownTableHeaderCell("End of life"),
-                    new MarkdownTableHeaderCell("Release notes"),
-                    new MarkdownTableHeaderCell("Nearest LTS TFM version")),
-                tfms.Where(_ => _.IsUnsupported)
-                    .Select(tfm =>
+                    new("Target version"),
+                    new("End of life"),
+                    new("Release notes"),
+                    new("Nearest LTS TFM version")),
+                new[]
+                {
+                    new MarkdownTableRow(
+                    $"`{tfmSupport.TargetFrameworkMoniker}`",
+                    tfmSupport.Release.EndOfLifeDate.HasValue
+                        ? $"{tfmSupport.Release.EndOfLifeDate:MMMM, dd yyyy}" : "N/A",
+                    new MarkdownLink(
+                        $"{tfmSupport.TargetFrameworkMoniker} release notes", tfmSupport.Release.ReleaseNotesUrl)
+                        .ToString(),
+                    $"`{tfmSupport.NearestLtsVersion}`")
+                });
+
+            document.AppendList(
+                new MarkdownList(
+                    psrs.OrderBy(psr => psr.Project.FullPath).Select(psr =>
                     {
-                        var (target, version, _, release) = tfm;
-                        return new MarkdownTableRow(
-                            $"`{target}`",
-                            release.EndOfLifeDate.HasValue ? $"{release.EndOfLifeDate:MMMM, dd yyyy}" : "N/A",
-                            new MarkdownLink(
-                                $"{target} release notes", release.ReleaseNotesUrl)
-                                .ToString(),
-                            $"`{tfm.NearestLtsVersion}`");
-                    }));
+                        var relativePath =
+                            Path.GetRelativePath(rootDirectory, psr.Project.FullPath);
+
+                        var lineNumberFileReference =
+                            $"../blob/{branch}/{relativePath.Replace("\\", "/")}#L{psr.Project.TfmLineNumber}"
+                                .EscapeUriString();
+                        var name = relativePath.ShrinkPath("...");
+
+                        return new MarkdownCheckListItem(false, $"[{name}]({lineNumberFileReference})");
+                    })));
 
             document.AppendParagraph(
-                "Consider upgrading the project to either the current release, or the nearest LTS TFM version.");
+                "Consider upgrading projects to either the current release, or the nearest LTS TFM version.");
 
             document.AppendParagraph(
-                $"If this project is intentionally targeting an unsupported version, " +
-                $"you can optionally configure to ignore this automated issue. " +
+                $"If any of these projects are intentionally targeting an unsupported version, " +
+                $"you can optionally configure to ignore including them in this automated issue. " +
                 $"Create a file at the root of the repository, named *dotnet-versionsweeper.json* and " +
                 $"add an `ignore` entry following the " +
                 $"[globbing patterns detailed here](https://docs.microsoft.com/dotnet/api/microsoft.extensions.filesystemglobbing.matcher#remarks).");
 
-            document.AppendCode("json", @$"{{
+            document.AppendCode("json", @"{
     ""ignore"": [
-        ""**/{relativePath}""
+        ""**/path/to/example.csproj""
     ]
-}}");
-
+}");
             return document.ToString();
         }
 
@@ -207,7 +115,7 @@ namespace DotNet.GitHub
                     Path.GetRelativePath(root, project.FullPath);
 
                 var path = $"../blob/{branch}/{relativePath.Replace("\\", "/")}".EscapeUriString();
-                var name = relativePath.FirstAndLastSegmentOfPath("...");
+                var name = relativePath.ShrinkPath("...");
 
                 return new(false, $"[{name}]({path})");
             }
@@ -229,7 +137,7 @@ namespace DotNet.GitHub
 
             document.AppendCode("json", @"{
     ""ignore"": [
-        ""**/Path/To/Example.csproj""
+        ""**/path/to/example.csproj""
     ]
 }");
 

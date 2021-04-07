@@ -58,14 +58,29 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             }
             else if (existingIssue is { State: ItemState.Open })
             {
-                job.Info($"Re-discovered but ignoring, latent issue: {existingIssue}.");
+                var markdownBody = getBody(options);
+                if (markdownBody != existingIssue.Body)
+                {
+                    // These updates will overwrite completed tasks in a check list
+                    // They'll be removed when the issue updated.
+                    queue.Enqueue(
+                        new(options.Owner, options.Name, options.Token, existingIssue.Number),
+                        new IssueUpdate
+                        {
+                            Body = markdownBody
+                        });
+                }
+                else
+                {
+                    job.Info($"Re-discovered but ignoring, latent issue: {existingIssue}.");
+                }
             }
             else
             {
                 var markdownBody = getBody(options);
                 queue.Enqueue(
                     new(options.Owner, options.Name, options.Token),
-                    new(title)
+                    new NewIssue(title)
                     {
                         Body = markdownBody
                     });
@@ -73,6 +88,23 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
         }
 
         HashSet<Project> nonSdkStyleProjects = new();
+        Dictionary<string, HashSet<ProjectSupportReport>> tfmToProjectSupportReports =
+            new(StringComparer.OrdinalIgnoreCase);
+
+        void AppendGrouping(
+            IGrouping<string, (TargetFrameworkMonikerSupport tfms, ProjectSupportReport psr)> grouping)
+        {
+            var key = grouping.Key;
+            if (!tfmToProjectSupportReports.ContainsKey(key))
+            {
+                tfmToProjectSupportReports[key] = new();
+            }
+
+            foreach (var group in grouping)
+            {
+                tfmToProjectSupportReports[key].Add(group.psr);
+            }
+        }
 
         foreach (var solution in solutions.Where(sln => sln is not null))
         {
@@ -95,10 +127,14 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             if (reports is { Count: > 0 } &&
                 reports.Any(r => r.TargetFrameworkMonikerSupports.Any(s => s.IsUnsupported)))
             {
-                await CreateAndEnqueueAsync(
-                    graphQLClient, issueQueue, job,
-                    solutionSupportReport.ToTitleMessage(),
-                    options, o => solutionSupportReport.ToMarkdownBody(o.Directory, o.Branch));
+                foreach (var grouping in
+                    reports.Where(r => r.TargetFrameworkMonikerSupports.Any(s => s.IsUnsupported))
+                        .SelectMany(
+                            psr => psr.TargetFrameworkMonikerSupports, (psr, tfms) => (tfms, psr))
+                        .GroupBy(t => t.tfms.TargetFrameworkMoniker))
+                {
+                    AppendGrouping(grouping);
+                }
             }
         }
 
@@ -114,12 +150,22 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                 var (project, reports) = psr;
                 if (reports is { Count: > 0 } && reports.Any(r => r.IsUnsupported))
                 {
-                    await CreateAndEnqueueAsync(
-                        graphQLClient, issueQueue, job,
-                        psr.ToTitleMessage(),
-                        options, o => psr.ToMarkdownBody(o.Directory, o.Branch));
+                    foreach (var grouping in
+                        reports.Select(tfms => (tfms, psr))
+                            .GroupBy(t => t.tfms.TargetFrameworkMoniker))
+                    {
+                        AppendGrouping(grouping);
+                    }
                 }
             }
+        }
+
+        foreach (var (tfm, projectSupportReports) in tfmToProjectSupportReports)
+        {
+            await CreateAndEnqueueAsync(
+                graphQLClient, issueQueue, job,
+                $"Upgrade from `{tfm}` to LTS (or current) version",
+                options, o => projectSupportReports.ToMarkdownBody(tfm, o.Directory, o.Branch));
         }
 
         if (nonSdkStyleProjects.TryCreateIssueContent(
@@ -130,9 +176,9 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                 graphQLClient, issueQueue, job, title, options, _ => markdownBody);
         }
 
-        await foreach (var issue in issueQueue.ExecuteAllQueuedItemsAsync())
+        await foreach (var (type, issue) in issueQueue.ExecuteAllQueuedItemsAsync())
         {
-            job.Info($"Created issue: {issue.HtmlUrl}");
+            job.Info($"{type} issue: {issue.HtmlUrl}");
         }
     }
     catch (Exception ex)

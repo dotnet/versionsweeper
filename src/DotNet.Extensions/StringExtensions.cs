@@ -2,7 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace DotNet.Extensions
 {
@@ -14,15 +17,45 @@ namespace DotNet.Extensions
         public static string EscapeUriString(this string? value) =>
             Uri.EscapeUriString(value ?? "");
 
-        public static string? FirstAndLastSegmentOfPath(this string value, string separate)
+        // Inspired and adapted from: https://stackoverflow.com/a/51282271/2410379
+        public static string? ShrinkPath(
+            this string value, string spacer = "...", int limit = 125)
         {
-            var segments = value?.Split(Path.DirectorySeparatorChar) ?? Array.Empty<string>();
-            return segments.Length switch
+            if (string.IsNullOrWhiteSpace(value))
             {
-                0 => default,
-                1 => segments[0],
-                _ => $"{segments[0]}/{separate}/{segments[^1]}"
+                return null;
+            }
+            if (value.Length <= limit)
+            {
+                return value.Replace('\\', '/');
+            }
+
+            var file = new FileInfo(value);
+            var segments = value.Split(Path.DirectorySeparatorChar);
+            var parts = new List<string>
+            {
+                segments[0],
+                spacer,
+                segments[^1]
             };
+
+            StringBuilder result = new(string.Join('/', parts));
+
+            var dir = file.Directory;
+            while (result.Length < limit && dir is not null)
+            {
+                if (result.Length + dir.Name.Length > limit)
+                {
+                    break;
+                }
+
+                parts.Insert(2, dir.Name);
+
+                dir = dir.Parent;
+                result = new(string.Join('/', parts));
+            }
+
+            return result.ToString();
         }
     }
 }

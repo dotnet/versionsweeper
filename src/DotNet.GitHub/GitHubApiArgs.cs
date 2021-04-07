@@ -3,5 +3,9 @@
 
 namespace DotNet.GitHub
 {
-    public record GitHubApiArgs(string Owner, string RepoName, string Token);
+    public record GitHubApiArgs(
+        string Owner,
+        string RepoName,
+        string Token,
+        long IssueNumber = -1);
 }

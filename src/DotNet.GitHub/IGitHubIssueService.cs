@@ -9,6 +9,9 @@ namespace DotNet.GitHub
     public interface IGitHubIssueService
     {
         ValueTask<Issue> PostIssueAsync(
-            string owner, string name, string token, NewIssue issue);
+            string owner, string name, string token, NewIssue newIssue);
+
+        ValueTask<Issue> UpdateIssueAsync(
+            string owner, string name, string token, long number, IssueUpdate issueUpdate);
     }
 }

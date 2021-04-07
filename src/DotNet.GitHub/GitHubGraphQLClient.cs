@@ -23,6 +23,7 @@ namespace DotNet.GitHub
         title
         number
         url
+        body
         state
         createdAt
         updatedAt
@@ -32,7 +33,7 @@ namespace DotNet.GitHub
   }
 }";
 
-        readonly Uri _graphQLUri = new("https://api.github.com/graphql");
+        readonly static Uri s_graphQLUri = new("https://api.github.com/graphql");
         readonly static JsonSerializerOptions s_options = new()
         {
             Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
@@ -67,7 +68,7 @@ namespace DotNet.GitHub
                 request.Headers.ContentType = new(MediaTypeNames.Application.Json);
                 request.Headers.Add("Accepts", MediaTypeNames.Application.Json);
 
-                using var response = await _httpClient.PostAsync(_graphQLUri, request);
+                using var response = await _httpClient.PostAsync(s_graphQLUri, request);
                 response.EnsureSuccessStatusCode();
 
                 var json = await response.Content.ReadAsStringAsync();
