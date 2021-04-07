@@ -62,7 +62,7 @@ namespace DotNet.GitHub
                         var lineNumberFileReference =
                             $"../blob/{branch}/{relativePath.Replace("\\", "/")}#L{psr.Project.TfmLineNumber}"
                                 .EscapeUriString();
-                        var name = relativePath.FirstAndLastSegmentOfPath("...");
+                        var name = relativePath.ShrinkPath("...");
 
                         return new MarkdownCheckListItem(false, $"[{name}]({lineNumberFileReference})");
                     })));
@@ -115,7 +115,7 @@ namespace DotNet.GitHub
                     Path.GetRelativePath(root, project.FullPath);
 
                 var path = $"../blob/{branch}/{relativePath.Replace("\\", "/")}".EscapeUriString();
-                var name = relativePath.FirstAndLastSegmentOfPath("...");
+                var name = relativePath.ShrinkPath("...");
 
                 return new(false, $"[{name}]({path})");
             }
