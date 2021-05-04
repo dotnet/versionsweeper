@@ -16,7 +16,8 @@ namespace DotNet.Extensions
             Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
             NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString,
-            PropertyNameCaseInsensitive = true
+            PropertyNameCaseInsensitive = true,
+            AllowTrailingCommas = true,
         });
 
         public static string? ToJson(this object value, JsonSerializerOptions? options = default) =>
