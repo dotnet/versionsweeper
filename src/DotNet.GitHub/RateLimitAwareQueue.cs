@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace DotNet.GitHub
     {
         const int DelayBetweenPostCalls = 1_000;
 
+        readonly HashSet<string> _unqiueNewIssueTitles = new(StringComparer.OrdinalIgnoreCase);
         readonly ConcurrentQueue<(GitHubApiArgs, NewIssue)> _newIssuesQueue = new();
         readonly ConcurrentQueue<(GitHubApiArgs, IssueUpdate)> _updateIssuesQueue = new();
         readonly IGitHubIssueService _gitHubIssueService;
@@ -19,8 +21,13 @@ namespace DotNet.GitHub
         public RateLimitAwareQueue(IGitHubIssueService gitHubIssueService) =>
             _gitHubIssueService = gitHubIssueService;
 
-        public void Enqueue(GitHubApiArgs args, NewIssue issue) =>
-            _newIssuesQueue.Enqueue((args, issue));
+        public void Enqueue(GitHubApiArgs args, NewIssue issue)
+        {
+            if (_unqiueNewIssueTitles.Add(issue.Title))
+            {
+                _newIssuesQueue.Enqueue((args, issue));
+            }
+        }
 
         public void Enqueue(GitHubApiArgs args, IssueUpdate issue) =>
             _updateIssuesQueue.Enqueue((args, issue));
@@ -28,7 +35,7 @@ namespace DotNet.GitHub
         public async IAsyncEnumerable<(string Type, Issue Issue)> ExecuteAllQueuedItemsAsync()
         {
             while (_newIssuesQueue is { IsEmpty: false }
-                && _newIssuesQueue.TryDequeue(out var newItem))
+                && _newIssuesQueue.TryDequeue(out (GitHubApiArgs, NewIssue) newItem))
             {
                 var (args, newIssue) = newItem;
                 var issue = await _gitHubIssueService.PostIssueAsync(
@@ -40,7 +47,7 @@ namespace DotNet.GitHub
             }
 
             while (_updateIssuesQueue is { IsEmpty: false }
-                && _updateIssuesQueue.TryDequeue(out var updatedItem))
+                && _updateIssuesQueue.TryDequeue(out (GitHubApiArgs, IssueUpdate) updatedItem))
             {
                 var (args, newIssue) = updatedItem;
                 var issue = await _gitHubIssueService.UpdateIssueAsync(
