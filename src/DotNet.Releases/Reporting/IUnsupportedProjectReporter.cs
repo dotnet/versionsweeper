@@ -8,6 +8,6 @@ namespace DotNet.Releases
 {
     public interface IUnsupportedProjectReporter
     {
-        IAsyncEnumerable<ProjectSupportReport> ReportAsync(Project project);
+        IAsyncEnumerable<ProjectSupportReport> ReportAsync(Project project, int outOfSupportWithinDays);
     }
 }
