@@ -14,6 +14,8 @@ namespace DotNet.VersionSweeper
     /// <summary>
     /// Example 'dotnet-versionsweeper.json' file:
     /// {
+    ///     "type": "pullRequest",
+    ///     "outOfSupportWithinDays": 90,
     ///     "ignore": [
     ///         "**/pinned-versions/**",
     ///         "**/*.fsproj"
@@ -22,10 +24,16 @@ namespace DotNet.VersionSweeper
     /// </summary>
     public class VersionSweeperConfig
     {
-        internal static string FileName = "dotnet-versionsweeper.json";
+        internal const string FileName = "dotnet-versionsweeper.json";
 
         [JsonPropertyName("ignore")]
         public string[] Ignore { get; init; } = Array.Empty<string>();
+
+        [JsonPropertyName("type")]
+        public ActionType Type { get; init; } = ActionType.CreateIssue;
+
+        [JsonPropertyName("outOfSupportWithinDays")]
+        public int OutOfSupportWithinDays { get; init; } = 0;
 
         internal static async Task<VersionSweeperConfig> ReadAsync(string root, IJobService job)
         {
@@ -41,6 +49,8 @@ namespace DotNet.VersionSweeper
 
                     job.Info($"Read {config.Ignore.Length} pattern(s) to ignore:");
                     job.Info($"{string.Join(",", config.Ignore.Select(val => $"\t{val}"))}");
+                    job.Info($"Intended version sweeper type: {config.Type}");
+                    job.Info($"Out of support within days: {config.OutOfSupportWithinDays}");
 
                     return config;
                 }

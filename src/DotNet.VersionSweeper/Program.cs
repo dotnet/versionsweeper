@@ -36,7 +36,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
     {
         options.WriteDebugInfo(job);
 
-        var (solutions, orphanedProjects) =
+        var (solutions, orphanedProjects, config) =
             await Discovery.FindSolutionsAndProjectsAsync(services, job, options);
 
         var (unsupportedProjectReporter, issueQueue, graphQLClient) =
@@ -117,7 +117,8 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                     nonSdkStyleProjects.Add(project);
                 }
 
-                await foreach (var psr in unsupportedProjectReporter.ReportAsync(project))
+                await foreach (var psr in unsupportedProjectReporter.ReportAsync(
+                    project, config.OutOfSupportWithinDays))
                 {
                     solutionSupportReport.ProjectSupportReports.Add(psr);
                 }
@@ -145,7 +146,8 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                 nonSdkStyleProjects.Add(orphanedProject);
             }
 
-            await foreach (var psr in unsupportedProjectReporter.ReportAsync(orphanedProject))
+            await foreach (var psr in unsupportedProjectReporter.ReportAsync(
+                orphanedProject, config.OutOfSupportWithinDays))
             {
                 var (project, reports) = psr;
                 if (reports is { Count: > 0 } && reports.Any(r => r.IsUnsupported))

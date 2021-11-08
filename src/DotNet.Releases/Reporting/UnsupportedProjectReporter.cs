@@ -22,9 +22,11 @@ namespace DotNet.Releases
             (_coreReleaseIndexService, _frameworkReleaseService) =
                 (coreReleaseIndexService, frameworkReleaseService);
 
-        async IAsyncEnumerable<ProjectSupportReport> IUnsupportedProjectReporter.ReportAsync(Project project)
+        async IAsyncEnumerable<ProjectSupportReport> IUnsupportedProjectReporter.ReportAsync(
+            Project project, int outOfSupportWithinDays)
         {
             HashSet<TargetFrameworkMonikerSupport> resultingSupports = new();
+            DateTime outOfSupportWithinDate = DateTime.Now.Date.AddDays(outOfSupportWithinDays);
 
             var products = await _coreReleaseIndexService.GetReleasesAsync();
             foreach (var product in products.Keys)
@@ -33,7 +35,7 @@ namespace DotNet.Releases
                     project.Tfms.Select(
                         tfm => TryEvaluateReleaseSupport(
                             tfm, product.ProductVersion,
-                            product, out var tfmSupport)
+                            product, outOfSupportWithinDate, out var tfmSupport)
                                 ? tfmSupport : null)
                         .Where(tfmSupport => tfmSupport is not null);
 
@@ -67,7 +69,7 @@ namespace DotNet.Releases
                     project.Tfms.Select(
                         tfm => TryEvaluateReleaseSupport(
                             tfm, frameworkRelease!.Version,
-                            frameworkRelease, out var tfmSupport)
+                            frameworkRelease, outOfSupportWithinDate, out var tfmSupport)
                                 ? tfmSupport : null)
                         .Where(tfmSupport => tfmSupport is not null);
 
@@ -101,6 +103,7 @@ namespace DotNet.Releases
         static bool TryEvaluateReleaseSupport(
             string tfm, string version,
             Product product,
+            DateTime outOfSupportWithinDate,
             out TargetFrameworkMonikerSupport? tfmSupport)
         {
             var release = ReleaseFactory.Create(
@@ -118,7 +121,9 @@ namespace DotNet.Releases
 
             if (TargetFrameworkMonikerMap.RawMapsToKnown(tfm, release.TargetFrameworkMoniker))
             {
-                var isOutOfSupport = product.IsOutOfSupport();
+                var isOutOfSupport = product.IsOutOfSupport() ||
+                    product.EndOfLifeDate <= outOfSupportWithinDate;
+
                 tfmSupport = new(tfm, version, isOutOfSupport, release);
                 return true;
             }
@@ -130,12 +135,14 @@ namespace DotNet.Releases
         static bool TryEvaluateReleaseSupport(
             string tfm, string version,
             IRelease release,
+            DateTime outOfSupportWithinDate,
             out TargetFrameworkMonikerSupport? tfmSupport)
         {
             if (TargetFrameworkMonikerMap.RawMapsToKnown(tfm, release.TargetFrameworkMoniker))
             {
                 var isOutOfSupport = release.SupportPhase == SupportPhase.EOL ||
-                    release.EndOfLifeDate?.Date <= DateTime.Now.Date;
+                    release.EndOfLifeDate?.Date <= outOfSupportWithinDate;
+
                 tfmSupport = new(tfm, version, isOutOfSupport, release);
                 return true;
             }
