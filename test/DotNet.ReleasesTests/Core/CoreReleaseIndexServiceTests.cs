@@ -18,8 +18,8 @@ namespace DotNet.ReleasesTests
 
         [
             Theory,
-            InlineData("1.1.0", "2.1"),
-            InlineData("1.0.0", "2.1"),
+            InlineData("1.1.0", "3.1"),
+            InlineData("1.0.0", "3.1"),
             InlineData("2.2.8", "3.1"),
             InlineData("3.0.3", "3.1"),
             InlineData("3.1.11", "3.1")
