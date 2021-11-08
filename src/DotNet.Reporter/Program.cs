@@ -26,7 +26,7 @@ if (args is { Length: 1 })
         if (project is { TfmLineNumber: > -1 })
         {
             var reporter = Get<IUnsupportedProjectReporter>();
-            await foreach (var projectSupportReport in reporter.ReportAsync(project))
+            await foreach (var projectSupportReport in reporter.ReportAsync(project, 0))
             {
                 var (proj, reports) = projectSupportReport;
                 if (reports is { Count: > 0 } && reports.Any(r => r.IsUnsupported))
