@@ -100,7 +100,7 @@ namespace DotNet.GitHub
             IMarkdownDocument document = new MarkdownDocument();
 
             var uniqueProjects =
-                projects.DistinctBy(project => project.FullPath, StringComparer.OrdinalIgnoreCase)
+                projects.DistinctBy(project => project.FullPath)
                     .OrderBy(project => project.FullPath)
                     .ToList();
 

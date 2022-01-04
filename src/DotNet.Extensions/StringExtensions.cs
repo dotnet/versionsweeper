@@ -14,7 +14,7 @@ namespace DotNet.Extensions
             string.IsNullOrWhiteSpace(value) ? null : value;
 
         public static string EscapeUriString(this string? value) =>
-            Uri.EscapeUriString(value ?? "");
+            Uri.EscapeDataString(value ?? "");
 
         // Inspired and adapted from: https://stackoverflow.com/a/51282271/2410379
         public static string? ShrinkPath(
