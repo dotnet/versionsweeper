@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30803.129
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32002.185
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet.VersionSweeper", "src\DotNet.VersionSweeper\DotNet.VersionSweeper.csproj", "{835DBC44-B11C-45E8-A042-D550FC96F4B0}"
 EndProject
@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		action.yml = action.yml
 		.github\workflows\build-and-test.yml = .github\workflows\build-and-test.yml
 		CODE-OF-CONDUCT.md = CODE-OF-CONDUCT.md
+		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
 		Dockerfile = Dockerfile
 		.github\workflows\dog-food.yml = .github\workflows\dog-food.yml
 		dotnet-versionsweeper.json = dotnet-versionsweeper.json
@@ -64,7 +65,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet.IO", "src\DotNet.IO\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet.IOTests", "test\DotNet.IOTests\DotNet.IOTests.csproj", "{B401F1C9-3212-490D-979A-E35B510FBDE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet.GitHubActionsTests", "test\DotNet.GitHubActionsTests\DotNet.GitHubActionsTests.csproj", "{D41F19E7-3FC5-4E41-8F46-9ADA2B7D6EAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet.GitHubActionsTests", "test\DotNet.GitHubActionsTests\DotNet.GitHubActionsTests.csproj", "{D41F19E7-3FC5-4E41-8F46-9ADA2B7D6EAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

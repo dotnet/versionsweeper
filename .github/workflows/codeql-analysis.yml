@@ -24,6 +24,10 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
 
     strategy:
       fail-fast: false
@@ -47,21 +51,24 @@ jobs:
         # Prefix the list here with "+" to use these queries and those in the config file.
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
-    # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
-    # If this step fails, then you should remove it and run the build manually (see below)
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v1
+    - name: Setup .NET 6.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
 
-    # ℹ️ Command-line programs to run using the OS shell.
-    # 📚 https://git.io/JvXDl
-
-    # ✏️ If the Autobuild fails above, remove it and uncomment the following three lines
-    #    and modify them (or add more) to build your code if your project
-    #    uses a compiled language
-
-    #- run: |
-    #   make bootstrap
-    #   make release
+    - name: Install dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: |
+        dotnet build ./src/DotNet.Extensions/DotNet.Extensions.csproj --configuration Release
+        dotnet build ./src/DotNet.GitHub/DotNet.GitHub.csproj --configuration Release
+        dotnet build ./src/DotNet.GitHubActions/DotNet.GitHubActions.csproj --configuration Release
+        dotnet build ./src/DotNet.IO/DotNet.IO.csproj --configuration Release
+        dotnet build ./src/DotNet.Models/DotNet.Models.csproj --configuration Release
+        dotnet build ./src/DotNet.Releases/DotNet.Releases.csproj --configuration Release
+        dotnet build ./src/DotNet.Reporter/DotNet.Reporter.csproj --configuration Release
+        dotnet build ./src/DotNet.VersionSweeper/DotNet.VersionSweeper.csproj --configuration Release
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
