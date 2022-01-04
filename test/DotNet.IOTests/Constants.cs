@@ -1,11 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace DotNet.IOTests
+namespace DotNet.IOTests;
+
+class Constants
 {
-    class Constants
-    {
-        internal const string TestSolutionXml = @"
+    internal const string TestSolutionXml = @"
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30803.129
@@ -42,7 +42,7 @@ Global
 EndGlobal
 ";
 
-        internal const string TestProjectXml = @"<Project Sdk=""Microsoft.NET.Sdk"">
+    internal const string TestProjectXml = @"<Project Sdk=""Microsoft.NET.Sdk"">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -60,7 +60,7 @@ EndGlobal
 
 </Project>";
 
-        internal const string TestProjectJson = @"{
+    internal const string TestProjectJson = @"{
   ""version"": ""1.0.0-*"",
   ""buildOptions"": {
     ""emitEntryPoint"": true
@@ -104,7 +104,7 @@ EndGlobal
   }
 }";
 
-        internal const string TestProjectJsonMultipleTfms = @"{
+    internal const string TestProjectJsonMultipleTfms = @"{
   ""version"": ""1.0.0-*"",
   ""tooling"": {
     ""defaultNamespace"": ""vscode_aspnet5""
@@ -157,5 +157,4 @@ EndGlobal
     ]
   }
 }";
-    }
 }

@@ -1,37 +1,30 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using DotNet.Extensions;
-using Microsoft.Deployment.DotNet.Releases;
-using Microsoft.Extensions.Caching.Memory;
+namespace DotNet.Releases;
 
-namespace DotNet.Releases
+public class CoreReleaseIndexService : ICoreReleaseIndexService
 {
-    public class CoreReleaseIndexService : ICoreReleaseIndexService
-    {
-        const string NetCoreKey = nameof(NetCoreKey);
+    const string NetCoreKey = nameof(NetCoreKey);
 
-        readonly IMemoryCache _cache;
+    readonly IMemoryCache _cache;
 
-        public CoreReleaseIndexService(IMemoryCache cache) => _cache = cache;
+    public CoreReleaseIndexService(IMemoryCache cache) => _cache = cache;
 
-        Task<IReadOnlyDictionary<Product, IReadOnlyCollection<ProductRelease>>>
-            ICoreReleaseIndexService.GetReleasesAsync() =>
-            _cache.GetOrCreateAsync(
-                NetCoreKey,
-                async entry =>
+    Task<IReadOnlyDictionary<Product, IReadOnlyCollection<ProductRelease>>>
+        ICoreReleaseIndexService.GetReleasesAsync() =>
+        _cache.GetOrCreateAsync(
+            NetCoreKey,
+            async entry =>
+            {
+                var products = await ProductCollection.GetAsync();
+
+                var map = new Dictionary<Product, IReadOnlyCollection<ProductRelease>>();
+                foreach (var product in products)
                 {
-                    var products = await ProductCollection.GetAsync();
+                    map[product] = await product.GetReleasesAsync();
+                }
 
-                    var map = new Dictionary<Product, IReadOnlyCollection<ProductRelease>>();
-                    foreach (var product in products)
-                    {
-                        map[product] = await product.GetReleasesAsync();
-                    }
-
-                    return map.AsReadOnly();
-                });
-    }
+                return map.AsReadOnly();
+            });
 }

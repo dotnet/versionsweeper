@@ -1,14 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Collections.Generic;
+namespace DotNet.Models;
 
-namespace DotNet.Models
+public class Solution
 {
-    public class Solution
-    {
-        public string FullPath { get; set; } = null!;
+    public string FullPath { get; set; } = null!;
 
-        public HashSet<Project> Projects { get; } = new();
-    }
+    public HashSet<Project> Projects { get; } = new();
 }
