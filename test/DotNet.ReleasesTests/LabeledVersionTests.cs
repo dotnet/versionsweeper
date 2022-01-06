@@ -1,17 +1,15 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using DotNet.Releases;
 using Xunit;
 
-namespace DotNet.ReleasesTests
+namespace DotNet.ReleasesTests;
+
+public class LabeledVersionTests
 {
-    public class LabeledVersionTests
+    public static IEnumerable<object[]> AsLabeledVersionInput = new[]
     {
-        public static IEnumerable<object[]> AsLabeledVersionInput = new[]
-        {
             new object[] { "5.0", new LabeledVersion(new Version(5, 0)) },
             new object[] { "5.0.2", new LabeledVersion(new Version(5, 0, 2)) },
             new object[] { "3.1.405", new LabeledVersion(new Version(3, 1, 405)) },
@@ -22,11 +20,10 @@ namespace DotNet.ReleasesTests
             new object[] { "pickles", new LabeledVersion(null) }
         };
 
-        [
-            Theory,
-            MemberData(nameof(AsLabeledVersionInput))
-        ]
-        public void AsLabeledVersionTest(string version, LabeledVersion expectedVersion) =>
-            Assert.Equal(expectedVersion, version);
-    }
+    [
+        Theory,
+        MemberData(nameof(AsLabeledVersionInput))
+    ]
+    public void AsLabeledVersionTest(string version, LabeledVersion expectedVersion) =>
+        Assert.Equal(expectedVersion, version);
 }

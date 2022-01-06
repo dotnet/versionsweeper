@@ -1,16 +1,14 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
 using DotNet.VersionSweeper;
 using Xunit;
 
-namespace DotNet.VersionSweeperTests
+namespace DotNet.VersionSweeperTests;
+
+public class OptionsTests
 {
-    public class OptionsTests
-    {
-        public static IEnumerable<object[]> NewOptionsSearchPatternInput = new[]
+    public static IEnumerable<object[]> NewOptionsSearchPatternInput = new[]
 {
             new object[] { "*.csproj|project.json", new[] { "**/*.csproj", "**/project.json" } },
             new object[] { "*.fsproj;*.vbproj", new[] { "**/*.fsproj", "**/*.vbproj" } },
@@ -19,23 +17,22 @@ namespace DotNet.VersionSweeperTests
             new object[] { null, Array.Empty<string>() }
         };
 
-        [
-            Theory,
-            MemberData(nameof(NewOptionsSearchPatternInput))
-        ]
-        public void OptionsSearchPatternIsCorrectlyParsed(
-            string inputPattern, IEnumerable<string> expectedPatterns)
+    [
+        Theory,
+        MemberData(nameof(NewOptionsSearchPatternInput))
+    ]
+    public void OptionsSearchPatternIsCorrectlyParsed(
+        string inputPattern, IEnumerable<string> expectedPatterns)
+    {
+        Options options = new()
         {
-            Options options = new()
-            {
-                SearchPattern = inputPattern
-            };
+            SearchPattern = inputPattern
+        };
 
-            Assert.Equal(
-                expectedPatterns,
-                options.SearchPattern
-                    .SplitOnExpectedDelimiters()
-                    .AsRecursivePatterns());
-        }
+        Assert.Equal(
+            expectedPatterns,
+            options.SearchPattern
+                .SplitOnExpectedDelimiters()
+                .AsRecursivePatterns());
     }
 }

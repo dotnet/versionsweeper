@@ -1,22 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CommandLine;
-using DotNet.GitHub;
-using DotNet.GitHubActions;
-using DotNet.Models;
-using DotNet.Releases;
-using DotNet.VersionSweeper;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Octokit;
-using static CommandLine.Parser;
-using Project = DotNet.Models.Project;
-
 using var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((_, services) =>
         services.AddDotNetGitHubServices()
@@ -87,7 +71,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             }
         }
 
-        HashSet<Project> nonSdkStyleProjects = new();
+        HashSet<ModelProject> nonSdkStyleProjects = new();
         Dictionary<string, HashSet<ProjectSupportReport>> tfmToProjectSupportReports =
             new(StringComparer.OrdinalIgnoreCase);
 

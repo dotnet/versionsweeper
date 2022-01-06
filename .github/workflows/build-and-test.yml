@@ -11,7 +11,7 @@ on:
     - '**.sln'
 
 env:
-  DOTNET_VERSION: '5.0.102' # SDK version
+  DOTNET_VERSION: '6.0.x' # SDK version
 
 jobs:
   build:

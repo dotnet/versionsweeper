@@ -1,15 +1,14 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Collections.Generic;
 using DotNet.GitHubActions;
 using Xunit;
 
-namespace DotNet.GitHubActionsTests
+namespace DotNet.GitHubActionsTests;
+
+public class WorkflowCommandTests
 {
-    public class WorkflowCommandTests
-    {
-        public static IEnumerable<object[]> WorkflowCommandToStringInput = new[]
+    public static IEnumerable<object[]> WorkflowCommandToStringInput = new[]
 {
             new object[]
             {
@@ -33,15 +32,14 @@ namespace DotNet.GitHubActionsTests
             }
         };
 
-        [
-            Theory,
-            MemberData(nameof(WorkflowCommandToStringInput))
-        ]
-        public void WorkflowCommandToStringTest<T>(
-            string name, T message, Dictionary<string, string> properties, string expected)
-        {
-            WorkflowCommand<T> command = new(name, message, properties);
-            Assert.Equal(expected, command.ToString());
-        }
+    [
+        Theory,
+        MemberData(nameof(WorkflowCommandToStringInput))
+    ]
+    public void WorkflowCommandToStringTest<T>(
+        string name, T message, Dictionary<string, string> properties, string expected)
+    {
+        WorkflowCommand<T> command = new(name, message, properties);
+        Assert.Equal(expected, command.ToString());
     }
 }
