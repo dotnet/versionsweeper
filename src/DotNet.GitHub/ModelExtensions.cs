@@ -52,16 +52,19 @@ public static class ModelExtensions
                             .EscapeUriString();
                     var name = relativePath.ShrinkPath("...");
 
-                    return new MarkdownCheckListItem(false, $"[{name}]({lineNumberFileReference})");
+                    // Must force anchor link, as GitHub assumes site-relative links.
+                    var anchor = $"<a href='{lineNumberFileReference}' title='{name} at line number {psr.Project.TfmLineNumber:#,0}'>{name}</a>";
+
+                    return new MarkdownCheckListItem(false, anchor);
                 })));
 
         document.AppendParagraph(
             "Consider upgrading projects to either the current release, or the nearest LTS TFM version.");
 
         document.AppendParagraph(
-            $"If any of these projects are intentionally targeting an unsupported version, " +
-            $"you can optionally configure to ignore including them in this automated issue. " +
-            $"Create a file at the root of the repository, named *dotnet-versionsweeper.json* and " +
+            $"If any of these projects listed in this issue are intentionally targeting an unsupported version, " +
+            $"you can optionally configure to ignore these results in future automation executions. " +
+            $"Create a (or update the) *dotnet-versionsweeper.json* file at the root of the repository and " +
             $"add an `ignore` entry following the " +
             $"[globbing patterns detailed here](https://docs.microsoft.com/dotnet/api/microsoft.extensions.filesystemglobbing.matcher#remarks).");
 
@@ -105,7 +108,10 @@ public static class ModelExtensions
             var path = $"../blob/{branch}/{relativePath.Replace("\\", "/")}".EscapeUriString();
             var name = relativePath.ShrinkPath("...");
 
-            return new(false, $"[{name}]({path})");
+            // Must force anchor link, as GitHub assumes site-relative links.
+            var anchor = $"<a href='{path}' title='{name}'>{name}</a>";
+
+            return new MarkdownCheckListItem(false, anchor);
         }
 
         document.AppendList(
@@ -117,9 +123,9 @@ public static class ModelExtensions
             "Consider upgrading the project(s) to the [SDK-style format](https://docs.microsoft.com/dotnet/standard/frameworks).");
 
         document.AppendParagraph(
-            $"If this project is intentionally demonstrating the old project style, " +
-            $"you can optionally configure to ignore this automated issue. " +
-            $"Create a file at the root of the repository, named *dotnet-versionsweeper.json* and " +
+            $"If any of these projects listed in this issue are intentionally demonstrating the old project style, " +
+            $"you can optionally configure to ignore these results in future automation executions. " +
+            $"Create a (or update the) *dotnet-versionsweeper.json* file at the root of the repository and " +
             $"add an `ignore` entry following the " +
             $"[globbing patterns detailed here](https://docs.microsoft.com/dotnet/api/microsoft.extensions.filesystemglobbing.matcher#remarks).");
 
