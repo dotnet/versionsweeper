@@ -12,5 +12,5 @@ global using Microsoft.Extensions.Caching.Memory;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Logging;
 global using Octokit;
-global using Octokit.Extensions;
+global using Octokit.Internal;
 global using ModelProject = DotNet.Models.Project;

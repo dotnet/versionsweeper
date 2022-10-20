@@ -19,11 +19,11 @@ public class CoreReleaseIndexService : ICoreReleaseIndexService
             {
                 var products = await ProductCollection.GetAsync();
 
-                var map = new Dictionary<Product, IReadOnlyCollection<ProductRelease>>();
-                foreach (var product in products)
+                var map = new ConcurrentDictionary<Product, IReadOnlyCollection<ProductRelease>>();
+                await Parallel.ForEachAsync(products, async (product, token) =>
                 {
                     map[product] = await product.GetReleasesAsync();
-                }
+                });
 
                 return map.AsReadOnly();
             });

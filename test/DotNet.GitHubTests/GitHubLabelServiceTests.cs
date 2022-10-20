@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Drawing;
 using DotNet.GitHub;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -14,7 +15,7 @@ namespace DotNet.GitHubTests;
 public class GitHubLabelServiceTests
 {
     readonly ILogger<GitHubLabelService> _logger = new LoggerFactory().CreateLogger<GitHubLabelService>();
-    readonly MemoryCache _cache = new(Options.Create(new MemoryCacheOptions()));
+    readonly IMemoryCache _cache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
 
     [Fact]
     public async Task GetOrCreateLabelAsyncCorrectlyReadsLabel()
@@ -96,5 +97,8 @@ public class GitHubLabelServiceTests
 
 public class TestLabel : Label
 {
-    public TestLabel(string name) => Name = name;
+    public TestLabel(string name) :
+        base(id: 7, url: "", name, nodeId: "", color: "", description: "test description", @default: false)
+    {        
+    }
 }

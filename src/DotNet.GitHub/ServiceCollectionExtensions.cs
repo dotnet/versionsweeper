@@ -11,7 +11,6 @@ public static class ServiceCollectionExtensions
         services.AddHttpClient<GitHubGraphQLClient>();
 
         return services
-            .AddSingleton<ResilientGitHubClientFactory>()
             .AddSingleton<IResilientGitHubClientFactory, DefaultResilientGitHubClientFactory>()
             .AddSingleton<GitHubGraphQLClient>()
             .AddSingleton<RateLimitAwareQueue>()
