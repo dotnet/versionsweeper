@@ -3,7 +3,7 @@
 
 namespace DotNet.IOTests;
 
-class Constants
+static class Constants
 {
     internal const string TestSolutionXml = @"
 Microsoft Visual Studio Solution File, Format Version 12.00

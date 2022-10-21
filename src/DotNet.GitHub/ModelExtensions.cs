@@ -66,7 +66,7 @@ public static class ModelExtensions
             $"you can optionally configure to ignore these results in future automation executions. " +
             $"Create a (or update the) *dotnet-versionsweeper.json* file at the root of the repository and " +
             $"add an `ignore` entry following the " +
-            $"[globbing patterns detailed here](https://docs.microsoft.com/dotnet/api/microsoft.extensions.filesystemglobbing.matcher#remarks).");
+            $"[globbing patterns detailed here](https://learn.microsoft.com/dotnet/core/extensions/file-globbing).");
 
         document.AppendCode("json", @"{
     ""ignore"": [
@@ -113,21 +113,23 @@ public static class ModelExtensions
 
         document.AppendList(
             new MarkdownList(
-                dfsr.OrderBy(psr => psr.Dockerfile.FullPath).Select(psr =>
-                {
-                    var relativePath =
-                        Path.GetRelativePath(rootDirectory, psr.Dockerfile.FullPath);
-                    // TODO: 1
-                    var lineNumberFileReference =
-                        $"../blob/{branch}/{relativePath.Replace("\\", "/")}#L{1}"
-                            .EscapeUriString();
-                    var name = relativePath.ShrinkPath("...");
+                dfsr.SelectMany(sr => sr.TargetFrameworkMonikerSupports.Select(tfms => (sr.Dockerfile, tfms)))
+                    .OrderBy(t => t.Dockerfile.FullPath)
+                    .Select(t =>
+                    {
+                        var relativePath =
+                            Path.GetRelativePath(rootDirectory, t.Dockerfile.FullPath);
+                        // TODO: 1
+                        var lineNumberFileReference =
+                            $"../blob/{branch}/{relativePath.Replace("\\", "/")}#L{1}"
+                                .EscapeUriString();
+                        var name = relativePath.ShrinkPath("...");
 
-                    // Must force anchor link, as GitHub assumes site-relative links.
-                    var anchor = $"<a href='{lineNumberFileReference}' title='{name} at line number {1:#,0}'>{name}</a>";
+                        // Must force anchor link, as GitHub assumes site-relative links.
+                        var anchor = $"<a href='{lineNumberFileReference}' title='{name} at line number {1:#,0}'>{name}</a>";
 
-                    return new MarkdownCheckListItem(false, anchor);
-                })));
+                        return new MarkdownCheckListItem(false, anchor);
+                    })));
 
         document.AppendParagraph(
             "Consider upgrading Dockerfile images to either the current release, or the nearest LTS TFM version.");
@@ -137,7 +139,7 @@ public static class ModelExtensions
             $"you can optionally configure to ignore these results in future automation executions. " +
             $"Create a (or update the) *dotnet-versionsweeper.json* file at the root of the repository and " +
             $"add an `ignore` entry following the " +
-            $"[globbing patterns detailed here](https://docs.microsoft.com/dotnet/api/microsoft.extensions.filesystemglobbing.matcher#remarks).");
+            $"[globbing patterns detailed here](https://learn.microsoft.com/dotnet/core/extensions/file-globbing).");
 
         document.AppendCode("json", @"{
     ""ignore"": [
@@ -198,7 +200,7 @@ public static class ModelExtensions
             $"you can optionally configure to ignore these results in future automation executions. " +
             $"Create a (or update the) *dotnet-versionsweeper.json* file at the root of the repository and " +
             $"add an `ignore` entry following the " +
-            $"[globbing patterns detailed here](https://docs.microsoft.com/dotnet/api/microsoft.extensions.filesystemglobbing.matcher#remarks).");
+            $"[globbing patterns detailed here](https://learn.microsoft.com/dotnet/core/extensions/file-globbing).");
 
         document.AppendCode("json", @"{
     ""ignore"": [
