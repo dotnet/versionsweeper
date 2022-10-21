@@ -12,5 +12,6 @@ public static class ServiceCollectionExtensions
             .AddSingleton<ICoreReleaseIndexService, CoreReleaseIndexService>()
             .AddSingleton<IFrameworkReleaseIndexService, FrameworkReleaseIndexService>()
             .AddSingleton<IFrameworkReleaseService, FrameworkReleaseService>()
-            .AddSingleton<IUnsupportedProjectReporter, UnsupportedProjectReporter>();
+            .AddSingleton<IUnsupportedProjectReporter, UnsupportedProjectReporter>()
+            .AddSingleton<IUnsupportedDockerfileReporter, UnsupportedDockerfileReporter>();
 }

@@ -34,7 +34,7 @@ sealed class Discovery
         await Task.WhenAll(
             projectMatcher.GetResultsInFullPath(options.Directory)
                 .ForEachAsync(
-                    Environment.ProcessorCount,
+                    ProcessorCount,
                     async path =>
                     {
                         var project = await projectReader.ReadProjectAsync(path);
@@ -46,7 +46,7 @@ sealed class Discovery
                     }),
             solutionMatcher.GetResultsInFullPath(options.Directory)
                 .ForEachAsync(
-                    Environment.ProcessorCount,
+                    ProcessorCount,
                     async path =>
                     {
                         var solution = await solutionReader.ReadSolutionAsync(path);
@@ -103,7 +103,7 @@ sealed class Discovery
 
         await dockerfileMatcher.GetResultsInFullPath(options.Directory)
                 .ForEachAsync(
-                    Environment.ProcessorCount,
+                    ProcessorCount,
                     async path =>
                     {
                         var dockerfile = await dockerfileReader.ReadDockerfileAsync(path);

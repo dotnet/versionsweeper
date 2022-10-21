@@ -23,11 +23,13 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
         var (solutions, orphanedProjects, config) =
             await Discovery.FindSolutionsAndProjectsAsync(services, job, options);
 
-        var dockerfiles = Discovery.FindDockerfilesAsync(services, job, options);
+        var dockerfiles =
+            await Discovery.FindDockerfilesAsync(services, job, options);
 
-        var (unsupportedProjectReporter, issueQueue, graphQLClient) =
+        var (unsupportedProjectReporter, unsupportedDockerfileReporter, issueQueue, graphQLClient) =
                 services.GetRequiredServices
-                    <IUnsupportedProjectReporter, RateLimitAwareQueue, GitHubGraphQLClient>();
+                    <IUnsupportedProjectReporter, IUnsupportedDockerfileReporter,
+                        RateLimitAwareQueue, GitHubGraphQLClient>();
 
         static async Task CreateAndEnqueueAsync(
             GitHubGraphQLClient client,
@@ -76,6 +78,8 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
         HashSet<ModelProject> nonSdkStyleProjects = new();
         Dictionary<string, HashSet<ProjectSupportReport>> tfmToProjectSupportReports =
             new(StringComparer.OrdinalIgnoreCase);
+        Dictionary<string, HashSet<DockerfileSupportReport>> tfmToDockerfileSupportReports =
+            new(StringComparer.OrdinalIgnoreCase);
 
         void AppendGrouping(
             IGrouping<string, (TargetFrameworkMonikerSupport tfms, ProjectSupportReport psr)> grouping)
@@ -86,9 +90,9 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                 tfmToProjectSupportReports[key] = new();
             }
 
-            foreach (var group in grouping)
+            foreach (var (_, psr) in grouping)
             {
-                tfmToProjectSupportReports[key].Add(group.psr);
+                tfmToProjectSupportReports[key].Add(psr);
             }
         }
 
@@ -148,6 +152,15 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             }
         }
 
+        foreach (var dockerfile in dockerfiles)
+        {
+            await foreach (var supportReport in unsupportedDockerfileReporter.ReportAsync(
+                dockerfile, config.OutOfSupportWithinDays))
+            {
+                var reports = supportReport.TargetFrameworkMonikerSupports;
+            }
+        }
+
         foreach (var (tfm, projectSupportReports) in tfmToProjectSupportReports)
         {
             await CreateAndEnqueueAsync(
@@ -175,13 +188,13 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
     }
     finally
     {
-        Environment.Exit(0);
+        Exit(0);
     }
 }
 
 parser.WithNotParsed(
     errors => jobService.SetFailed(
-        string.Join(Environment.NewLine, errors.Select(error => error.ToString()))));
+        string.Join(NewLine, errors.Select(error => error.ToString()))));
 
 await parser.WithParsedAsync(options => StartSweeperAsync(options, host.Services, jobService));
 await host.RunAsync();

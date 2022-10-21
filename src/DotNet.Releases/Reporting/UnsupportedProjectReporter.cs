@@ -3,7 +3,7 @@
 
 namespace DotNet.Releases;
 
-internal class UnsupportedProjectReporter : IUnsupportedProjectReporter
+internal sealed class UnsupportedProjectReporter : UnsupportedReporterBase, IUnsupportedProjectReporter
 {
     readonly ICoreReleaseIndexService _coreReleaseIndexService;
     readonly IFrameworkReleaseService _frameworkReleaseService;
@@ -90,57 +90,5 @@ internal class UnsupportedProjectReporter : IUnsupportedProjectReporter
 
         if (resultingSupports.Any())
             yield return new(project, resultingSupports);
-    }
-
-    static bool TryEvaluateDotNetSupport(
-        string tfm,
-        string version,
-        Product product,
-        DateTime outOfSupportWithinDate,
-        out TargetFrameworkMonikerSupport? tfmSupport)
-    {
-        var release = ReleaseFactory.Create(
-            product,
-            pr => $"{pr.ProductName} {pr.ProductVersion}",
-            product.ProductName switch
-            {
-                ".NET" => $"net{product.ProductVersion}",
-                ".NET Core" => $"netcoreapp{product.ProductVersion}",
-                _ => product.ProductVersion
-            },
-            product.SupportPhase,
-            product.EndOfLifeDate,
-            product.ReleasesJson.ToString());
-
-        if (TargetFrameworkMonikerMap.RawMapsToKnown(tfm, release.TargetFrameworkMoniker))
-        {
-            var isOutOfSupport = product.IsOutOfSupport() ||
-                product.EndOfLifeDate <= outOfSupportWithinDate;
-
-            tfmSupport = new(tfm, version, isOutOfSupport, release);
-            return true;
-        }
-
-        tfmSupport = default;
-        return false;
-    }
-
-    static bool TryEvaluateDotNetFrameworkSupport(
-        string tfm, string version,
-        IRelease release,
-        DateTime outOfSupportWithinDate,
-        out TargetFrameworkMonikerSupport? tfmSupport)
-    {
-        if (TargetFrameworkMonikerMap.RawMapsToKnown(tfm, release.TargetFrameworkMoniker))
-        {
-            var isOutOfSupport = release.SupportPhase == SupportPhase.EOL ||
-                release.EndOfLifeDate?.Date <= outOfSupportWithinDate;
-
-            tfmSupport = new(tfm, version, isOutOfSupport, release);
-            return true;
-        }
-
-        tfmSupport = default;
-        return false;
     }
 }
