@@ -15,12 +15,7 @@ internal class UnsupportedReporterBase
         var release = ReleaseFactory.Create(
             product,
             pr => $"{pr.ProductName} {pr.ProductVersion}",
-            product.ProductName switch
-            {
-                ".NET" => $"net{product.ProductVersion}",
-                ".NET Core" => $"netcoreapp{product.ProductVersion}",
-                _ => product.ProductVersion
-            },
+            product.GetTargetFrameworkMoniker(),
             product.SupportPhase,
             product.EndOfLifeDate,
             product.ReleasesJson.ToString());
