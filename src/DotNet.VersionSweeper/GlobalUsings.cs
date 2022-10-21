@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 global using System.Collections.Concurrent;
+global using System.Collections.Immutable;
 global using System.Text;
 global using System.Text.Json.Serialization;
 global using CommandLine;

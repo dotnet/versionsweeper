@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Collections.Immutable;
-
 namespace DotNet.VersionSweeper;
 
 sealed class Discovery
@@ -102,20 +100,20 @@ sealed class Discovery
         var dockerfileMatcher = new Matcher().AddInclude("**/Dockerfile");
 
         await dockerfileMatcher.GetResultsInFullPath(options.Directory)
-                .ForEachAsync(
-                    ProcessorCount,
-                    async path =>
+            .ForEachAsync(
+                ProcessorCount,
+                async path =>
+                {
+                    var dockerfile = await dockerfileReader.ReadDockerfileAsync(path);
+                    if (dockerfile is { ImageDetails.Count: > 0 })
                     {
-                        var dockerfile = await dockerfileReader.ReadDockerfileAsync(path);
-                        if (dockerfile is { ImageDetails.Count: > 0 })
+                        dockerfiles.Add(dockerfile);
+                        foreach (var imageDetail in dockerfile.ImageDetails)
                         {
-                            dockerfiles.Add(dockerfile);
-                            foreach (var imageDetail in dockerfile.ImageDetails)
-                            {
-                                job.Info($"Parsed TFM(s): '{string.Join(", ", imageDetail.TargetFrameworkMoniker)}' on line {imageDetail.LineNumber} in {path}.");
-                            }
+                            job.Info($"Parsed TFM(s): '{imageDetail.TargetFrameworkMoniker}' on line {imageDetail.LineNumber} in {path}.");
                         }
-                    });
+                    }
+                });
 
         return dockerfiles.ToImmutableHashSet();
     }
