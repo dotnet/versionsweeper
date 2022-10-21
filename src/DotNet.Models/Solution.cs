@@ -3,7 +3,7 @@
 
 namespace DotNet.Models;
 
-public class Solution
+public sealed class Solution
 {
     public string FullPath { get; set; } = null!;
 

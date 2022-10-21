@@ -11,7 +11,7 @@ using Xunit;
 
 namespace DotNet.ReleasesTests;
 
-public class CoreReleaseIndexServiceTests
+public sealed class CoreReleaseIndexServiceTests
 {
     readonly MemoryCache _cache = new(Options.Create(new MemoryCacheOptions()));
 

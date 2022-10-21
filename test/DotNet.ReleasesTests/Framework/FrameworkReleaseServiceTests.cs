@@ -8,7 +8,7 @@ using Xunit;
 
 namespace DotNet.ReleasesTests;
 
-public class FrameworkReleaseServiceTests
+public sealed class FrameworkReleaseServiceTests
 {
     readonly IFrameworkReleaseIndexService _indexService = new FrameworkReleaseIndexService();
     readonly MemoryCache _cache = new(Options.Create(new MemoryCacheOptions()));

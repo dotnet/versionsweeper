@@ -3,7 +3,7 @@
 
 namespace DotNet.IO;
 
-public class DockerfileReader : IDockerfileReader
+public sealed class DockerfileReader : IDockerfileReader
 {
     static readonly RegexOptions _options =
         RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.ExplicitCapture;

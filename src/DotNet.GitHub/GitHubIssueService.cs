@@ -3,7 +3,7 @@
 
 namespace DotNet.GitHub;
 
-public class GitHubIssueService : IGitHubIssueService
+public sealed class GitHubIssueService : IGitHubIssueService
 {
     readonly IResilientGitHubClientFactory _clientFactory;
     readonly IGitHubLabelService _gitHubLabelService;

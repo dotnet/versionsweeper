@@ -6,7 +6,7 @@ using Xunit;
 
 namespace DotNet.GitHubActionsTests;
 
-public class WorkflowCommandTests
+public sealed class WorkflowCommandTests
 {
     public static IEnumerable<object[]> WorkflowCommandToStringInput = new[]
 {

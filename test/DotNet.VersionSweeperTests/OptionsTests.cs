@@ -6,7 +6,7 @@ using Xunit;
 
 namespace DotNet.VersionSweeperTests;
 
-public class OptionsTests
+public sealed class OptionsTests
 {
     public static IEnumerable<object[]> NewOptionsSearchPatternInput = new[]
 {

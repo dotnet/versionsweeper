@@ -6,7 +6,7 @@ using Xunit;
 
 namespace DotNet.IOTests;
 
-public class SolutionFileReaderTests
+public sealed class SolutionFileReaderTests
 {
     [Fact]
     public async Task ReadSolutionAsyncTest()

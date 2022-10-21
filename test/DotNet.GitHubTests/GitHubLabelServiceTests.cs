@@ -12,7 +12,7 @@ using Xunit;
 
 namespace DotNet.GitHubTests;
 
-public class GitHubLabelServiceTests
+public sealed class GitHubLabelServiceTests
 {
     readonly ILogger<GitHubLabelService> _logger = new LoggerFactory().CreateLogger<GitHubLabelService>();
     readonly IMemoryCache _cache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
@@ -95,7 +95,7 @@ public class GitHubLabelServiceTests
     }
 }
 
-public class TestLabel : Label
+public sealed class TestLabel : Label
 {
     public TestLabel(string name) :
         base(id: 7, url: "", name, nodeId: "", color: "", description: "test description", @default: false)

@@ -6,7 +6,7 @@ using Xunit;
 
 namespace DotNet.IOTests;
 
-public class ProjectFileReaderTests
+public sealed class ProjectFileReaderTests
 {
     [Fact]
     public async Task ReadProjectAndParseXmlCorrectly()

@@ -7,7 +7,7 @@ using Xunit;
 
 namespace DotNet.ModelsTests;
 
-public class ReleaseFactoryTests
+public sealed class ReleaseFactoryTests
 {
     [Fact]
     public void CreateTest()

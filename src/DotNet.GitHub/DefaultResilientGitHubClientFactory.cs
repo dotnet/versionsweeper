@@ -3,7 +3,7 @@
 
 namespace DotNet.GitHub;
 
-public class DefaultResilientGitHubClientFactory : IResilientGitHubClientFactory
+public sealed class DefaultResilientGitHubClientFactory : IResilientGitHubClientFactory
 {
     public IGitHubClient Create(string token) =>
         new GitHubClient(

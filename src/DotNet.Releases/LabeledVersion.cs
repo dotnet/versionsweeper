@@ -3,7 +3,7 @@
 
 namespace DotNet.Releases;
 
-public class LabeledVersion : IComparable<LabeledVersion?>
+public sealed class LabeledVersion : IComparable<LabeledVersion?>
 {
     private readonly Version? _parsedVersion;
 

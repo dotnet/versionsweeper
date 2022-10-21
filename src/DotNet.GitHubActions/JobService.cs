@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DotNet.GitHubActions;
 
-public class JobService : IJobService
+public sealed class JobService : IJobService
 {
     /// <inheritdoc />
     public void AddPath(string inputPath)

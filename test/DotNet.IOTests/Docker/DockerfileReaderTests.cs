@@ -6,7 +6,7 @@ using Xunit;
 
 namespace DotNet.IOTests;
 
-public class DockerfileReaderTests
+public sealed class DockerfileReaderTests
 {
     [Fact]
     public async Task ReadDcokerfileAndParsesCorrectly()

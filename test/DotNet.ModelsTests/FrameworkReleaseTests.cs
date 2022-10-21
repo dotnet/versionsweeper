@@ -6,7 +6,7 @@ using Xunit;
 
 namespace DotNet.ModelsTests;
 
-public class FrameworkReleaseTests
+public sealed class FrameworkReleaseTests
 {
     [
         Theory,

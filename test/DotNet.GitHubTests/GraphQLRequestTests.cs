@@ -11,7 +11,7 @@ using Xunit;
 
 namespace DotNet.GitHubTests;
 
-public class GraphQLRequestTests
+public sealed class GraphQLRequestTests
 {
     readonly static JsonSerializerOptions _options = new()
     {

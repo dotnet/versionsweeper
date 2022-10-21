@@ -3,7 +3,7 @@
 
 namespace DotNet.IO;
 
-public class ProjectFileReader : IProjectFileReader
+public sealed class ProjectFileReader : IProjectFileReader
 {
     static readonly RegexOptions _options =
         RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.ExplicitCapture;

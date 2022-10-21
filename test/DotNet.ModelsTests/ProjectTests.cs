@@ -6,7 +6,7 @@ using Xunit;
 
 namespace DotNet.ModelsTests;
 
-public class ProjectTests
+public sealed class ProjectTests
 {
     public static IEnumerable<object[]> NewProjectInput = new[]
     {

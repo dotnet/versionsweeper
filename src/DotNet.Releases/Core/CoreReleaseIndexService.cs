@@ -3,7 +3,7 @@
 
 namespace DotNet.Releases;
 
-public class CoreReleaseIndexService : ICoreReleaseIndexService
+public sealed class CoreReleaseIndexService : ICoreReleaseIndexService
 {
     const string NetCoreKey = nameof(NetCoreKey);
 

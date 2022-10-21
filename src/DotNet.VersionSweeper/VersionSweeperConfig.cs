@@ -14,7 +14,7 @@ namespace DotNet.VersionSweeper;
 ///     ]
 /// }
 /// </summary>
-public class VersionSweeperConfig
+public sealed class VersionSweeperConfig
 {
     private static VersionSweeperConfig? s_cachedConfig = null;
 

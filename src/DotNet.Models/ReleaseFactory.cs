@@ -3,7 +3,7 @@
 
 namespace DotNet.Models;
 
-public class ReleaseFactory
+public sealed class ReleaseFactory
 {
     public static IRelease Create<TSource>(
         TSource source,

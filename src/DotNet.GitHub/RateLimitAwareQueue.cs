@@ -3,7 +3,7 @@
 
 namespace DotNet.GitHub;
 
-public class RateLimitAwareQueue
+public sealed class RateLimitAwareQueue
 {
     const int DelayBetweenPostCalls = 1_000;
 
