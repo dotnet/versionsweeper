@@ -18,7 +18,7 @@ internal class UnsupportedProjectReporter : IUnsupportedProjectReporter
         Project project, int outOfSupportWithinDays)
     {
         HashSet<TargetFrameworkMonikerSupport> resultingSupports = new();
-        DateTime outOfSupportWithinDate = DateTime.Now.Date.AddDays(outOfSupportWithinDays);
+        DateTime outOfSupportWithinDate = DateTimeOffset.UtcNow.Date.AddDays(outOfSupportWithinDays);
 
         var products = await _coreReleaseIndexService.GetReleasesAsync();
         foreach (var product in products.Keys)
@@ -93,7 +93,8 @@ internal class UnsupportedProjectReporter : IUnsupportedProjectReporter
     }
 
     static bool TryEvaluateReleaseSupport(
-        string tfm, string version,
+        string tfm,
+        string version,
         Product product,
         DateTime outOfSupportWithinDate,
         out TargetFrameworkMonikerSupport? tfmSupport)

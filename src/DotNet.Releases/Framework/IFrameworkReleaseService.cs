@@ -13,7 +13,7 @@ public interface IFrameworkReleaseService
         var releases = await sequence.ToListAsync();
 
         static bool IsOutOfSupport(FrameworkRelease release) =>
-            release.SupportPhase == SupportPhase.EOL || release.EndOfLifeDate?.Date <= DateTime.Now.Date;
+            release.SupportPhase == SupportPhase.EOL || release.EndOfLifeDate?.Date <= DateTimeOffset.UtcNow.Date;
 
         var orderedReleases = releases?
             .Where(release => release is not null)

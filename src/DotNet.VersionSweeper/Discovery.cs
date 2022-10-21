@@ -89,4 +89,12 @@ sealed class Discovery
                 Config: config
             );
     }
+
+    internal static Task<ISet<Dockerfile>> FindDockerfilesAsync(
+        IServiceProvider services,
+        IJobService job,
+        Options options)
+    {
+        throw new MissingMethodException();
+    }
 }

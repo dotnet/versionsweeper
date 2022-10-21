@@ -16,6 +16,8 @@ namespace DotNet.VersionSweeper;
 /// </summary>
 public class VersionSweeperConfig
 {
+    private static VersionSweeperConfig? s_cachedConfig = null;
+
     internal const string FileName = "dotnet-versionsweeper.json";
 
     [JsonPropertyName("ignore")]
@@ -27,8 +29,17 @@ public class VersionSweeperConfig
     [JsonPropertyName("outOfSupportWithinDays")]
     public int OutOfSupportWithinDays { get; init; } = 0;
 
+    /// <summary>
+    /// Returns the read configuration, or a default configuration if the file is not found.
+    /// The configuration is cached for the lifetime of the process.
+    /// </summary>
     internal static async Task<VersionSweeperConfig> ReadAsync(string root, IJobService job)
     {
+        if (s_cachedConfig is not null)
+        {
+            return s_cachedConfig;
+        }
+
         try
         {
             var fullPath = Path.Combine(root, FileName);
@@ -43,6 +54,8 @@ public class VersionSweeperConfig
                 job.Info($"{string.Join(",", config.Ignore.Select(val => $"\t{val}"))}");
                 job.Info($"Intended version sweeper type: {config.Type}");
                 job.Info($"Out of support within days: {config.OutOfSupportWithinDays}");
+
+                s_cachedConfig = config;
 
                 return config;
             }

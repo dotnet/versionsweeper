@@ -8,8 +8,10 @@ public class ReleaseFactory
     public static IRelease Create<TSource>(
         TSource source,
         Func<TSource, string> toString,
-        string tfm, SupportPhase supportPhase,
-        DateTime? endOfLifeDate, string releaseNotesUrl) =>
+        string tfm,
+        SupportPhase supportPhase,
+        DateTime? endOfLifeDate,
+        string releaseNotesUrl) =>
         new ReleaseWrapper<TSource>(() => toString(source))
         {
             TargetFrameworkMoniker = tfm,

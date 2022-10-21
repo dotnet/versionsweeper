@@ -48,7 +48,7 @@ public class ProjectFileReader : IProjectFileReader
         static Project ParseJson(Project project, string projectContent)
         {
             var projectJson = projectContent.FromJson<ProjectJson>();
-            if (projectJson is null or { Frameworks: { Count: 0 } })
+            if (projectJson is null or { Frameworks.Count: 0 })
             {
                 return project;
             }
