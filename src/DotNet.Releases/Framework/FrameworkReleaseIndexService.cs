@@ -6,7 +6,7 @@ namespace DotNet.Releases;
 public sealed class FrameworkReleaseIndexService : IFrameworkReleaseIndexService
 {
     /// <summary>
-    /// Private sourhttps://github.com/dotnet/website-resources/tree/master/data/dotnet-framework-releases
+    /// https://github.com/dotnet/website-resources/tree/master/data/dotnet-framework-releases
     /// </summary>
     public HashSet<string> FrameworkReseaseFileNames { get; } = new()
     {

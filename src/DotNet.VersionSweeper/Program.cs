@@ -23,6 +23,8 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
         var (solutions, orphanedProjects, config) =
             await Discovery.FindSolutionsAndProjectsAsync(services, job, options);
 
+        var dockerfiles = Discovery.FindDockerfilesAsync(services, job, options);
+
         var (unsupportedProjectReporter, issueQueue, graphQLClient) =
                 services.GetRequiredServices
                     <IUnsupportedProjectReporter, RateLimitAwareQueue, GitHubGraphQLClient>();

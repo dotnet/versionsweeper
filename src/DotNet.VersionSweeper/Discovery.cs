@@ -1,6 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Collections.Immutable;
+
 namespace DotNet.VersionSweeper;
 
 sealed class Discovery
@@ -9,7 +11,7 @@ sealed class Discovery
     /// Returns a list of solutions, each solution contains projects. Also returns a mapping
     /// of orphaned projects that do not belong to solutions, but match the search patterns.
     /// </summary>
-    internal static async Task<(ISet<Solution> Solutions, ISet<ModelProject> OrphanedProjects, VersionSweeperConfig Config)>
+    internal static async Task<(IImmutableSet<Solution> Solutions, IImmutableSet<ModelProject> OrphanedProjects, VersionSweeperConfig Config)>
         FindSolutionsAndProjectsAsync(
             IServiceProvider services,
             IJobService job,
@@ -75,10 +77,10 @@ sealed class Discovery
                     })
             );
 
-        var solutionSet = solutions.ToHashSet();
+        var solutionSet = solutions.ToImmutableHashSet();
         var orphanedProjectSet =
             projects.Except(solutions.SelectMany(sln => sln.Projects))
-                .ToHashSet();
+                .ToImmutableHashSet();
 
         job.Info($"Discovered {solutionSet.Count} solutions and {orphanedProjectSet.Count} orphaned projects.");
 
@@ -90,11 +92,31 @@ sealed class Discovery
             );
     }
 
-    internal static Task<ISet<Dockerfile>> FindDockerfilesAsync(
+    internal static async Task<IImmutableSet<Dockerfile>> FindDockerfilesAsync(
         IServiceProvider services,
         IJobService job,
         Options options)
     {
-        throw new MissingMethodException();
+        var dockerfileReader = services.GetRequiredService<IDockerfileReader>();
+        ConcurrentBag<Dockerfile> dockerfiles = new();
+        var dockerfileMatcher = new Matcher().AddInclude("**/Dockerfile");
+
+        await dockerfileMatcher.GetResultsInFullPath(options.Directory)
+                .ForEachAsync(
+                    Environment.ProcessorCount,
+                    async path =>
+                    {
+                        var dockerfile = await dockerfileReader.ReadDockerfileAsync(path);
+                        if (dockerfile is { ImageDetails.Count: > 0 })
+                        {
+                            dockerfiles.Add(dockerfile);
+                            foreach (var imageDetail in dockerfile.ImageDetails)
+                            {
+                                job.Info($"Parsed TFM(s): '{string.Join(", ", imageDetail.TargetFrameworkMoniker)}' on line {imageDetail.LineNumber} in {path}.");
+                            }
+                        }
+                    });
+
+        return dockerfiles.ToImmutableHashSet();
     }
 }
