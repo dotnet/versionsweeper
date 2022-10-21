@@ -7,8 +7,10 @@ public class DockerfileReader : IDockerfileReader
 {
     static readonly RegexOptions _options =
         RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.ExplicitCapture;
-    static readonly Regex _dockerfileTfmsExpression =
-        new(@"FROM .+?dotnet.+?:(?<tfm>.+?)[\s|\n]", _options);
+    static readonly Regex _fromInstructionRegex =
+        new(@"FROM (?<image>.+?dotnet.+?):(?<tag>.+?)[\s|\n]", _options);
+    static readonly Regex _copyInstructionRegex =
+        new(@"COPY --from=(?<image>.+?dotnet.+?):(?<tag>.+?)[\s|\n]", _options);
 
     public async ValueTask<Dockerfile> ReadDockerfileAsync(string dockerfilePath)
     {
@@ -20,31 +22,53 @@ public class DockerfileReader : IDockerfileReader
         if (SystemFile.Exists(dockerfilePath))
         {
             var dockerfileContent = await SystemFile.ReadAllTextAsync(dockerfilePath);
-            var matches = _dockerfileTfmsExpression.Matches(dockerfileContent);
-
-            foreach (Match match in matches)
+            var fromMatches = _fromInstructionRegex.Matches(dockerfileContent);
+            foreach (Match match in fromMatches)
             {
-                var group = match.Groups["tfm"];
-                var (index, tfm) = (group.Index, group.Value);
-                if (tfm is not null)
-                {
-                    if (dockerfile.ImageDetails is null)
-                    {
-                        dockerfile = dockerfile with
-                        {
-                            ImageDetails = new HashSet<ImageDetails>()
-                        };
-                    }
+                dockerfile = ParseMatch(dockerfile, dockerfileContent, match);
+            }
 
-                    var lineNumber = GetLineNumberFromIndex(dockerfileContent, index);
-
-                    dockerfile.ImageDetails.Add(
-                        new TfmAndLineNumberPair(tfm, lineNumber));
-                }
+            var copyMatches = _copyInstructionRegex.Matches(dockerfileContent);
+            foreach (Match match in copyMatches)
+            {
+                dockerfile = ParseMatch(dockerfile, dockerfileContent, match);
             }
         }
 
         return dockerfile;
+
+        static Dockerfile ParseMatch(Dockerfile dockerfile, string dockerfileContent, Match match)
+        {
+            var group = match.Groups["tag"];
+            var (index, tag) = (group.Index, group.Value);
+            var image = match.Groups["image"].Value;
+            if (image is not null && tag is not null)
+            {
+                if (dockerfile.ImageDetails is null)
+                {
+                    dockerfile = dockerfile with
+                    {
+                        ImageDetails = new HashSet<ImageDetails>()
+                    };
+                }
+
+                var lineNumber = GetLineNumberFromIndex(dockerfileContent, index);
+                var isFramework = image.Contains("framework");
+                tag = tag.Contains('-') ? tag.Split("-")[0] : tag;
+                var firstNumber = int.TryParse(tag[0].ToString(), out var number) ? number : -1;
+                var tfm = isFramework switch
+                {
+                    true => $"net{tag.Replace(".", "")}",
+                    false when firstNumber < 4 => $"netcoreapp{tag}",
+                    _ => $"net{tag}"
+                };
+
+                dockerfile.ImageDetails.Add(
+                    new ImageDetails(image, tag, tfm, lineNumber));
+            }
+
+            return dockerfile;
+        }
     }
 
     static int GetLineNumberFromIndex(string content, int index)

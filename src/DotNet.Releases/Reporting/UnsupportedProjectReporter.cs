@@ -25,7 +25,7 @@ internal class UnsupportedProjectReporter : IUnsupportedProjectReporter
         {
             var tfmSupports =
                 project.Tfms.Select(
-                    tfm => TryEvaluateReleaseSupport(
+                    tfm => TryEvaluateDotNetSupport(
                         tfm, product.ProductVersion,
                         product, outOfSupportWithinDate, out var tfmSupport)
                             ? tfmSupport : null)
@@ -59,7 +59,7 @@ internal class UnsupportedProjectReporter : IUnsupportedProjectReporter
         {
             var tfmSupports =
                 project.Tfms.Select(
-                    tfm => TryEvaluateReleaseSupport(
+                    tfm => TryEvaluateDotNetFrameworkSupport(
                         tfm, frameworkRelease!.Version,
                         frameworkRelease, outOfSupportWithinDate, out var tfmSupport)
                             ? tfmSupport : null)
@@ -92,7 +92,7 @@ internal class UnsupportedProjectReporter : IUnsupportedProjectReporter
             yield return new(project, resultingSupports);
     }
 
-    static bool TryEvaluateReleaseSupport(
+    static bool TryEvaluateDotNetSupport(
         string tfm,
         string version,
         Product product,
@@ -125,7 +125,7 @@ internal class UnsupportedProjectReporter : IUnsupportedProjectReporter
         return false;
     }
 
-    static bool TryEvaluateReleaseSupport(
+    static bool TryEvaluateDotNetFrameworkSupport(
         string tfm, string version,
         IRelease release,
         DateTime outOfSupportWithinDate,
