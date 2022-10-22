@@ -1,5 +1,5 @@
 # This file is intentionally not valid.
-# It's only purpose is for dog fooding.
+# Its only purpose is for dog fooding.
 
 FROM mcr.microsoft.com/dotnet/aspnet:3.1.30-bionic AS build-env
 WORKDIR /App
