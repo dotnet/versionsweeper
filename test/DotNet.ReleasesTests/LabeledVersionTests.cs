@@ -6,7 +6,7 @@ using Xunit;
 
 namespace DotNet.ReleasesTests;
 
-public class LabeledVersionTests
+public sealed class LabeledVersionTests
 {
     public static IEnumerable<object[]> AsLabeledVersionInput = new[]
     {

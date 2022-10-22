@@ -6,7 +6,7 @@ using Xunit;
 
 namespace DotNet.Extensions.Tests;
 
-public class ObjectExtensionsTests
+public sealed class ObjectExtensionsTests
 {
     public static IEnumerable<object[]> FromJsonInput = new[]
     {
@@ -87,7 +87,7 @@ enum TestEnum
     WaitWhat = 2
 }
 
-public class CustomName
+public sealed class CustomName
 {
     [JsonPropertyName("test.value")] public string TestValue { get; init; }
 }

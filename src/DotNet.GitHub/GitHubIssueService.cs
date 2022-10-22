@@ -3,7 +3,7 @@
 
 namespace DotNet.GitHub;
 
-public class GitHubIssueService : IGitHubIssueService
+public sealed class GitHubIssueService : IGitHubIssueService
 {
     readonly IResilientGitHubClientFactory _clientFactory;
     readonly IGitHubLabelService _gitHubLabelService;
@@ -18,11 +18,10 @@ public class GitHubIssueService : IGitHubIssueService
     public async ValueTask<Issue> PostIssueAsync(
         string owner, string name, string token, NewIssue newIssue)
     {
-        var issuesClient = GetIssuesClient(token);
-
         var label = await _gitHubLabelService.GetOrCreateLabelAsync(owner, name, token);
         newIssue.Labels.Add(label.Name);
 
+        var issuesClient = GetIssuesClient(token);
         var issue = await issuesClient.Create(owner, name, newIssue);
 
         _logger.LogInformation($"Issue created: {issue.HtmlUrl}");
@@ -46,9 +45,5 @@ public class GitHubIssueService : IGitHubIssueService
         return issue;
     }
 
-    IIssuesClient GetIssuesClient(string token)
-    {
-        var client = _clientFactory.Create(token);
-        return client.Issue;
-    }
+    IIssuesClient GetIssuesClient(string token) => _clientFactory.Create(token).Issue;
 }

@@ -5,7 +5,7 @@ using Xunit;
 
 namespace DotNet.Extensions.Tests;
 
-public class StringExtensionsTests
+public sealed class StringExtensionsTests
 {
     [Fact]
     public void FirstAndLastSegementsOfPathTest()

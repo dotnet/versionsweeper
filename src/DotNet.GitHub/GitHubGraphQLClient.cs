@@ -3,7 +3,7 @@
 
 namespace DotNet.GitHub;
 
-public class GitHubGraphQLClient
+public sealed class GitHubGraphQLClient
 {
     const string _issueQuery = @"query($search_value: String!) {
   search(type: ISSUE, query: $search_value, first: 10) {

@@ -3,7 +3,7 @@
 
 namespace DotNet.IO;
 
-public class ProjectFileReader : IProjectFileReader
+public sealed class ProjectFileReader : IProjectFileReader
 {
     static readonly RegexOptions _options =
         RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.ExplicitCapture;
@@ -48,7 +48,7 @@ public class ProjectFileReader : IProjectFileReader
         static Project ParseJson(Project project, string projectContent)
         {
             var projectJson = projectContent.FromJson<ProjectJson>();
-            if (projectJson is null or { Frameworks: { Count: 0 } })
+            if (projectJson is null or { Frameworks.Count: 0 })
             {
                 return project;
             }

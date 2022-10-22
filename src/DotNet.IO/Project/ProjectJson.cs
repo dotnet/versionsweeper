@@ -3,12 +3,12 @@
 
 namespace DotNet.IO;
 
-internal class ProjectJson
+internal sealed class ProjectJson
 {
     [JsonPropertyName("frameworks")]
     public Dictionary<string, Framework> Frameworks { get; set; } = new();
 }
 
-internal class Framework
+internal sealed class Framework
 {
 }

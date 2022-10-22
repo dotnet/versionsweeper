@@ -6,7 +6,7 @@ using Xunit;
 
 namespace DotNet.VersionSweeperTests;
 
-public class StringExtensionsTests
+public sealed class StringExtensionsTests
 {
     public static IEnumerable<object[]> AsMaskedExtensionsInput = new[]
     {

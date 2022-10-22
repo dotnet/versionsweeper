@@ -66,11 +66,84 @@ public static class ModelExtensions
             $"you can optionally configure to ignore these results in future automation executions. " +
             $"Create a (or update the) *dotnet-versionsweeper.json* file at the root of the repository and " +
             $"add an `ignore` entry following the " +
-            $"[globbing patterns detailed here](https://docs.microsoft.com/dotnet/api/microsoft.extensions.filesystemglobbing.matcher#remarks).");
+            $"[globbing patterns detailed here](https://learn.microsoft.com/dotnet/core/extensions/file-globbing).");
 
         document.AppendCode("json", @"{
     ""ignore"": [
         ""**/path/to/example.csproj""
+    ]
+}");
+        return document.ToString();
+    }
+
+    public static string ToMarkdownBody(
+        this ISet<DockerfileSupportReport> dfsr,
+        string tfm,
+        string rootDirectory,
+        string branch)
+    {
+        IMarkdownDocument document = new MarkdownDocument();
+
+        document.AppendParagraph(
+            "The following Dockerfile(s) target a .NET version which is no longer supported. " +
+            "This is an auto-generated issue, detailed and discussed in [dotnet/docs#22271](https://github.com/dotnet/docs/issues/22271).");
+
+        var tfmSupport =
+            dfsr.First()
+                .TargetFrameworkMonikerSupports
+                .First(tfms => tfms.TargetFrameworkMoniker == tfm);
+
+        document.AppendTable(
+            new MarkdownTableHeader(
+                new("Target version"),
+                new("End of life"),
+                new("Release notes"),
+                new("Nearest LTS TFM version")),
+            new[]
+            {
+                    new MarkdownTableRow(
+                    $"`{tfmSupport.TargetFrameworkMoniker}`",
+                    tfmSupport.Release.EndOfLifeDate.HasValue
+                        ? $"{tfmSupport.Release.EndOfLifeDate:MMMM, dd yyyy}" : "N/A",
+                    new MarkdownLink(
+                        $"{tfmSupport.TargetFrameworkMoniker} release notes", tfmSupport.Release.ReleaseNotesUrl)
+                        .ToString(),
+                    $"`{tfmSupport.NearestLtsVersion}`")
+            });
+
+        document.AppendList(
+            new MarkdownList(
+                dfsr.SelectMany(sr => sr.TargetFrameworkMonikerSupports.Select(tfms => (sr.Dockerfile, tfms)))
+                    .OrderBy(t => t.Dockerfile.FullPath)
+                    .Select(t =>
+                    {
+                        var relativePath =
+                            Path.GetRelativePath(rootDirectory, t.Dockerfile.FullPath);
+                        // TODO: 1
+                        var lineNumberFileReference =
+                            $"../blob/{branch}/{relativePath.Replace("\\", "/")}#L{1}"
+                                .EscapeUriString();
+                        var name = relativePath.ShrinkPath("...");
+
+                        // Must force anchor link, as GitHub assumes site-relative links.
+                        var anchor = $"<a href='{lineNumberFileReference}' title='{name} at line number {1:#,0}'>{name}</a>";
+
+                        return new MarkdownCheckListItem(false, anchor);
+                    })));
+
+        document.AppendParagraph(
+            "Consider upgrading Dockerfile images to either the current release, or the nearest LTS TFM version.");
+
+        document.AppendParagraph(
+            $"If any of these Dockerfile(s) listed in this issue are intentionally targeting an unsupported version, " +
+            $"you can optionally configure to ignore these results in future automation executions. " +
+            $"Create a (or update the) *dotnet-versionsweeper.json* file at the root of the repository and " +
+            $"add an `ignore` entry following the " +
+            $"[globbing patterns detailed here](https://learn.microsoft.com/dotnet/core/extensions/file-globbing).");
+
+        document.AppendCode("json", @"{
+    ""ignore"": [
+        ""**/path/to/Dockerfile""
     ]
 }");
         return document.ToString();
@@ -127,7 +200,7 @@ public static class ModelExtensions
             $"you can optionally configure to ignore these results in future automation executions. " +
             $"Create a (or update the) *dotnet-versionsweeper.json* file at the root of the repository and " +
             $"add an `ignore` entry following the " +
-            $"[globbing patterns detailed here](https://docs.microsoft.com/dotnet/api/microsoft.extensions.filesystemglobbing.matcher#remarks).");
+            $"[globbing patterns detailed here](https://learn.microsoft.com/dotnet/core/extensions/file-globbing).");
 
         document.AppendCode("json", @"{
     ""ignore"": [

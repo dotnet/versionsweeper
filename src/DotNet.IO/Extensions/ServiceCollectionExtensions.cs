@@ -9,5 +9,6 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services) =>
         services
             .AddSingleton<IProjectFileReader, ProjectFileReader>()
-            .AddSingleton<ISolutionFileReader, SolutionFileReader>();
+            .AddSingleton<ISolutionFileReader, SolutionFileReader>()
+            .AddSingleton<IDockerfileReader, DockerfileReader>();
 }

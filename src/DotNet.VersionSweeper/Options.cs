@@ -3,7 +3,7 @@
 
 namespace DotNet.VersionSweeper;
 
-public class Options
+public sealed class Options
 {
     string _repositoryName = null!;
     string _branchName = null!;
