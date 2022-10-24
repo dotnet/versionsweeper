@@ -55,6 +55,9 @@ on:
 jobs:
   version-sweep:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      statuses: write
 
     # Checkout the repo into the workspace within the VM
     steps:
