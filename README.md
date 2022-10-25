@@ -6,6 +6,13 @@
 [![code-ql analysis](https://github.com/dotnet/versionsweeper/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/dotnet/versionsweeper/actions/workflows/codeql-analysis.yml)
 [![GitHub Marketplace](https://img.shields.io/badge/marketplace-.NET%20version%20sweeper-green?colorA=24292e&colorB=97ca00&style=flat&longCache=true&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAM6wAADOsB5dZE0gAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAERSURBVCiRhZG/SsMxFEZPfsVJ61jbxaF0cRQRcRJ9hlYn30IHN/+9iquDCOIsblIrOjqKgy5aKoJQj4O3EEtbPwhJbr6Te28CmdSKeqzeqr0YbfVIrTBKakvtOl5dtTkK+v4HfA9PEyBFCY9AGVgCBLaBp1jPAyfAJ/AAdIEG0dNAiyP7+K1qIfMdonZic6+WJoBJvQlvuwDqcXadUuqPA1NKAlexbRTAIMvMOCjTbMwl1LtI/6KWJ5Q6rT6Ht1MA58AX8Apcqqt5r2qhrgAXQC3CZ6i1+KMd9TRu3MvA3aH/fFPnBodb6oe6HM8+lYHrGdRXW8M9bMZtPXUji69lmf5Cmamq7quNLFZXD9Rq7v0Bpc1o/tp0fisAAAAASUVORK5CYII=)](https://github.com/marketplace/actions/net-version-sweeper)
 [![GitHub License](https://img.shields.io/github/license/dotnet/versionsweeper)](https://github.com/dotnet/versionsweeper/blob/main/LICENSE)
+[![GitHub contributors](https://img.shields.io/github/contributors/dotnet/versionsweeper.svg)](https://GitHub.com/dotnet/versionsweeper/graphs/contributors/)
+[![GitHub repo size](https://img.shields.io/github/repo-size/dotnet/versionsweeper)](https://github.com/dotnet/versionsweeper)
+[![GitHub issues-opened](https://img.shields.io/github/issues/dotnet/versionsweeper.svg)](https://GitHub.com/dotnet/versionsweeper/issues?q=is%3Aissue+is%3Aopened)
+[![GitHub issues-closed](https://img.shields.io/github/issues-closed/dotnet/versionsweeper.svg)](https://GitHub.com/dotnet/versionsweeper/issues?q=is%3Aissue+is%3Aclosed)
+[![GitHub pulls-opened](https://img.shields.io/github/issues-pr/dotnet/versionsweeper.svg)](https://GitHub.com/dotnet/versionsweeper/pulls?q=is%3Aissue+is%3Aopened)
+[![GitHub pulls-merged](https://img.shields.io/github/issues-search/dotnet/versionsweeper?label=merged%20pull%20requests&query=is%3Apr%20is%3Aclosed%20is%3Amerged&color=darkviolet)](https://github.com/dotnet/versionsweeper/pulls?q=is%3Apr+is%3Aclosed+is%3Amerged)
+[![GitHub pulls-unmerged](https://img.shields.io/github/issues-search/dotnet/versionsweeper?label=unmerged%20pull%20requests&query=is%3Apr%20is%3Aclosed%20is%3Aunmerged&color=red)](https://github.com/dotnet/versionsweeper/pulls?q=is%3Apr+is%3Aclosed+is%3Aunmerged)
 
 ## Get started
 
