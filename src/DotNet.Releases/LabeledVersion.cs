@@ -22,7 +22,7 @@ public sealed class LabeledVersion : IComparable<LabeledVersion?>
 
     public static bool TryParse(string? input, out LabeledVersion? labeledVersion)
     {
-        if (input is not null and { Length: > 0 })
+        if (input is { Length: > 0 })
         {
             var split = input.Split("-");
             if (Version.TryParse(split[0], out var version))

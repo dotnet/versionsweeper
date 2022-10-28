@@ -21,15 +21,16 @@ public sealed class CoreReleaseIndexServiceTests
         InlineData("1.0.0", "3.1"),
         InlineData("2.2.8", "3.1"),
         InlineData("3.0.3", "3.1"),
-        InlineData("3.1.11", "3.1")
+        InlineData("3.1.11", "3.1"),
+        InlineData("5.0.17", "6.0")
     ]
     public async Task GetNextLtsVersionAsyncTest(
-        string releaseVersion, string expectedVersion)
+        string releaseVersion, string expected)
     {
         ICoreReleaseIndexService service = new CoreReleaseIndexService(_cache);
 
-        var result = await service.GetNextLtsVersionAsync(releaseVersion);
-        Assert.Equal(expectedVersion, result.ProductVersion);
+        var actual = await service.GetNextLtsVersionAsync(releaseVersion);
+        Assert.Equal(expected, actual.ProductVersion);
     }
 
     [
@@ -41,7 +42,7 @@ public sealed class CoreReleaseIndexServiceTests
         InlineData("5.0", ".NET", "net5.0")
     ]
     public void ReleasesIndexCorrectlyRepresentsTfm(
-        string version, string productName, string expectedTfm)
+        string version, string productName, string expected)
     {
         var product = "{}".FromJson<Product>();
         static void WorkAroundDeserializationLimitation<T>(Product product, string propName, T propValue)
@@ -52,6 +53,6 @@ public sealed class CoreReleaseIndexServiceTests
         WorkAroundDeserializationLimitation(product, nameof(Product.ProductVersion), version);
         WorkAroundDeserializationLimitation(product, nameof(Product.ProductName), productName);
 
-        Assert.Equal(expectedTfm, product.GetTargetFrameworkMoniker());
+        Assert.Equal(expected, product.GetTargetFrameworkMoniker());
     }
 }

@@ -3,7 +3,7 @@
 
 namespace DotNet.Releases;
 
-public sealed class FrameworkReleaseIndexService : IFrameworkReleaseIndexService
+internal sealed class FrameworkReleaseIndexService : IFrameworkReleaseIndexService
 {
     /// <summary>
     /// https://github.com/dotnet/website-resources/tree/master/data/dotnet-framework-releases

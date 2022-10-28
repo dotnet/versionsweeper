@@ -3,7 +3,7 @@
 
 namespace DotNet.Releases;
 
-public sealed class FrameworkReleaseService : IFrameworkReleaseService
+internal sealed class FrameworkReleaseService : IFrameworkReleaseService
 {
     readonly IMemoryCache _cache;
     readonly IFrameworkReleaseIndexService _indexService;

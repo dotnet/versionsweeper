@@ -8,9 +8,9 @@ public static class ModelExtensions
     public static string ToMarkdownBody(
         this ISet<ProjectSupportReport> psrs,
         string tfm,
-        string rootDirectory,
-        string branch)
+        IRepoOptions options)
     {
+        var (rootDirectory, branch) = (options.Directory, options.Branch);
         IMarkdownDocument document = new MarkdownDocument();
 
         document.AppendParagraph(
@@ -44,17 +44,8 @@ public static class ModelExtensions
             new MarkdownList(
                 psrs.OrderBy(psr => psr.Project.FullPath).Select(psr =>
                 {
-                    var relativePath =
-                        Path.GetRelativePath(rootDirectory, psr.Project.FullPath);
-
-                    var lineNumberFileReference =
-                        $"../blob/{branch}/{relativePath.Replace("\\", "/")}#L{psr.Project.TfmLineNumber}"
-                            .EscapeUriString();
-                    var name = relativePath.ShrinkPath("...");
-
-                    // Must force anchor link, as GitHub assumes site-relative links.
-                    var anchor = $"<a href='{lineNumberFileReference}' title='{name} at line number {psr.Project.TfmLineNumber:#,0}'>{name}</a>";
-
+                    var anchor = ToLineNumberUrl(
+                        psr.Project.FullPath, psr.Project.TfmLineNumber, options);
                     return new MarkdownCheckListItem(false, anchor);
                 })));
 
@@ -79,9 +70,9 @@ public static class ModelExtensions
     public static string ToMarkdownBody(
         this ISet<DockerfileSupportReport> dfsr,
         string tfm,
-        string rootDirectory,
-        string branch)
+        IRepoOptions options)
     {
+        var (rootDirectory, branch) = (options.Directory, options.Branch);
         IMarkdownDocument document = new MarkdownDocument();
 
         document.AppendParagraph(
@@ -115,20 +106,13 @@ public static class ModelExtensions
             new MarkdownList(
                 dfsr.SelectMany(sr => sr.TargetFrameworkMonikerSupports.Select(tfms => (sr.Dockerfile, tfms)))
                     .OrderBy(t => t.Dockerfile.FullPath)
-                    .Select(t =>
+                    .SelectMany(t =>
                     {
-                        var relativePath =
-                            Path.GetRelativePath(rootDirectory, t.Dockerfile.FullPath);
-                        // TODO: 1
-                        var lineNumberFileReference =
-                            $"../blob/{branch}/{relativePath.Replace("\\", "/")}#L{1}"
-                                .EscapeUriString();
-                        var name = relativePath.ShrinkPath("...");
-
-                        // Must force anchor link, as GitHub assumes site-relative links.
-                        var anchor = $"<a href='{lineNumberFileReference}' title='{name} at line number {1:#,0}'>{name}</a>";
-
-                        return new MarkdownCheckListItem(false, anchor);
+                        return t.Dockerfile.ImageDetails!.Select(i =>
+                        {
+                            var anchor = ToLineNumberUrl(t.Dockerfile.FullPath, i.LineNumber, options);
+                            return new MarkdownCheckListItem(false, anchor);
+                        });
                     })));
 
         document.AppendParagraph(
@@ -147,6 +131,25 @@ public static class ModelExtensions
     ]
 }");
         return document.ToString();
+    }
+
+    private static string ToLineNumberUrl(
+        string fullPath, int lineNumber, IRepoOptions options)
+    {
+        if (fullPath is null)
+        {
+            return "N/A";
+        }
+
+        var relativePath =
+                Path.GetRelativePath(options.Directory, fullPath!)
+                    .Replace("\\", "/");
+        var lineNumberFileReference =
+            $"https://github.com/{options.Owner}/{options.Name}/blob/{options.Branch}/{relativePath}#L{lineNumber}";
+        var name = relativePath.ShrinkPath("...");
+
+        // Must force anchor link, as GitHub assumes site-relative links.
+        return $"<a href='{lineNumberFileReference}' title='{name}'>{name}</a>";
     }
 
     public static bool TryCreateIssueContent(

@@ -176,7 +176,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             await CreateAndEnqueueAsync(
                 graphQLClient, issueQueue, job,
                 $"Upgrade from `{tfm}` to LTS (or current) image tag",
-                options, o => dockerfileSupportReports.ToMarkdownBody(tfm, o.Directory, o.Branch));
+                options, o => dockerfileSupportReports.ToMarkdownBody(tfm, o));
         }
 
         foreach (var (tfm, projectSupportReports) in tfmToProjectSupportReports)
@@ -184,7 +184,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             await CreateAndEnqueueAsync(
                 graphQLClient, issueQueue, job,
                 $"Upgrade from `{tfm}` to LTS (or current) version",
-                options, o => projectSupportReports.ToMarkdownBody(tfm, o.Directory, o.Branch));
+                options, o => projectSupportReports.ToMarkdownBody(tfm, o));
         }
 
         if (nonSdkStyleProjects.TryCreateIssueContent(
