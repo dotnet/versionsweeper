@@ -25,7 +25,7 @@ public sealed class ModelExtensionsTests
             await File.WriteAllTextAsync(projectPath, Constants.TestProjectXml);
 
             IProjectFileReader reader = new ProjectFileReader();
-            var project = await reader.ReadProjectAsync(projectPath);
+            Project project = await reader.ReadProjectAsync(projectPath);
             ICoreReleaseIndexService coreService = new CoreReleaseIndexService(_cache);
             IFrameworkReleaseService frameworkService =
                 new FrameworkReleaseService(new FrameworkReleaseIndexService(), _cache);
@@ -35,10 +35,39 @@ public sealed class ModelExtensionsTests
 
             await foreach (var report in reporter.ReportAsync(project, 90))
             {
-                var actualMD = new HashSet<ProjectSupportReport> { report }.ToMarkdownBody("net5.0", new TestOptions());
-                var expectedMD = "";
+                var expected = @"The following project file(s) target a .NET version which is no longer supported. This is an auto-generated issue, detailed and discussed in [dotnet/docs#22271](https://github.com/dotnet/docs/issues/22271).
 
-                Assert.Equal(expectedMD, actualMD);
+| Target version | End of life | Release notes | Nearest LTS TFM version |
+| --- | --- | --- | --- |
+| `net5.0` | May, 10 2022 | [net5.0 release notes](https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/5.0/releases.json) | `net6.0` |
+
+  - [ ] <a href='https://github.com/dotnet/docs/blob/main/test.csproj#L4' title='test.csproj'>test.csproj</a>
+
+Consider upgrading projects to either the current release, or the nearest LTS TFM version.
+
+If any of these projects listed in this issue are intentionally targeting an unsupported version, you can optionally configure to ignore these results in future automation executions. Create a (or update the) *dotnet-versionsweeper.json* file at the root of the repository and add an `ignore` entry following the [globbing patterns detailed here](https://learn.microsoft.com/dotnet/core/extensions/file-globbing).
+
+```json
+{
+    ""ignore"": [
+        ""**/path/to/example.csproj""
+    ]
+}
+```
+"
+.ReplaceLineEndings();
+                var actual = new HashSet<ProjectSupportReport>                
+                    {
+                        report
+                    }
+                    .ToMarkdownBody(
+                        tfm: "net5.0",
+                        options: new TestOptions(
+                            Path.GetDirectoryName(
+                                Path.GetFullPath(projectPath))))
+                    .ReplaceLineEndings();
+                
+                Assert.Equal(expected, actual);
             }
         }
         finally
@@ -53,5 +82,7 @@ internal class TestOptions : IRepoOptions
     public string Owner => "dotnet";
     public string Name => "docs";
     public string Branch => "main";
-    public string Directory => "";
+    public string Directory { get; }
+
+    public TestOptions(string directory) => Directory = directory;
 }

@@ -15,6 +15,9 @@ public sealed class FrameworkReleaseServiceTests
 
     [
         Theory,
+        InlineData("3.0", "3.5.0-sp1"),
+        InlineData("3.5", "3.5.0-sp1"),
+        InlineData("4.0", "4.8"),
         InlineData("4.5", "4.8"),
         InlineData("4.5.2", "4.8"),
         InlineData("4.6.1", "4.8"),
@@ -23,12 +26,12 @@ public sealed class FrameworkReleaseServiceTests
         InlineData("4.6", "4.8")
     ]
     public async Task GetNextLtsVersionAsyncTest(
-        string releaseVersion, string expectedVersion)
+        string releaseVersion, string expected)
     {
         IFrameworkReleaseService service =
             new FrameworkReleaseService(_indexService, _cache);
 
-        var result = await service.GetNextLtsVersionAsync(releaseVersion);
-        Assert.Equal(expectedVersion, result.Version);
+        var actual = await service.GetNextLtsVersionAsync(releaseVersion);
+        Assert.Equal(expected, actual.Version);
     }
 }
