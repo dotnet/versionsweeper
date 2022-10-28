@@ -14,3 +14,5 @@ global using Microsoft.Extensions.Logging;
 global using Octokit;
 global using Octokit.Internal;
 global using ModelProject = DotNet.Models.Project;
+
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DotNet.GitHubTests")]
