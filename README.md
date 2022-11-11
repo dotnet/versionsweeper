@@ -106,7 +106,7 @@ The .NET version sweeper currently supports reporting on all of the following ty
 
 To configure the action, you can create a file at the root of the repository named *dotnet-versionsweeper.json*. This config file contains a node, named `"ignore"` that is an array of patterns following the [globbing matcher detailed here](https://docs.microsoft.com/dotnet/api/microsoft.extensions.filesystemglobbing.matcher#remarks).
 
-The file can also contain a value to specify the number of additional days to consider flagging versions that will be out of support.
+The file can also contain a value `outOfSupportWithinDays` to specify the number of additional days to consider flagging versions that will be out of support.
 
 ```json
 {
