@@ -51,10 +51,10 @@ jobs:
         # Prefix the list here with "+" to use these queries and those in the config file.
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
-    - name: Setup .NET 6.0
+    - name: Setup .NET 7.0
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 7.0.x
 
     - name: Install dependencies
       run: dotnet restore
