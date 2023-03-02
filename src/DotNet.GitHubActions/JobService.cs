@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Text;
+using static System.Environment;
 
 namespace DotNet.GitHubActions;
 
@@ -11,12 +12,13 @@ public sealed class JobService : IJobService
     public void AddPath(string inputPath)
     {
         IssueCommand(Commands.AddPath, message: inputPath);
-        Environment.SetEnvironmentVariable(
-            "PATH", $"{inputPath}{Path.PathSeparator}{Environment.GetEnvironmentVariable("PATH")}");
+        SetEnvironmentVariable(
+            "PATH",
+            $"{inputPath}{Path.PathSeparator}{GetEnvironmentVariable("PATH")}");
     }
 
     /// <inheritdoc />
-    public bool IsDebug() => Environment.GetEnvironmentVariable("RUNNER_DEBUG") == "1";
+    public bool IsDebug() => GetEnvironmentVariable("RUNNER_DEBUG") is "1";
     /// <inheritdoc />
     public void Info(string? message) => Console.WriteLine(message);
     /// <inheritdoc />
@@ -34,19 +36,19 @@ public sealed class JobService : IJobService
     /// <inheritdoc />
     public void SetCommandEcho(bool enabled) => IssueCommand(Commands.Echo, message: enabled ? "on" : "off");
     /// <inheritdoc />
-    public string GetState(string name) => Environment.GetEnvironmentVariable($"STATE_{name}") ?? "";
+    public string GetState(string name) => GetEnvironmentVariable($"STATE_{name}") ?? "";
 
     /// <inheritdoc />
     public void ExportVariable<T>(string name, T? value)
     {
         var convertedValue = value.ToCommandValue();
-        Environment.SetEnvironmentVariable(name, convertedValue);
+        SetEnvironmentVariable(name, convertedValue);
 
-        var filePath = Environment.GetEnvironmentVariable("GITHUB_ENV") ?? "";
+        var filePath = GetEnvironmentVariable("GITHUB_ENV") ?? "";
         if (filePath is { Length: > 0 })
         {
             var delimiter = "_GitHubActionsFileCommandDelimeter_";
-            var commandValue = $"{name}<<{delimiter}{Environment.NewLine}{convertedValue}{Environment.NewLine}{delimiter}";
+            var commandValue = $"{name}<<{delimiter}{NewLine}{convertedValue}{NewLine}{delimiter}";
             IssueFileCommand("ENV", commandValue);
         }
         else
@@ -58,7 +60,7 @@ public sealed class JobService : IJobService
     /// <inheritdoc />
     public string GetInput(string name, InputOptions? options = default)
     {
-        var value = Environment.GetEnvironmentVariable(
+        var value = GetEnvironmentVariable(
             $"INPUT_{name.Replace(" ", "_").ToUpper()}") ?? "";
 
         return options?.Required ?? false && value is { Length: 0 }
@@ -67,19 +69,40 @@ public sealed class JobService : IJobService
     }
 
     /// <inheritdoc />
-    public void SaveState<T>(string stateName, T? stateValue) =>
-        IssueCommand(Commands.SaveState, new() { ["name"] = stateName }, stateValue);
+    public void SaveState<T>(string stateName, T? stateValue)
+    {
+        if (stateValue is null) return;
+
+        var gitHubStateFile = GetEnvironmentVariable("GITHUB_STATE");
+        if (!string.IsNullOrWhiteSpace(gitHubStateFile))
+        {
+            using StreamWriter? textWriter = new(gitHubStateFile, true, Encoding.UTF8);
+            textWriter.WriteLine($"{stateName}={stateValue}");
+        }
+    }
 
     /// <inheritdoc />
     public void SetFailed(string message, int? exitCode = null)
     {
         Error(message);
-        Environment.Exit(exitCode ?? (int)ExitCode.Failure);
+        Exit(exitCode ?? (int)ExitCode.Failure);
     }
 
     /// <inheritdoc />
-    public void SetOutput(string? message, Dictionary<string, string>? properties = default) =>
-        IssueCommand(Commands.SetOutput, properties, message);
+    public void SetOutput(Dictionary<string, string>? properties = default)
+    {
+        if (properties is null) return;
+
+        var gitHubOutputFile = GetEnvironmentVariable("GITHUB_OUTPUT");
+        if (!string.IsNullOrWhiteSpace(gitHubOutputFile))
+        {
+            using StreamWriter? textWriter = new(gitHubOutputFile, true, Encoding.UTF8);
+            foreach ((string key, string value) in properties)
+            {
+                textWriter.WriteLine($"{key}={value}");
+            }
+        }
+    }
 
     static void IssueCommand<T>(
         string commandName,
@@ -94,7 +117,7 @@ public sealed class JobService : IJobService
         string command,
         object? message)
     {
-        var filePath = Environment.GetEnvironmentVariable($"GITHUB_{command}") ?? "";
+        var filePath = GetEnvironmentVariable($"GITHUB_{command}") ?? "";
         if (filePath is { Length: > 0 })
         {
             throw new(
@@ -107,6 +130,6 @@ public sealed class JobService : IJobService
         }
 
         File.AppendAllText(
-            filePath, $"{message.ToCommandValue()}{Environment.NewLine}", Encoding.UTF8);
+            filePath, $"{message.ToCommandValue()}{NewLine}", Encoding.UTF8);
     }
 }

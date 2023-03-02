@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Security.Cryptography.X509Certificates;
 using DotNet.GitHubActions;
 using Xunit;
 
@@ -16,19 +17,13 @@ public sealed class JobServiceTests : IDisposable
             {
                 "test-state",
                 2,
-                new[]
-                {
-                    $"::{Commands.SaveState} name=test-state::2"
-                }
+                $"test-state=2{Environment.NewLine}"
             },
             new object[]
             {
                 "pickle",
                 "chips",
-                new[]
-                {
-                    $"::{Commands.SaveState} name=pickle::chips"
-                }
+                $"pickle=chips{Environment.NewLine}"
             }
         };
 
@@ -39,16 +34,24 @@ public sealed class JobServiceTests : IDisposable
     public void WriteSaveStateCommandTest<T>(
         string stateName,
         T stateValue,
-        string[] expectedCommands)
+        string expected)
     {
-        var interceptor = InterceptOut();
+        var tempFile = Path.GetTempFileName();
+        Environment.SetEnvironmentVariable("GITHUB_STATE", tempFile);
         IJobService sut = new JobService();
 
         sut.SaveState(stateName, stateValue);
 
-        AssertCommand(
-            interceptor,
-            expectedCommands);
+        var stateFile = Environment.GetEnvironmentVariable("GITHUB_STATE");
+        var actual = File.ReadAllText(stateFile);
+        try
+        {
+            Assert.Equal(expected, actual);
+        }
+        finally
+        {
+            File.Delete(tempFile);
+        }
     }
 
     public static IEnumerable<object[]> WriteSetOutputInput = new[]
@@ -59,38 +62,12 @@ public sealed class JobServiceTests : IDisposable
                 {
                     ["name"] = "summary"
                 },
-                "Everything worked as expected",
-                new[]
-                {
-                    $"::{Commands.SetOutput} name=summary::Everything worked as expected"
-                }
+                $"name=summary{Environment.NewLine}"
             },
             new object[]
             {
                 null,
-                "deftones",
-                new[]
-                {
-                    $"::{Commands.SetOutput}::deftones"
-                }
-            },
-            new object[]
-            {
-                null,
-                "percent % percent % cr \r cr \r lf \n lf \n",
-                new[]
-                {
-                    $"::{Commands.SetOutput}::percent %25 percent %25 cr %0D cr %0D lf %0A lf %0A"
-                }
-            },
-            new object[]
-            {
-                null,
-                "%25 %25 %0D %0D %0A %0A %3A %3A %2C %2C",
-                new[]
-                {
-                    $"::{Commands.SetOutput}::%2525 %2525 %250D %250D %250A %250A %253A %253A %252C %252C"
-                }
+                ""
             },
             new object[]
             {
@@ -99,11 +76,7 @@ public sealed class JobServiceTests : IDisposable
                     ["prop1"] = "Value 1",
                     ["prop2"] = "Value 2"
                 },
-                "example",
-                new[]
-                {
-                    $"::{Commands.SetOutput} prop1=Value 1, prop2=Value 2::example"
-                }
+                $"prop1=Value 1{Environment.NewLine}prop2=Value 2{Environment.NewLine}"
             }
         };
 
@@ -113,17 +86,24 @@ public sealed class JobServiceTests : IDisposable
     ]
     public void WriteSetOutputCommandTest(
         Dictionary<string, string> properties,
-        string message,
-        string[] expectedCommands)
+        string expected)
     {
-        var interceptor = InterceptOut();
+        var tempFile = Path.GetTempFileName();
+        Environment.SetEnvironmentVariable("GITHUB_OUTPUT", tempFile);
         IJobService sut = new JobService();
 
-        sut.SetOutput(message, properties);
+        sut.SetOutput(properties);
 
-        AssertCommand(
-            interceptor,
-            expectedCommands);
+        var outputFile = Environment.GetEnvironmentVariable("GITHUB_OUTPUT");
+        var actual = File.ReadAllText(outputFile);
+        try
+        {
+            Assert.Equal(expected, actual);
+        }
+        finally
+        {
+            File.Delete(tempFile);
+        }
     }
 
     [Fact]
@@ -172,11 +152,13 @@ public sealed class JobServiceTests : IDisposable
         return interceptor;
     }
 
-    static void AssertCommand(StringWriter writer, string[] expectedCommands)
+    static void AssertCommand(StringWriter writer, string[] expectedCommands) =>
+        AssertCommand(writer.ToString(), expectedCommands);
+
+    static void AssertCommand(string actualRaw, string[] expectedCommands)
     {
         var actualCommands =
-            writer.ToString()
-                .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+            actualRaw.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
         Assert.Equal(expectedCommands.Length, actualCommands.Length);
 
         for (var i = 0; i < expectedCommands.Length; ++i)

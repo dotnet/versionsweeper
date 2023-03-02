@@ -18,7 +18,7 @@ jobs:
       statuses: write
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@main
 
     - name: 'Print manual run reason'
       if: ${{ github.event_name == 'workflow_dispatch' }}

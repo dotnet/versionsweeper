@@ -52,7 +52,7 @@ jobs:
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
     - name: Setup .NET 7.0
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@main
       with:
         dotnet-version: 7.0.x
 
@@ -71,4 +71,4 @@ jobs:
         dotnet build ./src/DotNet.VersionSweeper/DotNet.VersionSweeper.csproj --configuration Release
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+      uses: github/codeql-action/analyze@main
