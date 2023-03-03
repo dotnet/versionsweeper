@@ -1,5 +1,6 @@
 {
-  "ignore": [
-    "**/*ThisShouldNeverBeFlagged.csproj"
-  ]
+    "outOfSupportWithinDays": 120,
+    "ignore": [
+        "**/*ThisShouldNeverBeFlagged.csproj"
+    ]
 }

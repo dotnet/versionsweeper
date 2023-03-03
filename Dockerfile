@@ -1,6 +1,7 @@
-﻿FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
+﻿FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 
 # Copy everything and restore
+WORKDIR /app
 COPY . ./
 RUN dotnet publish ./src/DotNet.VersionSweeper/DotNet.VersionSweeper.csproj -c Release -o out --no-self-contained
 
@@ -15,6 +16,6 @@ LABEL com.github.actions.icon="alert-circle"
 LABEL com.github.actions.color="yellow"
 
 # Build the runtime image
-FROM mcr.microsoft.com/dotnet/runtime:6.0
-COPY --from=build-env /out .
+FROM mcr.microsoft.com/dotnet/runtime:7.0
+COPY --from=build-env /app/out .
 ENTRYPOINT [ "dotnet", "/DotNet.VersionSweeper.dll" ]

@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 namespace DotNet.GitHubActions;
 
 /// <summary>
+/// Inspired by <a href="https://github.com/actions/toolkit/blob/main/packages/core/src/command.ts"></a> <br/>
 /// {commandName} is the command name, example:
 ///     "::set-output::"
 ///     "::{commandName}::"
@@ -29,21 +30,26 @@ namespace DotNet.GitHubActions;
 ///         }
 /// ::{commandName} {properties}::{message}
 /// </summary>
-public record WorkflowCommand<T>(
+public readonly record struct WorkflowCommand<T>(
     string CommandName,
     T? Message,
     IDictionary<string, string>? CommandProperties = default)
 {
     const string CMD_STRING = "::";
 
+    /// <summary>
+    /// Builds the string represention of the workflow command.
+    /// Example format: <code>::{commandName} {properties}::{message}</code>
+    /// </summary>
     public override string ToString()
     {
         StringBuilder builder = new($"{CMD_STRING}{CommandName}");
 
         if (CommandProperties?.Any() ?? false)
         {
-            foreach (var (first, key, value)
-                in CommandProperties.Select((kvp, i) => (i == 0, kvp.Key, kvp.Value)))
+            foreach ((bool first, string key, string value)
+                in CommandProperties.Select(
+                    (kvp, index) => (index is 0, kvp.Key, kvp.Value)))
             {
                 if (!first)
                 {

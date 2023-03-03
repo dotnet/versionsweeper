@@ -21,7 +21,7 @@ internal sealed class UnsupportedProjectReporter : UnsupportedReporterBase, IUns
         DateTime outOfSupportWithinDate = DateTimeOffset.UtcNow.Date.AddDays(outOfSupportWithinDays);
 
         var products = await _coreReleaseIndexService.GetReleasesAsync();
-        foreach (var product in products.Keys)
+        foreach (var product in products?.Keys ?? Enumerable.Empty<Product>())
         {
             var tfmSupports =
                 project.Tfms.Select(
