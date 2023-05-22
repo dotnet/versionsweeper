@@ -13,7 +13,7 @@ namespace DotNet.GitHubTests;
 
 public sealed class GraphQLRequestTests
 {
-    readonly static JsonSerializerOptions _options = new()
+    static readonly JsonSerializerOptions _options = new()
     {
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
         PropertyNameCaseInsensitive = true

@@ -5,25 +5,27 @@ namespace DotNet.GitHub;
 
 public sealed class GitHubGraphQLClient
 {
-    const string _issueQuery = @"query($search_value: String!) {
-  search(type: ISSUE, query: $search_value, first: 10) {
-    nodes {
-      ... on Issue {
-        title
-        number
-        url
-        body
-        state
-        createdAt
-        updatedAt
-        closedAt
-      }
-    }
-  }
-}";
+    const string IssueQuery = """
+        query($search_value: String!) {
+          search(type: ISSUE, query: $search_value, first: 10) {
+            nodes {
+              ... on Issue {
+                title
+                number
+                url
+                body
+                state
+                createdAt
+                updatedAt
+                closedAt
+              }
+            }
+          }
+        }
+        """;
 
-    readonly static Uri s_graphQLUri = new("https://api.github.com/graphql");
-    readonly static JsonSerializerOptions s_options = new()
+    static readonly Uri s_graphQLUri = new("https://api.github.com/graphql");
+    static readonly JsonSerializerOptions s_options = new()
     {
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
         PropertyNameCaseInsensitive = true
@@ -46,7 +48,7 @@ public sealed class GitHubGraphQLClient
 
             GraphQLRequest graphQLRequest = new()
             {
-                Query = _issueQuery,
+                Query = IssueQuery,
                 Variables =
                     {
                         ["search_value"] = $"repo:{owner}/{name} type:issue '{title}' in:title"
