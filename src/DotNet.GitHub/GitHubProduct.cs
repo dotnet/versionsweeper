@@ -5,8 +5,8 @@ namespace DotNet.GitHub;
 
 public static class GitHubProduct
 {
-    static readonly string _name = "DotNetVersionSweeper";
-    static readonly string _version = "1.1";
+    const string Name = "DotNetVersionSweeper";
+    const string Version = "1.2";
 
-    public static ProductHeaderValue Header { get; } = new(_name, _version);
+    public static ProductHeaderValue Header { get; } = new(Name, Version);
 }

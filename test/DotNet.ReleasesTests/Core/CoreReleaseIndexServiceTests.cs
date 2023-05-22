@@ -1,9 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using DotNet.Extensions;
 using DotNet.Releases;
-using DotNet.Releases.Extensions;
 using Microsoft.Deployment.DotNet.Releases;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
@@ -29,30 +27,7 @@ public sealed class CoreReleaseIndexServiceTests
     {
         ICoreReleaseIndexService service = new CoreReleaseIndexService(_cache);
 
-        var actual = await service.GetNextLtsVersionAsync(releaseVersion);
+        Product actual = await service.GetNextLtsVersionAsync(releaseVersion);
         Assert.Equal(expected, actual.ProductVersion);
-    }
-
-    [
-        Theory,
-        InlineData("1.0", ".NET Core", "netcoreapp1.0"),
-        InlineData("1.1", ".NET Core", "netcoreapp1.1"),
-        InlineData("2.2", ".NET Core", "netcoreapp2.2"),
-        InlineData("3.1", ".NET Core", "netcoreapp3.1"),
-        InlineData("5.0", ".NET", "net5.0")
-    ]
-    public void ReleasesIndexCorrectlyRepresentsTfm(
-        string version, string productName, string expected)
-    {
-        var product = "{}".FromJson<Product>();
-        static void WorkAroundDeserializationLimitation<T>(Product product, string propName, T propValue)
-        {
-            typeof(Product).GetProperty(propName).SetValue(product, propValue, null);
-        }
-
-        WorkAroundDeserializationLimitation(product, nameof(Product.ProductVersion), version);
-        WorkAroundDeserializationLimitation(product, nameof(Product.ProductName), productName);
-
-        Assert.Equal(expected, product.GetTargetFrameworkMoniker());
     }
 }

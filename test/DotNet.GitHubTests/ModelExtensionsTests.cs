@@ -18,7 +18,7 @@ public sealed class ModelExtensionsTests
     [Fact]
     public async Task ToMarkDownCorrectlyGeneratesContentTest()
     {
-        var projectPath = "test.csproj";
+        string projectPath = "test.csproj";
 
         try
         {
@@ -33,30 +33,38 @@ public sealed class ModelExtensionsTests
             IUnsupportedProjectReporter reporter =
                 new UnsupportedProjectReporter(coreService, frameworkService);
 
-            await foreach (var report in reporter.ReportAsync(project, 90))
+            await foreach (ProjectSupportReport report in reporter.ReportAsync(project, 90))
             {
-                var expected = @"The following project file(s) target a .NET version which is no longer supported. This is an auto-generated issue, detailed and discussed in [dotnet/docs#22271](https://github.com/dotnet/docs/issues/22271).
+                string expected = """
+                    The following project file(s) target a .NET version which is no longer supported.
+                    This is an auto-generated issue, detailed and discussed in [dotnet/docs#22271](https://github.com/dotnet/docs/issues/22271).
 
-| Target version | End of life | Release notes | Nearest LTS TFM version |
-| --- | --- | --- | --- |
-| `net5.0` | May, 10 2022 | [net5.0 release notes](https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/5.0/releases.json) | `net6.0` |
+                    | Target version | End of life | Release notes | Nearest LTS TFM version |
+                    | --- | --- | --- | --- |
+                    | `net5.0` | May, 10 2022 | [net5.0 release notes](https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/5.0/releases.json) | `net6.0` |
 
-  - [ ] <a href='https://github.com/dotnet/docs/blob/main/test.csproj#L4' title='test.csproj'>test.csproj</a>
+                      - [ ] <a href='https://github.com/dotnet/docs/blob/main/test.csproj#L4' title='test.csproj'>test.csproj</a>
 
-Consider upgrading projects to either the current release, or the nearest LTS TFM version.
+                    Consider upgrading projects to either the current release, or the nearest LTS TFM version.
 
-If any of these projects listed in this issue are intentionally targeting an unsupported version, you can optionally configure to ignore these results in future automation executions. Create a (or update the) *dotnet-versionsweeper.json* file at the root of the repository and add an `ignore` entry following the [globbing patterns detailed here](https://learn.microsoft.com/dotnet/core/extensions/file-globbing).
+                    If any of these projects listed in this issue are intentionally targeting an unsupported version,
+                    you can optionally configure to ignore these results in future automation executions.
+                    Create a (or update the) *dotnet-versionsweeper.json* file at the root of the repository and
+                    add an `ignore` entry following the
+                    [globbing patterns detailed here](https://learn.microsoft.com/dotnet/core/extensions/file-globbing).
 
-```json
-{
-    ""ignore"": [
-        ""**/path/to/example.csproj""
-    ]
-}
-```
-"
-.ReplaceLineEndings();
-                var actual = new HashSet<ProjectSupportReport>                
+                    ```json
+                    {
+                        "ignore": [
+                            "**/path/to/example.csproj"
+                        ]
+                    }
+                    ```
+
+                    """
+                    .ReplaceLineEndings();
+
+                string actual = new HashSet<ProjectSupportReport>                
                     {
                         report
                     }

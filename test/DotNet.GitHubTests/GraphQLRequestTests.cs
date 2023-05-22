@@ -13,7 +13,7 @@ namespace DotNet.GitHubTests;
 
 public sealed class GraphQLRequestTests
 {
-    readonly static JsonSerializerOptions _options = new()
+    static readonly JsonSerializerOptions _options = new()
     {
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
         PropertyNameCaseInsensitive = true
@@ -31,12 +31,12 @@ public sealed class GraphQLRequestTests
 }"
         };
 
-        var expectedJson = @"{""query"":""query {
+        string expectedJson = @"{""query"":""query {
   viewer {
     login
   }
 }"",""variables"":{}}";
-        var actualJson = Regex.Unescape(request.ToString());
+        string actualJson = Regex.Unescape(request.ToString());
 
         Assert.Equal(expectedJson, actualJson);
     }
@@ -72,7 +72,7 @@ public sealed class GraphQLRequestTests
             ClosedAt = null
         };
 
-        var actualIssue =
+        ExistingIssue actualIssue =
             responseJson.FromJson<GraphQLResult<ExistingIssue>>(_options)
                 .Data
                 .Search

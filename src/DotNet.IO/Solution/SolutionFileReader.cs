@@ -28,14 +28,14 @@ public sealed class SolutionFileReader : ISolutionFileReader
         if (SystemFile.Exists(solutionPath))
         {
             solution.FullPath = Path.GetFullPath(solutionPath);
-            var solutionDirectory = Path.GetDirectoryName(solution.FullPath);
-            var solutionText = await SystemFile.ReadAllTextAsync(solution.FullPath);
-            var matches = _solutionProjectsExpression.Matches(solutionText);
+            string? solutionDirectory = Path.GetDirectoryName(solution.FullPath);
+            string solutionText = await SystemFile.ReadAllTextAsync(solution.FullPath);
+            MatchCollection matches = _solutionProjectsExpression.Matches(solutionText);
 
             foreach (Match match in matches)
             {
-                var path = match.Groups["Path"].Value;
-                var fullPath = Path.Combine(solutionDirectory!, path);
+                string path = match.Groups["Path"].Value;
+                string fullPath = Path.Combine(solutionDirectory!, path);
 
                 if (SystemFile.Exists(fullPath) is false ||
                     SystemFile.GetAttributes(fullPath).HasFlag(FileAttributes.Directory))
@@ -43,7 +43,7 @@ public sealed class SolutionFileReader : ISolutionFileReader
                     continue;
                 }
 
-                var project = await _projectFileReader.ReadProjectAsync(fullPath);
+                Project project = await _projectFileReader.ReadProjectAsync(fullPath);
                 solution.Projects.Add(project);
             }
         }

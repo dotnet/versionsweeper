@@ -11,7 +11,7 @@ public sealed class ProjectFileReaderTests
     [Fact]
     public async Task ReadProjectAndParseXmlCorrectly()
     {
-        var projectPath = "test.csproj";
+        string projectPath = "test.csproj";
 
         try
         {
@@ -19,7 +19,7 @@ public sealed class ProjectFileReaderTests
 
             IProjectFileReader sut = new ProjectFileReader();
 
-            var project = await sut.ReadProjectAsync(projectPath);
+            Models.Project project = await sut.ReadProjectAsync(projectPath);
             Assert.Equal(4, project.TfmLineNumber);
             Assert.Single(project.Tfms);
             Assert.Equal("net5.0", project.Tfms[0]);
@@ -46,10 +46,10 @@ public sealed class ProjectFileReaderTests
 
             IProjectFileReader sut = new ProjectFileReader();
 
-            var project = await sut.ReadProjectAsync(projectPath);
+            Models.Project project = await sut.ReadProjectAsync(projectPath);
             Assert.Equal(expectedLineNumber, project.TfmLineNumber);
             Assert.Equal(expectedTfms.Length, project.Tfms.Length);
-            for (var i = 0; i < expectedTfms.Length; ++i)
+            for (int i = 0; i < expectedTfms.Length; ++i)
             {
                 Assert.Equal(expectedTfms[i], project.Tfms[i]);
             }

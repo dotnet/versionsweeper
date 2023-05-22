@@ -31,8 +31,8 @@ public sealed class RateLimitAwareQueue
         while (_newIssuesQueue is { IsEmpty: false }
             && _newIssuesQueue.TryDequeue(out (GitHubApiArgs, NewIssue) newItem))
         {
-            var (args, newIssue) = newItem;
-            var issue = await _gitHubIssueService.PostIssueAsync(
+            (GitHubApiArgs args, NewIssue newIssue) = newItem;
+            Issue issue = await _gitHubIssueService.PostIssueAsync(
                 args.Owner, args.RepoName, args.Token, newIssue);
 
             yield return ("Created", issue);
@@ -43,8 +43,8 @@ public sealed class RateLimitAwareQueue
         while (_updateIssuesQueue is { IsEmpty: false }
             && _updateIssuesQueue.TryDequeue(out (GitHubApiArgs, IssueUpdate) updatedItem))
         {
-            var (args, newIssue) = updatedItem;
-            var issue = await _gitHubIssueService.UpdateIssueAsync(
+            (GitHubApiArgs args, IssueUpdate newIssue) = updatedItem;
+            Issue issue = await _gitHubIssueService.UpdateIssueAsync(
                 args.Owner, args.RepoName, args.Token, args.IssueNumber, newIssue);
 
             yield return ("Updated", issue);

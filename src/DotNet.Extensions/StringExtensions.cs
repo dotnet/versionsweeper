@@ -25,7 +25,7 @@ public static class StringExtensions
         }
 
         var file = new FileInfo(value);
-        var segments = value.Split(Path.DirectorySeparatorChar);
+        string[] segments = value.Split(Path.DirectorySeparatorChar);
         var parts = new List<string>
             {
                 segments[0],
@@ -35,7 +35,7 @@ public static class StringExtensions
 
         StringBuilder result = new(string.Join('/', parts));
 
-        var dir = file.Directory;
+        DirectoryInfo? dir = file.Directory;
         while (result.Length < limit && dir is not null)
         {
             if (result.Length + dir.Name.Length > limit)

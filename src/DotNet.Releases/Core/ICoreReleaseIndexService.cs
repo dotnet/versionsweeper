@@ -12,7 +12,7 @@ public interface ICoreReleaseIndexService
     async ValueTask<Product?> GetNextLtsVersionAsync(string releaseVersion)
     {
         var version = new ReleaseVersion(releaseVersion);
-        var products = await GetReleasesAsync();
+        ReadOnlyDictionary<Product, IReadOnlyCollection<ProductRelease>>? products = await GetReleasesAsync();
 
         return products?.SelectMany(kvp => kvp.Value)
             .Where(release => release.Version > version && !release.Product.IsOutOfSupport())

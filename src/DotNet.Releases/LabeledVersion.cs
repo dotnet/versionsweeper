@@ -24,8 +24,8 @@ public sealed class LabeledVersion : IComparable<LabeledVersion?>
     {
         if (input is { Length: > 0 })
         {
-            var split = input.Split("-");
-            if (Version.TryParse(split[0], out var version))
+            string[] split = input.Split("-");
+            if (Version.TryParse(split[0], out Version? version))
             {
                 labeledVersion = new LabeledVersion(version, split.Length > 1 ? split[1] : null);
                 return true;
@@ -37,7 +37,7 @@ public sealed class LabeledVersion : IComparable<LabeledVersion?>
     }
 
     public static implicit operator LabeledVersion(string input) =>
-        TryParse(input, out var version) ? version ?? new() : new();
+        TryParse(input, out LabeledVersion? version) ? version ?? new() : new();
 
     public static bool operator ==(LabeledVersion? v1, LabeledVersion? v2) =>
         v1?._parsedVersion == v2?._parsedVersion;

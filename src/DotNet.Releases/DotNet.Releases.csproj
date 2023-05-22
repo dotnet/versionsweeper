@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Deployment.DotNet.Releases" Version="1.0.0-preview4.1.22206.3" />
+    <PackageReference Include="Microsoft.Deployment.DotNet.Releases" Version="1.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />

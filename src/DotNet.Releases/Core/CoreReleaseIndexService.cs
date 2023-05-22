@@ -19,7 +19,7 @@ internal sealed class CoreReleaseIndexService : ICoreReleaseIndexService
             NetCoreKey,
             async entry =>
             {
-                var products = await ProductCollection.GetAsync();
+                ProductCollection products = await ProductCollection.GetAsync();
 
                 var map = new ConcurrentDictionary<Product, IReadOnlyCollection<ProductRelease>>();
                 await Parallel.ForEachAsync(products, async (product, token) =>

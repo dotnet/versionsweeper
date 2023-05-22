@@ -12,22 +12,22 @@ sealed class Discovery
     internal static async Task<(IImmutableSet<Solution> Solutions, IImmutableSet<ModelProject> OrphanedProjects, VersionSweeperConfig Config)>
         FindSolutionsAndProjectsAsync(
             IServiceProvider services,
-            IJobService job,
+            ICoreService job,
             Options options)
     {
-        var (solutionReader, projectReader) =
+        (ISolutionFileReader solutionReader, IProjectFileReader projectReader) =
             services.GetRequiredServices<ISolutionFileReader, IProjectFileReader>();
 
-        var (directory, extensions) =
+        (DirectoryInfo directory, HashSet<string> extensions) =
             (options.ToDirectoryInfo(), options.AsFileExtensions());
 
         ConcurrentBag<Solution> solutions = new();
         ConcurrentBag<ModelProject> projects = new();
 
-        var config = await VersionSweeperConfig.ReadAsync(options.Directory, job);
+        VersionSweeperConfig config = await VersionSweeperConfig.ReadAsync(options.Directory, job);
 
-        var solutionMatcher = new Matcher().AddInclude("**/*.sln");
-        var projectMatcher = options.AsGlobMatcher(config.Ignore);
+        Matcher solutionMatcher = new Matcher().AddInclude("**/*.sln");
+        Matcher projectMatcher = options.AsGlobMatcher(config.Ignore);
 
         await Task.WhenAll(
             projectMatcher.GetResultsInFullPath(options.Directory)
@@ -35,7 +35,7 @@ sealed class Discovery
                     ProcessorCount,
                     async path =>
                     {
-                        var project = await projectReader.ReadProjectAsync(path);
+                        ModelProject project = await projectReader.ReadProjectAsync(path);
                         if (project is { TfmLineNumber: > -1 })
                         {
                             projects.Add(project);
@@ -47,10 +47,10 @@ sealed class Discovery
                     ProcessorCount,
                     async path =>
                     {
-                        var solution = await solutionReader.ReadSolutionAsync(path);
+                        Solution? solution = await solutionReader.ReadSolutionAsync(path);
                         if (solution is not null && solution.Projects is not null)
                         {
-                            var match = projectMatcher.Match(
+                            PatternMatchingResult match = projectMatcher.Match(
                                 options.Directory,
                                 solution.Projects.Select(proj => proj.FullPath));
 
@@ -92,23 +92,23 @@ sealed class Discovery
 
     internal static async Task<IImmutableSet<Dockerfile>> FindDockerfilesAsync(
         IServiceProvider services,
-        IJobService job,
+        ICoreService job,
         Options options)
     {
-        var dockerfileReader = services.GetRequiredService<IDockerfileReader>();
+        IDockerfileReader dockerfileReader = services.GetRequiredService<IDockerfileReader>();
         ConcurrentBag<Dockerfile> dockerfiles = new();
-        var dockerfileMatcher = new Matcher().AddInclude("**/Dockerfile");
+        Matcher dockerfileMatcher = new Matcher().AddInclude("**/Dockerfile");
 
         await dockerfileMatcher.GetResultsInFullPath(options.Directory)
             .ForEachAsync(
                 ProcessorCount,
                 async path =>
                 {
-                    var dockerfile = await dockerfileReader.ReadDockerfileAsync(path);
+                    Dockerfile dockerfile = await dockerfileReader.ReadDockerfileAsync(path);
                     if (dockerfile is { ImageDetails.Count: > 0 })
                     {
                         dockerfiles.Add(dockerfile);
-                        foreach (var imageDetail in dockerfile.ImageDetails)
+                        foreach (ImageDetails imageDetail in dockerfile.ImageDetails)
                         {
                             job.Info($"Parsed TFM(s): '{imageDetail.TargetFrameworkMoniker}' on line {imageDetail.LineNumber} in {path}.");
                         }

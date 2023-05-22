@@ -31,7 +31,7 @@ public sealed class FrameworkReleaseServiceTests
         IFrameworkReleaseService service =
             new FrameworkReleaseService(_indexService, _cache);
 
-        var actual = await service.GetNextLtsVersionAsync(releaseVersion);
+        Models.FrameworkRelease actual = await service.GetNextLtsVersionAsync(releaseVersion);
         Assert.Equal(expected, actual.Version);
     }
 }

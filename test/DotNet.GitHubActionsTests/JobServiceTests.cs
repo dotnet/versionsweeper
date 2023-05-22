@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Security.Cryptography.X509Certificates;
 using DotNet.GitHubActions;
 using Xunit;
 
@@ -36,14 +35,14 @@ public sealed class JobServiceTests : IDisposable
         T stateValue,
         string expected)
     {
-        var tempFile = Path.GetTempFileName();
+        string tempFile = Path.GetTempFileName();
         Environment.SetEnvironmentVariable("GITHUB_STATE", tempFile);
         IJobService sut = new JobService();
 
         sut.SaveState(stateName, stateValue);
 
-        var stateFile = Environment.GetEnvironmentVariable("GITHUB_STATE");
-        var actual = File.ReadAllText(stateFile);
+        string stateFile = Environment.GetEnvironmentVariable("GITHUB_STATE");
+        string actual = File.ReadAllText(stateFile);
         try
         {
             Assert.Equal(expected, actual);
@@ -88,14 +87,14 @@ public sealed class JobServiceTests : IDisposable
         Dictionary<string, string> properties,
         string expected)
     {
-        var tempFile = Path.GetTempFileName();
+        string tempFile = Path.GetTempFileName();
         Environment.SetEnvironmentVariable("GITHUB_OUTPUT", tempFile);
         IJobService sut = new JobService();
 
         sut.SetOutput(properties);
 
-        var outputFile = Environment.GetEnvironmentVariable("GITHUB_OUTPUT");
-        var actual = File.ReadAllText(outputFile);
+        string outputFile = Environment.GetEnvironmentVariable("GITHUB_OUTPUT");
+        string actual = File.ReadAllText(outputFile);
         try
         {
             Assert.Equal(expected, actual);
@@ -109,7 +108,7 @@ public sealed class JobServiceTests : IDisposable
     [Fact]
     public void WriteWarningMessageTest()
     {
-        var interceptor = InterceptOut();
+        StringWriter interceptor = InterceptOut();
         IJobService sut = new JobService();
         sut.Warning("Um, not sure....but something feels off!");
 
@@ -121,7 +120,7 @@ public sealed class JobServiceTests : IDisposable
     [Fact]
     public void WriteDebugMessageTest()
     {
-        var interceptor = InterceptOut();
+        StringWriter interceptor = InterceptOut();
         IJobService sut = new JobService();
         sut.Debug("Does this really work?");
 
@@ -133,7 +132,7 @@ public sealed class JobServiceTests : IDisposable
     [Fact]
     public void GroupMessagesTest()
     {
-        var interceptor = InterceptOut();
+        StringWriter interceptor = InterceptOut();
         IJobService sut = new JobService();
         sut.StartGroup("example");
         sut.Info("Testing... 1, 2, free?!");
@@ -157,11 +156,11 @@ public sealed class JobServiceTests : IDisposable
 
     static void AssertCommand(string actualRaw, string[] expectedCommands)
     {
-        var actualCommands =
+        string[] actualCommands =
             actualRaw.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
         Assert.Equal(expectedCommands.Length, actualCommands.Length);
 
-        for (var i = 0; i < expectedCommands.Length; ++i)
+        for (int i = 0; i < expectedCommands.Length; ++i)
         {
             Assert.Equal(expectedCommands[i], actualCommands[i]);
         }
