@@ -33,7 +33,7 @@ public sealed class VersionSweeperConfig
     /// Returns the read configuration, or a default configuration if the file is not found.
     /// The configuration is cached for the lifetime of the process.
     /// </summary>
-    internal static async Task<VersionSweeperConfig> ReadAsync(string root, IJobService job)
+    internal static async Task<VersionSweeperConfig> ReadAsync(string root, ICoreService job)
     {
         if (s_cachedConfig is not null)
         {
@@ -42,13 +42,13 @@ public sealed class VersionSweeperConfig
 
         try
         {
-            var fullPath = Path.Combine(root, FileName);
+            string fullPath = Path.Combine(root, FileName);
             if (File.Exists(fullPath))
             {
                 job.Info($"Reading '{fullPath}' config file.");
 
-                var configJson = await File.ReadAllTextAsync(fullPath);
-                var config = configJson.FromJson<VersionSweeperConfig>() ?? new();
+                string configJson = await File.ReadAllTextAsync(fullPath);
+                VersionSweeperConfig config = configJson.FromJson<VersionSweeperConfig>() ?? new();
 
                 job.Info($"Read {config.Ignore.Length} pattern(s) to ignore:");
                 job.Info($"{string.Join(",", config.Ignore.Select(val => $"\t{val}"))}");

@@ -11,7 +11,7 @@ public sealed class DockerfileReaderTests
     [Fact]
     public async Task ReadDcokerfileAndParsesCorrectly()
     {
-        var dockerfilePath = "Dockerfile";
+        string dockerfilePath = "Dockerfile";
 
         try
         {
@@ -19,7 +19,7 @@ public sealed class DockerfileReaderTests
 
             IDockerfileReader sut = new DockerfileReader();
 
-            var dockerfile = await sut.ReadDockerfileAsync(dockerfilePath);
+            Models.Dockerfile dockerfile = await sut.ReadDockerfileAsync(dockerfilePath);
             Assert.Equal(6, dockerfile.ImageDetails.Count);
 
             Assert.Contains(dockerfile.ImageDetails, i => i.TargetFrameworkMoniker == "net35");

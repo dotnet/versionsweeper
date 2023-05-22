@@ -29,7 +29,7 @@ static class TargetFrameworkMonikerMap
 
     internal static bool RawMapsToKnown(string parsedTfm, string knownTfm)
     {
-        if (_frameworkMonikers.TryGetValue(StripAtHyphen(parsedTfm), out var tfm))
+        if (_frameworkMonikers.TryGetValue(StripAtHyphen(parsedTfm), out string? tfm))
         {
             return string.Equals(knownTfm, tfm, StringComparison.OrdinalIgnoreCase)
                 || string.Equals(parsedTfm, knownTfm, StringComparison.OrdinalIgnoreCase);

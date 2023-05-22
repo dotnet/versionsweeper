@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Deployment.DotNet.Releases" Version="1.0.0-preview4.1.22206.3" />
+    <PackageReference Include="Microsoft.Deployment.DotNet.Releases" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

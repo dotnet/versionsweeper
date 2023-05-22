@@ -57,11 +57,11 @@ public sealed class GitHubGraphQLClient
             request.Headers.ContentType = new(MediaTypeNames.Application.Json);
             request.Headers.Add("Accepts", MediaTypeNames.Application.Json);
 
-            using var response = await _httpClient.PostAsync(s_graphQLUri, request);
+            using HttpResponseMessage response = await _httpClient.PostAsync(s_graphQLUri, request);
             response.EnsureSuccessStatusCode();
 
-            var json = await response.Content.ReadAsStringAsync();
-            var result = json.FromJson<GraphQLResult<ExistingIssue>>(s_options);
+            string json = await response.Content.ReadAsStringAsync();
+            GraphQLResult<ExistingIssue>? result = json.FromJson<GraphQLResult<ExistingIssue>>(s_options);
 
             return (false, result?.Data?.Search?.Nodes
                 ?.Where(i => i.State == ItemState.Open)

@@ -10,8 +10,8 @@ public sealed class StringExtensionsTests
     [Fact]
     public void FirstAndLastSegementsOfPathTest()
     {
-        var d = Path.DirectorySeparatorChar;
-        foreach (var (input, expected, limit)
+        char d = Path.DirectorySeparatorChar;
+        foreach ((string input, string expected, int limit)
             in new[]
             {
                     (null, null, 10),

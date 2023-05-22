@@ -21,7 +21,7 @@ public sealed class ProjectFileReader : IProjectFileReader
 
         if (SystemFile.Exists(projectPath))
         {
-            var projectContent = await SystemFile.ReadAllTextAsync(projectPath);
+            string projectContent = await SystemFile.ReadAllTextAsync(projectPath);
             return project.Extension switch
             {
                 ".json" => ParseJson(project, projectContent),
@@ -33,9 +33,9 @@ public sealed class ProjectFileReader : IProjectFileReader
 
         static Project ParseXml(Project project, string projectContent)
         {
-            var (index, rawTfms) = MatchExpression(_targetFrameworkExpression, projectContent, "tfm");
-            var lineNumber = GetLineNumberFromIndex(projectContent, index);
-            var (_, sdk) = MatchExpression(_projectSdkExpression, projectContent, "sdk");
+            (int index, string rawTfms) = MatchExpression(_targetFrameworkExpression, projectContent, "tfm");
+            int lineNumber = GetLineNumberFromIndex(projectContent, index);
+            (int _, string sdk) = MatchExpression(_projectSdkExpression, projectContent, "sdk");
 
             return project with
             {
@@ -47,14 +47,14 @@ public sealed class ProjectFileReader : IProjectFileReader
 
         static Project ParseJson(Project project, string projectContent)
         {
-            var projectJson = projectContent.FromJson<ProjectJson>();
+            ProjectJson? projectJson = projectContent.FromJson<ProjectJson>();
             if (projectJson is null or { Frameworks.Count: 0 })
             {
                 return project;
             }
 
-            var rawTfms = string.Join(";", projectJson.Frameworks.Keys);
-            var lineNumber = GetLineNumberFromProjectJson(
+            string rawTfms = string.Join(";", projectJson.Frameworks.Keys);
+            int lineNumber = GetLineNumberFromProjectJson(
                 projectJson.Frameworks.Keys.First(), projectContent);
 
             return project with
@@ -67,11 +67,11 @@ public sealed class ProjectFileReader : IProjectFileReader
 
     static int GetLineNumberFromProjectJson(string tfm, string json)
     {
-        var lineNumber = 0;
+        int lineNumber = 0;
         if (json is { Length: > 0 })
         {
-            var lines = json.Split('\n');
-            for (var i = 0; i < lines.Length; ++i)
+            string[] lines = json.Split('\n');
+            for (int i = 0; i < lines.Length; ++i)
             {
                 if (lines[i]?.Contains(tfm, StringComparison.OrdinalIgnoreCase) ?? false)
                 {
@@ -86,10 +86,10 @@ public sealed class ProjectFileReader : IProjectFileReader
     static (int Index, string? Value) MatchExpression(
         Regex expression, string content, string groupName)
     {
-        var match = expression?.Match(content);
+        Match? match = expression?.Match(content);
         if (match is not null)
         {
-            var group = match.Groups[groupName];
+            Group group = match.Groups[groupName];
             return (group.Index, group.Value);
         }
 
@@ -98,8 +98,8 @@ public sealed class ProjectFileReader : IProjectFileReader
 
     static int GetLineNumberFromIndex(string xml, int index)
     {
-        var lineNumber = 1;
-        for (var i = 0; i < index; ++i)
+        int lineNumber = 1;
+        for (int i = 0; i < index; ++i)
         {
             if (xml[i] == '\n') ++lineNumber;
         }

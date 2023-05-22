@@ -13,15 +13,15 @@ public sealed class ReleaseFactoryTests
     public void CreateTest()
     {
         var example = new Example();
-        var release = ReleaseFactory.Create(
+        IRelease release = ReleaseFactory.Create(
             example,
             _ => "Does this thing work",
             "test",
-            SupportPhase.LTS,
+            SupportPhase.GoLive,
             null,
             "some-path.md");
 
-        Assert.Equal(SupportPhase.LTS, release.SupportPhase);
+        Assert.Equal(SupportPhase.GoLive, release.SupportPhase);
         Assert.Equal("Does this thing work", release.ToBrandString());
         Assert.Equal("test", release.TargetFrameworkMoniker);
         Assert.Null(release.EndOfLifeDate);

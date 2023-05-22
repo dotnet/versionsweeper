@@ -21,14 +21,14 @@ public sealed class DockerfileReader : IDockerfileReader
         
         if (SystemFile.Exists(dockerfilePath))
         {
-            var dockerfileContent = await SystemFile.ReadAllTextAsync(dockerfilePath);
-            var fromMatches = _fromInstructionRegex.Matches(dockerfileContent);
+            string dockerfileContent = await SystemFile.ReadAllTextAsync(dockerfilePath);
+            MatchCollection fromMatches = _fromInstructionRegex.Matches(dockerfileContent);
             foreach (Match match in fromMatches)
             {
                 dockerfile = ParseMatch(dockerfile, dockerfileContent, match);
             }
 
-            var copyMatches = _copyInstructionRegex.Matches(dockerfileContent);
+            MatchCollection copyMatches = _copyInstructionRegex.Matches(dockerfileContent);
             foreach (Match match in copyMatches)
             {
                 dockerfile = ParseMatch(dockerfile, dockerfileContent, match);
@@ -39,9 +39,9 @@ public sealed class DockerfileReader : IDockerfileReader
 
         static Dockerfile ParseMatch(Dockerfile dockerfile, string dockerfileContent, Match match)
         {
-            var group = match.Groups["tag"];
-            var (index, tag) = (group.Index, group.Value);
-            var image = match.Groups["image"].Value;
+            Group group = match.Groups["tag"];
+            (int index, string tag) = (group.Index, group.Value);
+            string? image = match.Groups["image"].Value;
             if (image is not null && tag is not null)
             {
                 if (dockerfile.ImageDetails is null)
@@ -52,11 +52,11 @@ public sealed class DockerfileReader : IDockerfileReader
                     };
                 }
 
-                var lineNumber = GetLineNumberFromIndex(dockerfileContent, index);
-                var isFramework = image.Contains("framework");
+                int lineNumber = GetLineNumberFromIndex(dockerfileContent, index);
+                bool isFramework = image.Contains("framework");
                 tag = tag.Contains('-') ? tag.Split("-")[0] : tag;
-                var firstNumber = int.TryParse(tag[0].ToString(), out var number) ? number : -1;
-                var tfm = isFramework switch
+                int firstNumber = int.TryParse(tag[0].ToString(), out int number) ? number : -1;
+                string tfm = isFramework switch
                 {
                     true => $"net{tag.Replace(".", "")}",
                     false when firstNumber < 4 => $"netcoreapp{tag}",
@@ -73,8 +73,8 @@ public sealed class DockerfileReader : IDockerfileReader
 
     static int GetLineNumberFromIndex(string content, int index)
     {
-        var lineNumber = 1;
-        for (var i = 0; i < index; ++i)
+        int lineNumber = 1;
+        for (int i = 0; i < index; ++i)
         {
             if (content[i] == '\n') ++lineNumber;
         }

@@ -52,7 +52,7 @@ public interface IJobService
     /// ]]>
     /// </code>
     /// </example>
-    void SetOutput(Dictionary<string, string>? properties = default);
+    void SetOutput(string? message, Dictionary<string, string>? properties = default);
 
     void SetCommandEcho(bool enabled);
 

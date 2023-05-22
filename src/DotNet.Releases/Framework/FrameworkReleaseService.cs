@@ -17,19 +17,19 @@ internal sealed class FrameworkReleaseService : IFrameworkReleaseService
 
     async IAsyncEnumerable<FrameworkRelease> IFrameworkReleaseService.GetAllReleasesAsync()
     {
-        foreach (var releaseName in _indexService.FrameworkReseaseFileNames)
+        foreach (string releaseName in _indexService.FrameworkReseaseFileNames)
         {
-            var frameworkRelease =
+            FrameworkRelease? frameworkRelease =
                 await _cache.GetOrCreateAsync(
                     releaseName,
                     async entry =>
                     {
-                        var name = entry.Key.ToString();
-                        var resourceName = $"DotNet.Releases.Data.{name}";
-                        using var stream = _executingAssembly.GetManifestResourceStream(resourceName);
+                        string? name = entry.Key.ToString();
+                        string resourceName = $"DotNet.Releases.Data.{name}";
+                        using Stream? stream = _executingAssembly.GetManifestResourceStream(resourceName);
                         using StreamReader reader = new(stream!);
 
-                        var json = await reader.ReadToEndAsync();
+                        string json = await reader.ReadToEndAsync();
 
                         return json.FromJson<FrameworkRelease>(new());
                     });

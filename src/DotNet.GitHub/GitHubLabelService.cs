@@ -21,13 +21,13 @@ public sealed class GitHubLabelService : IGitHubLabelService, IDisposable
     public async ValueTask<Label> GetOrCreateLabelAsync(
         string owner, string name, string token)
     {
-        var labelsClient = GetLabelsClient(token);
-        var cacheKey = $"{owner}/{name}/labels";
-        var labels = await _cache.GetOrCreateAsync(
+        IIssuesLabelsClient labelsClient = GetLabelsClient(token);
+        string cacheKey = $"{owner}/{name}/labels";
+        IReadOnlyList<Label>? labels = await _cache.GetOrCreateAsync(
             cacheKey,
             async _ => await labelsClient.GetAllForRepository(owner, name));
 
-        var label = labels?.FirstOrDefault(l => l.Name == DefaultLabel.Name);
+        Label? label = labels?.FirstOrDefault(l => l.Name == DefaultLabel.Name);
         if (label is not null)
         {
             return _label = label;
@@ -55,8 +55,8 @@ public sealed class GitHubLabelService : IGitHubLabelService, IDisposable
 
     IIssuesLabelsClient GetLabelsClient(string token)
     {
-        var client = _clientFactory.Create(token);
-        var labelsClient = client.Issue.Labels;
+        IGitHubClient client = _clientFactory.Create(token);
+        IIssuesLabelsClient labelsClient = client.Issue.Labels;
         return labelsClient;
     }
 

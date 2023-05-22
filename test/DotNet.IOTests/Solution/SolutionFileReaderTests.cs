@@ -11,7 +11,7 @@ public sealed class SolutionFileReaderTests
     [Fact]
     public async Task ReadSolutionAsyncTest()
     {
-        var solutionPath = "test.sln";
+        string solutionPath = "test.sln";
         Dictionary<string, string> files = new()
         {
             ["sln-test.csproj"] = Constants.TestProjectXml,
@@ -21,19 +21,19 @@ public sealed class SolutionFileReaderTests
 
         try
         {
-            foreach (var (path, content) in files)
+            foreach ((string path, string content) in files)
             {
                 await File.WriteAllTextAsync(path, content);
             }
 
             ISolutionFileReader sut = new SolutionFileReader(new ProjectFileReader());
 
-            var solution = await sut.ReadSolutionAsync(solutionPath);
+            Models.Solution solution = await sut.ReadSolutionAsync(solutionPath);
             Assert.NotNull(solution);
             Assert.Equal(Path.GetFullPath(solutionPath), solution.FullPath);
             Assert.NotEmpty(solution.Projects);
 
-            var project = solution.Projects.FirstOrDefault(p => !p.IsSdkStyle);
+            Models.Project project = solution.Projects.FirstOrDefault(p => !p.IsSdkStyle);
             Assert.Equal(18, project.TfmLineNumber);
             Assert.Single(project.Tfms);
             Assert.Equal("netcoreapp1.0", project.Tfms[0]);
@@ -46,7 +46,7 @@ public sealed class SolutionFileReaderTests
         }
         finally
         {
-            foreach (var path in files.Keys)
+            foreach (string path in files.Keys)
             {
                 File.Delete(path);
             }

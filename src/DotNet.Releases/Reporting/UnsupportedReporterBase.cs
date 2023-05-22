@@ -12,7 +12,7 @@ internal class UnsupportedReporterBase
         DateTime outOfSupportWithinDate,
         out TargetFrameworkMonikerSupport? tfmSupport)
     {
-        var release = ReleaseFactory.Create(
+        IRelease release = ReleaseFactory.Create(
             product,
             pr => $"{pr.ProductName} {pr.ProductVersion}",
             product.GetTargetFrameworkMoniker(),
@@ -22,7 +22,7 @@ internal class UnsupportedReporterBase
 
         if (TargetFrameworkMonikerMap.RawMapsToKnown(tfm, release.TargetFrameworkMoniker))
         {
-            var isOutOfSupport = product.IsOutOfSupport() ||
+            bool isOutOfSupport = product.IsOutOfSupport() ||
                 product.EndOfLifeDate <= outOfSupportWithinDate;
 
             tfmSupport = new(tfm, version, isOutOfSupport, release);
@@ -41,7 +41,7 @@ internal class UnsupportedReporterBase
     {
         if (TargetFrameworkMonikerMap.RawMapsToKnown(tfm, release.TargetFrameworkMoniker))
         {
-            var isOutOfSupport = release.SupportPhase == SupportPhase.EOL ||
+            bool isOutOfSupport = release.SupportPhase == SupportPhase.EOL ||
                 release.EndOfLifeDate?.Date <= outOfSupportWithinDate;
 
             tfmSupport = new(tfm, version, isOutOfSupport, release);

@@ -18,11 +18,11 @@ public sealed class GitHubIssueService : IGitHubIssueService
     public async ValueTask<Issue> PostIssueAsync(
         string owner, string name, string token, NewIssue newIssue)
     {
-        var label = await _gitHubLabelService.GetOrCreateLabelAsync(owner, name, token);
+        Label label = await _gitHubLabelService.GetOrCreateLabelAsync(owner, name, token);
         newIssue.Labels.Add(label.Name);
 
-        var issuesClient = GetIssuesClient(token);
-        var issue = await issuesClient.Create(owner, name, newIssue);
+        IIssuesClient issuesClient = GetIssuesClient(token);
+        Issue issue = await issuesClient.Create(owner, name, newIssue);
 
         _logger.LogInformation($"Issue created: {issue.HtmlUrl}");
 
@@ -32,12 +32,12 @@ public sealed class GitHubIssueService : IGitHubIssueService
     public async ValueTask<Issue> UpdateIssueAsync(
         string owner, string name, string token, long number, IssueUpdate issueUpdate)
     {
-        var issuesClient = GetIssuesClient(token);
+        IIssuesClient issuesClient = GetIssuesClient(token);
 
         // The GitHub GraphQL API returns a long for the issue Id.
         // The GitHub REST API expects an int for the issue Id.
 
-        var issue = await issuesClient.Update(
+        Issue issue = await issuesClient.Update(
             owner, name, unchecked((int)number), issueUpdate);
 
         _logger.LogInformation($"Issue updated: {issue.HtmlUrl}");

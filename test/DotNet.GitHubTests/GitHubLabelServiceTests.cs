@@ -19,12 +19,12 @@ public sealed class GitHubLabelServiceTests
     [Fact]
     public async Task GetOrCreateLabelAsyncCorrectlyReadsLabel()
     {
-        var factory = SubstituteWith(
+        IResilientGitHubClientFactory factory = SubstituteWith(
             new[] { new TestLabel("dotnet-target-version") },
             new("Label")).Factory;
 
         var sut = new GitHubLabelService(factory, _logger, _cache);
-        var label = await sut.GetOrCreateLabelAsync("unit", "test", "fake");
+        Label label = await sut.GetOrCreateLabelAsync("unit", "test", "fake");
 
         Assert.Equal("dotnet-target-version", label.Name);
     }
@@ -32,11 +32,11 @@ public sealed class GitHubLabelServiceTests
     [Fact]
     public async Task GetOrCreateLabelAsyncCreatesLabel()
     {
-        var (labelsClient, _, factory) = SubstituteWith(
+        (IIssuesLabelsClient labelsClient, IIssuesClient _, IResilientGitHubClientFactory factory) = SubstituteWith(
             Array.Empty<TestLabel>(), new TestLabel("dotnet-target-version"));
 
         var sut = new GitHubLabelService(factory, _logger, _cache);
-        var label = await sut.GetOrCreateLabelAsync("unit", "test", "fake");
+        Label label = await sut.GetOrCreateLabelAsync("unit", "test", "fake");
 
         await labelsClient.Received(1).Create(
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<NewLabel>());
@@ -47,12 +47,12 @@ public sealed class GitHubLabelServiceTests
     [Fact]
     public async Task GetOrCreateLabelAsyncOnlyCreatesLabelOnce()
     {
-        var (labelsClient, _, factory) = SubstituteWith(
+        (IIssuesLabelsClient labelsClient, IIssuesClient _, IResilientGitHubClientFactory factory) = SubstituteWith(
             Array.Empty<TestLabel>(), new TestLabel("dotnet-target-version"));
 
-        var floodCount = 10_000;
+        int floodCount = 10_000;
         var sut = new GitHubLabelService(factory, _logger, _cache);
-        var labels = await Task.WhenAll(
+        Label[] labels = await Task.WhenAll(
             Enumerable.Range(0, floodCount)
                 .Select(i => sut.GetOrCreateLabelAsync("unit", "test", "fake")
                 .AsTask()));
@@ -77,17 +77,17 @@ public sealed class GitHubLabelServiceTests
             IReadOnlyList<TestLabel> allLabels,
             TestLabel createdLabel)
     {
-        var labelsClient = Substitute.For<IIssuesLabelsClient>();
+        IIssuesLabelsClient labelsClient = Substitute.For<IIssuesLabelsClient>();
         labelsClient.GetAllForRepository(null, null).ReturnsForAnyArgs(allLabels);
         labelsClient.Create(null, null, null).ReturnsForAnyArgs(createdLabel);
 
-        var issuesClient = Substitute.For<IIssuesClient>();
+        IIssuesClient issuesClient = Substitute.For<IIssuesClient>();
         issuesClient.Labels.ReturnsForAnyArgs(labelsClient);
 
-        var client = Substitute.For<IGitHubClient>();
+        IGitHubClient client = Substitute.For<IGitHubClient>();
         client.Issue.Returns(issuesClient);
 
-        var factory = Substitute.For<IResilientGitHubClientFactory>();
+        IResilientGitHubClientFactory factory = Substitute.For<IResilientGitHubClientFactory>();
         factory.Create(null).ReturnsForAnyArgs(client);
 
         return (labelsClient, issuesClient, factory);

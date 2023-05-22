@@ -46,7 +46,7 @@ public static class OptionsExtensions
 
     public static DirectoryInfo ToDirectoryInfo(this Options options) => new(options.Directory);
 
-    public static void WriteDebugInfo(this Options options, IJobService job)
+    public static void WriteDebugInfo(this Options options, ICoreService job)
     {
         job.SetCommandEcho(true);
 
@@ -55,7 +55,7 @@ public static class OptionsExtensions
         builder.AppendLine($"repository name: {options.Name}");
         builder.AppendLine($"current branch: {options.Branch}");
         builder.AppendLine($"root directory to search: {options.Directory}");
-        var parsedPatterns = string.Join(", ",
+        string parsedPatterns = string.Join(", ",
             options.SearchPattern?.SplitOnExpectedDelimiters().AsRecursivePatterns() ?? Array.Empty<string>());
         builder.AppendLine($"parsed patterns: {parsedPatterns}");
         builder.AppendLine($"report non-SDK style projects: {options.ReportNonSdkStyleProjects}");

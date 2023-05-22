@@ -1,32 +1,40 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using var host = Host.CreateDefaultBuilder(args)
-    .ConfigureServices((_, services) =>
-        services.AddDotNetGitHubServices()
-                .AddGitHubActionServices()
-                .AddDotNetReleaseServices()
-                .AddDotNetFileSystem())
-    .Build();
+HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
-var jobService =
-    host.Services.GetRequiredService<IJobService>();
-var parser =
+builder.Services.AddDotNetGitHubServices();
+builder.Services.AddGitHubActionsCore();
+builder.Services.AddDotNetReleaseServices();
+builder.Services.AddDotNetFileSystem();
+
+using IHost host = builder.Build();
+
+ICoreService jobService =
+    host.Services.GetRequiredService<ICoreService>();
+ParserResult<Options> parser =
     Default.ParseArguments<Options>(() => new(), args);
 
-static async Task StartSweeperAsync(Options options, IServiceProvider services, IJobService job)
+parser.WithNotParsed(
+    errors => jobService.SetFailed(
+        string.Join(NewLine, errors.Select(error => error.ToString()))));
+
+await parser.WithParsedAsync(options => StartSweeperAsync(options, host.Services, jobService));
+await host.RunAsync();
+
+static async Task StartSweeperAsync(Options options, IServiceProvider services, ICoreService job)
 {
     try
     {
         options.WriteDebugInfo(job);
 
-        var (solutions, orphanedProjects, config) =
+        (IImmutableSet<Solution> solutions, IImmutableSet<ModelProject> orphanedProjects, VersionSweeperConfig config) =
             await Discovery.FindSolutionsAndProjectsAsync(services, job, options);
 
-        var dockerfiles =
+        IImmutableSet<Dockerfile> dockerfiles =
             await Discovery.FindDockerfilesAsync(services, job, options);
 
-        var (unsupportedProjectReporter, unsupportedDockerfileReporter, issueQueue, graphQLClient) =
+        (IUnsupportedProjectReporter unsupportedProjectReporter, IUnsupportedDockerfileReporter unsupportedDockerfileReporter, RateLimitAwareQueue issueQueue, GitHubGraphQLClient graphQLClient) =
                 services.GetRequiredServices
                     <IUnsupportedProjectReporter, IUnsupportedDockerfileReporter,
                         RateLimitAwareQueue, GitHubGraphQLClient>();
@@ -34,10 +42,10 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
         static async Task CreateAndEnqueueAsync(
             GitHubGraphQLClient client,
             RateLimitAwareQueue queue,
-            IJobService job,
+            ICoreService job,
             string title, Options options, Func<Options, string> getBody)
         {
-            var (isError, existingIssue) =
+            (bool isError, ExistingIssue? existingIssue) =
                 await client.GetIssueAsync(
                     options.Owner, options.Name, options.Token, title);
             if (isError)
@@ -46,7 +54,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             }
             else if (existingIssue is { State: ItemState.Open })
             {
-                var markdownBody = getBody(options);
+                string markdownBody = getBody(options);
                 if (markdownBody != existingIssue.Body)
                 {
                     // These updates will overwrite completed tasks in a check list
@@ -65,7 +73,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             }
             else
             {
-                var markdownBody = getBody(options);
+                string markdownBody = getBody(options);
                 queue.Enqueue(
                     new(options.Owner, options.Name, options.Token),
                     new NewIssue(title)
@@ -85,41 +93,41 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             Dictionary<string, HashSet<T>> tfmToSupportReport,
             IGrouping<string, (TargetFrameworkMonikerSupport tfms, T report)> grouping)
         {
-            var key = grouping.Key;
+            string key = grouping.Key;
             if (!tfmToSupportReport.ContainsKey(key))
             {
                 tfmToSupportReport[key] = new();
             }
 
-            foreach (var (_, report) in grouping)
+            foreach ((TargetFrameworkMonikerSupport _, T report) in grouping)
             {
                 tfmToSupportReport[key].Add(report);
             }
         }
 
-        foreach (var solution in solutions.Where(sln => sln is not null))
+        foreach (Solution? solution in solutions.Where(sln => sln is not null))
         {
             SolutionSupportReport solutionSupportReport = new(solution);
 
-            foreach (var project in solution.Projects)
+            foreach (ModelProject project in solution.Projects)
             {
                 if (!project.IsSdkStyle)
                 {
                     nonSdkStyleProjects.Add(project);
                 }
 
-                await foreach (var psr in unsupportedProjectReporter.ReportAsync(
+                await foreach (ProjectSupportReport psr in unsupportedProjectReporter.ReportAsync(
                     project, config.OutOfSupportWithinDays))
                 {
                     solutionSupportReport.ProjectSupportReports.Add(psr);
                 }
             }
 
-            var reports = solutionSupportReport.ProjectSupportReports;
+            HashSet<ProjectSupportReport> reports = solutionSupportReport.ProjectSupportReports;
             if (reports is { Count: > 0 } &&
                 reports.Any(r => r.TargetFrameworkMonikerSupports.Any(s => s.IsUnsupported)))
             {
-                foreach (var grouping in
+                foreach (IGrouping<string, (TargetFrameworkMonikerSupport tfms, ProjectSupportReport psr)> grouping in
                     reports.Where(r => r.TargetFrameworkMonikerSupports.Any(s => s.IsUnsupported))
                         .SelectMany(
                             psr => psr.TargetFrameworkMonikerSupports, (psr, tfms) => (tfms, psr))
@@ -130,20 +138,20 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             }
         }
 
-        foreach (var orphanedProject in orphanedProjects)
+        foreach (ModelProject orphanedProject in orphanedProjects)
         {
             if (!orphanedProject.IsSdkStyle)
             {
                 nonSdkStyleProjects.Add(orphanedProject);
             }
 
-            await foreach (var psr in unsupportedProjectReporter.ReportAsync(
+            await foreach (ProjectSupportReport psr in unsupportedProjectReporter.ReportAsync(
                 orphanedProject, config.OutOfSupportWithinDays))
             {
-                var (project, reports) = psr;
+                (ModelProject project, HashSet<TargetFrameworkMonikerSupport> reports) = psr;
                 if (reports is { Count: > 0 } && reports.Any(r => r.IsUnsupported))
                 {
-                    foreach (var grouping in
+                    foreach (IGrouping<string, (TargetFrameworkMonikerSupport tfms, ProjectSupportReport psr)> grouping in
                         reports.Select(tfms => (tfms, psr))
                             .GroupBy(t => t.tfms.TargetFrameworkMoniker))
                     {
@@ -153,15 +161,15 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             }
         }
 
-        foreach (var dockerfile in dockerfiles)
+        foreach (Dockerfile dockerfile in dockerfiles)
         {
-            await foreach (var supportReport in unsupportedDockerfileReporter.ReportAsync(
+            await foreach (DockerfileSupportReport supportReport in unsupportedDockerfileReporter.ReportAsync(
                 dockerfile, config.OutOfSupportWithinDays))
             {
-                var reports = supportReport.TargetFrameworkMonikerSupports;
+                HashSet<TargetFrameworkMonikerSupport> reports = supportReport.TargetFrameworkMonikerSupports;
                 if (reports is { Count: > 0 } && reports.Any(r => r.IsUnsupported))
                 {
-                    foreach (var grouping in
+                    foreach (IGrouping<string, (TargetFrameworkMonikerSupport tfms, DockerfileSupportReport supportReport)> grouping in
                         reports.Select(tfms => (tfms, supportReport))
                             .GroupBy(t => t.tfms.TargetFrameworkMoniker))
                     {
@@ -171,7 +179,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             }
         }
 
-        foreach (var (tfm, dockerfileSupportReports) in tfmToDockerfileSupportReports)
+        foreach ((string tfm, HashSet<DockerfileSupportReport> dockerfileSupportReports) in tfmToDockerfileSupportReports)
         {
             await CreateAndEnqueueAsync(
                 graphQLClient, issueQueue, job,
@@ -179,7 +187,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                 options, o => dockerfileSupportReports.ToMarkdownBody(tfm, o));
         }
 
-        foreach (var (tfm, projectSupportReports) in tfmToProjectSupportReports)
+        foreach ((string tfm, HashSet<ProjectSupportReport> projectSupportReports) in tfmToProjectSupportReports)
         {
             await CreateAndEnqueueAsync(
                 graphQLClient, issueQueue, job,
@@ -188,14 +196,14 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
         }
 
         if (nonSdkStyleProjects.TryCreateIssueContent(
-            options.Directory, options.Branch, out var content))
+            options.Directory, options.Branch, out (string Title, string MarkdownBody) content))
         {
-            var (title, markdownBody) = content;
+            (string title, string markdownBody) = content;
             await CreateAndEnqueueAsync(
                 graphQLClient, issueQueue, job, title, options, _ => markdownBody);
         }
 
-        await foreach (var (type, issue) in issueQueue.ExecuteAllQueuedItemsAsync())
+        await foreach ((string type, Issue issue) in issueQueue.ExecuteAllQueuedItemsAsync())
         {
             job.Info($"{type} issue: {issue.HtmlUrl}");
         }
@@ -209,10 +217,3 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
         Exit(0);
     }
 }
-
-parser.WithNotParsed(
-    errors => jobService.SetFailed(
-        string.Join(NewLine, errors.Select(error => error.ToString()))));
-
-await parser.WithParsedAsync(options => StartSweeperAsync(options, host.Services, jobService));
-await host.RunAsync();

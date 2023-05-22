@@ -25,8 +25,8 @@ public record FrameworkRelease(
 
     public SupportPhase SupportPhase => EndOfLifeDate switch
     {
-        var date when date is null && Version == "4.8" => SupportPhase.Current,
-        var date when date > DateTimeOffset.UtcNow => SupportPhase.LTS,
+        var date when date is null && Version == "4.8" => SupportPhase.Active,
+        var date when date > DateTimeOffset.UtcNow => SupportPhase.GoLive,
 
         _ => SupportPhase.EOL
     };

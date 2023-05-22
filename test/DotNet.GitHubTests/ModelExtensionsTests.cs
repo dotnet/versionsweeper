@@ -18,7 +18,7 @@ public sealed class ModelExtensionsTests
     [Fact]
     public async Task ToMarkDownCorrectlyGeneratesContentTest()
     {
-        var projectPath = "test.csproj";
+        string projectPath = "test.csproj";
 
         try
         {
@@ -33,9 +33,9 @@ public sealed class ModelExtensionsTests
             IUnsupportedProjectReporter reporter =
                 new UnsupportedProjectReporter(coreService, frameworkService);
 
-            await foreach (var report in reporter.ReportAsync(project, 90))
+            await foreach (ProjectSupportReport report in reporter.ReportAsync(project, 90))
             {
-                var expected = @"The following project file(s) target a .NET version which is no longer supported. This is an auto-generated issue, detailed and discussed in [dotnet/docs#22271](https://github.com/dotnet/docs/issues/22271).
+                string expected = @"The following project file(s) target a .NET version which is no longer supported. This is an auto-generated issue, detailed and discussed in [dotnet/docs#22271](https://github.com/dotnet/docs/issues/22271).
 
 | Target version | End of life | Release notes | Nearest LTS TFM version |
 | --- | --- | --- | --- |
@@ -56,7 +56,7 @@ If any of these projects listed in this issue are intentionally targeting an uns
 ```
 "
 .ReplaceLineEndings();
-                var actual = new HashSet<ProjectSupportReport>                
+                string actual = new HashSet<ProjectSupportReport>                
                     {
                         report
                     }

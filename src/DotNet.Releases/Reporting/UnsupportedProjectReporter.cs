@@ -20,25 +20,25 @@ internal sealed class UnsupportedProjectReporter : UnsupportedReporterBase, IUns
         HashSet<TargetFrameworkMonikerSupport> resultingSupports = new();
         DateTime outOfSupportWithinDate = DateTimeOffset.UtcNow.Date.AddDays(outOfSupportWithinDays);
 
-        var products = await _coreReleaseIndexService.GetReleasesAsync();
-        foreach (var product in products?.Keys ?? Enumerable.Empty<Product>())
+        System.Collections.ObjectModel.ReadOnlyDictionary<Product, IReadOnlyCollection<ProductRelease>>? products = await _coreReleaseIndexService.GetReleasesAsync();
+        foreach (Product product in products?.Keys ?? Enumerable.Empty<Product>())
         {
-            var tfmSupports =
+            IEnumerable<TargetFrameworkMonikerSupport?> tfmSupports =
                 project.Tfms.Select(
                     tfm => TryEvaluateDotNetSupport(
                         tfm, product.ProductVersion,
-                        product, outOfSupportWithinDate, out var tfmSupport)
+                        product, outOfSupportWithinDate, out TargetFrameworkMonikerSupport? tfmSupport)
                             ? tfmSupport : null)
                     .Where(tfmSupport => tfmSupport is not null);
 
             if (tfmSupports.Any())
             {
-                var supports = await Task.WhenAll(
+                TargetFrameworkMonikerSupport[] supports = await Task.WhenAll(
                     tfmSupports.Where(support => support?.IsUnsupported ?? false)
                         .Select(
                         async support =>
                         {
-                            var release = await _coreReleaseIndexService.GetNextLtsVersionAsync(
+                            Product? release = await _coreReleaseIndexService.GetNextLtsVersionAsync(
                                 product.LatestReleaseVersion.ToString());
 
                             return support! with
@@ -47,32 +47,32 @@ internal sealed class UnsupportedProjectReporter : UnsupportedReporterBase, IUns
                             };
                         }));
 
-                foreach (var support in supports)
+                foreach (TargetFrameworkMonikerSupport? support in supports)
                 {
                     resultingSupports.Add(support);
                 }
             }
         }
 
-        await foreach (var frameworkRelease
+        await foreach (FrameworkRelease frameworkRelease
             in _frameworkReleaseService.GetAllReleasesAsync())
         {
-            var tfmSupports =
+            IEnumerable<TargetFrameworkMonikerSupport?> tfmSupports =
                 project.Tfms.Select(
                     tfm => TryEvaluateDotNetFrameworkSupport(
                         tfm, frameworkRelease!.Version,
-                        frameworkRelease, outOfSupportWithinDate, out var tfmSupport)
+                        frameworkRelease, outOfSupportWithinDate, out TargetFrameworkMonikerSupport? tfmSupport)
                             ? tfmSupport : null)
                     .Where(tfmSupport => tfmSupport is not null);
 
             if (tfmSupports.Any())
             {
-                var supports = await Task.WhenAll(
+                TargetFrameworkMonikerSupport[] supports = await Task.WhenAll(
                     tfmSupports.Where(support => support?.IsUnsupported ?? false)
                     .Select(
                         async support =>
                         {
-                            var release = await _frameworkReleaseService.GetNextLtsVersionAsync(
+                            FrameworkRelease? release = await _frameworkReleaseService.GetNextLtsVersionAsync(
                                 (LabeledVersion)frameworkRelease.Version);
 
                             return support! with
@@ -81,7 +81,7 @@ internal sealed class UnsupportedProjectReporter : UnsupportedReporterBase, IUns
                             };
                         }));
 
-                foreach (var support in supports)
+                foreach (TargetFrameworkMonikerSupport? support in supports)
                 {
                     resultingSupports.Add(support);
                 }

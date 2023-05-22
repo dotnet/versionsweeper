@@ -25,7 +25,7 @@ public static class EnumerableExtensions
     public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
     {
         if (action is null) return;
-        foreach (var item in source) action(item);
+        foreach (T? item in source) action(item);
     }
 
     public static Dictionary<string, string> AsReverseMap(
