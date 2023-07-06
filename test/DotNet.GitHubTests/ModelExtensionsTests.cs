@@ -45,7 +45,7 @@ public sealed class ModelExtensionsTests
 
                       - [ ] <a href='https://github.com/dotnet/docs/blob/main/test.csproj#L4' title='test.csproj'>test.csproj</a>
 
-                    Consider upgrading projects to either the current release, or the nearest LTS TFM version.
+                    Consider upgrading projects to either the Standard Term Support (STS) or Long Term Support (LTS) versions.
 
                     If any of these projects listed in this issue are intentionally targeting an unsupported version,
                     you can optionally configure to ignore these results in future automation executions.

@@ -26,8 +26,10 @@ inputs:
     required: false
     default: 'false'
 outputs:
-  summary-message:
-    description: 'A detailed summary of all the projects that were flagged.'
+  has-remaining-work:
+    description: 'A boolean value indicating whether more work remains, i.e. upgrade-projects contains values.'
+  upgrade-projects:
+    description: 'An array of projects that need to be upgraded.'
 runs:
   using: 'docker'
   image: 'Dockerfile'

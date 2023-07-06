@@ -4,15 +4,17 @@
 namespace DotNet.VersionSweeper;
 
 /// <summary>
-/// Example 'dotnet-versionsweeper.json' file:
+/// Example <c>dotnet-versionsweeper.json</c> file:
+/// <code>
 /// {
-///     "type": "pullRequest",
-///     "outOfSupportWithinDays": 90,
-///     "ignore": [
-///         "**/pinned-versions/**",
-///         "**/*.fsproj"
-///     ]
+///   "actionType": "pullRequest",
+///   "outOfSupportWithinDays": 90,
+///   "ignore": [
+///     "**/pinned-versions/**",
+///     "**/*.fsproj"
+///   ]
 /// }
+/// </code>
 /// </summary>
 public sealed class VersionSweeperConfig
 {
@@ -23,8 +25,8 @@ public sealed class VersionSweeperConfig
     [JsonPropertyName("ignore")]
     public string[] Ignore { get; init; } = Array.Empty<string>();
 
-    [JsonPropertyName("type")]
-    public ActionType Type { get; init; } = ActionType.CreateIssue;
+    [JsonPropertyName("actionType")]
+    public ActionType ActionType { get; init; } = ActionType.CreateIssue;
 
     [JsonPropertyName("outOfSupportWithinDays")]
     public int OutOfSupportWithinDays { get; init; } = 0;
@@ -52,7 +54,7 @@ public sealed class VersionSweeperConfig
 
                 job.Info($"Read {config.Ignore.Length} pattern(s) to ignore:");
                 job.Info($"{string.Join(",", config.Ignore.Select(val => $"\t{val}"))}");
-                job.Info($"Intended version sweeper type: {config.Type}");
+                job.Info($"Intended version sweeper type: {config.ActionType}");
                 job.Info($"Out of support within days: {config.OutOfSupportWithinDays}");
 
                 s_cachedConfig = config;

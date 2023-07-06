@@ -3,15 +3,8 @@
 
 namespace DotNet.IO;
 
-public sealed class ProjectFileReader : IProjectFileReader
+public sealed partial class ProjectFileReader : IProjectFileReader
 {
-    static readonly RegexOptions _options =
-        RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.ExplicitCapture;
-    static readonly Regex _projectSdkExpression =
-        new(@"\<Project Sdk=""(?<sdk>.+?)""", _options);
-    static readonly Regex _targetFrameworkExpression =
-        new(@"TargetFramework(.*)>(?<tfm>.+?)</", _options);
-
     public async ValueTask<Project> ReadProjectAsync(string projectPath)
     {
         Project project = new()
@@ -33,9 +26,9 @@ public sealed class ProjectFileReader : IProjectFileReader
 
         static Project ParseXml(Project project, string projectContent)
         {
-            (int index, string rawTfms) = MatchExpression(_targetFrameworkExpression, projectContent, "tfm");
+            (int index, string? rawTfms) = MatchExpression(TargetFrameworkRegex(), projectContent, "tfm");
             int lineNumber = GetLineNumberFromIndex(projectContent, index);
-            (int _, string sdk) = MatchExpression(_projectSdkExpression, projectContent, "sdk");
+            (int _, string? sdk) = MatchExpression(ProjectSdkRegex(), projectContent, "sdk");
 
             return project with
             {
@@ -105,4 +98,16 @@ public sealed class ProjectFileReader : IProjectFileReader
         }
         return lineNumber;
     }
+
+    [GeneratedRegex(
+        pattern: @"\<Project Sdk=""(?<sdk>.+?)""",
+        options: RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.ExplicitCapture,
+        cultureName: "en-US")]
+    private static partial Regex ProjectSdkRegex();
+
+    [GeneratedRegex(
+        pattern: "TargetFramework(.*)>(?<tfm>.+?)</",
+        options: RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.ExplicitCapture,
+        cultureName: "en-US")]
+    private static partial Regex TargetFrameworkRegex();
 }

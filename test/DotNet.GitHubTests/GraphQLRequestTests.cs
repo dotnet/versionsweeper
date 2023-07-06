@@ -13,7 +13,7 @@ namespace DotNet.GitHubTests;
 
 public sealed class GraphQLRequestTests
 {
-    static readonly JsonSerializerOptions _options = new()
+    static readonly JsonSerializerOptions s_options = new()
     {
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
         PropertyNameCaseInsensitive = true
@@ -73,7 +73,7 @@ public sealed class GraphQLRequestTests
         };
 
         ExistingIssue actualIssue =
-            responseJson.FromJson<GraphQLResult<ExistingIssue>>(_options)
+            responseJson.FromJson<GraphQLResult<ExistingIssue>>(s_options)
                 .Data
                 .Search
                 .Nodes[0];

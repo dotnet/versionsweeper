@@ -8,7 +8,6 @@ global using System.Text.Json.Serialization;
 global using CommandLine;
 global using DotNet.Extensions;
 global using DotNet.GitHub;
-global using Actions.Core;
 global using Actions.Core.Services;
 global using Actions.Core.Extensions;
 global using DotNet.IO;
@@ -23,3 +22,5 @@ global using static System.Environment;
 global using static CommandLine.Parser;
 global using static DotNet.VersionSweeper.EnvironmentVariableNames;
 global using ModelProject = DotNet.Models.Project;
+
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DotNet.VersionSweeperTests")]
