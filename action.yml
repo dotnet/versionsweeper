@@ -27,7 +27,7 @@ inputs:
     default: 'false'
 outputs:
   has-remaining-work:
-    description: 'A boolean value indicating whether more work remains, i.e.; upgrade-projects contains values.'
+    description: 'A boolean value indicating whether more work remains, i.e. upgrade-projects contains values.'
   upgrade-projects:
     description: 'An array of projects that need to be upgraded.'
 runs:

@@ -16,7 +16,7 @@
 
 ## Get started
 
-The .NET version sweeper is designed to alert repositories (by either creating issues, pull requests, or both) that there are projects targeting versions that are no longer supported (or will be soon). For example, projects targeting .NET Core 3.0, or .NET Framework 4.5.1 could trigger an issue to be created to update these projects to supported versions, or even a pull request that upgrades it for you. For example issues, see [issues created in this repo based on the *non-lts* directory](https://github.com/dotnet/versionsweeper/issues?q=is%3Aopen+is%3Aissue+label%3Adotnet-target-version).
+The .NET version sweeper is designed to alert repositories (by either creating issues, pull requests, or both) that there are projects targeting versions that are no longer supported (or won't be soon). For example, projects targeting .NET Core 3.0 or .NET Framework 4.5.1 could trigger an issue to be created to update these projects to supported versions, or even a pull request that upgrades it for you. For example issues, see [issues created in this repo based on the *non-lts* directory](https://github.com/dotnet/versionsweeper/issues?q=is%3Aopen+is%3Aissue+label%3Adotnet-target-version).
 
 This is intended to be used as a GitHub action that will run as a [scheduled CRON job](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#onschedule). Ideally, once a month or as often as necessary to align with .NET version updates.
 
@@ -180,7 +180,7 @@ For an example config file, see [dotnet/samples/dotnet-versionsweeper.json](http
 |:--|:--|:--|
 | `ignore` | `string[]` | Glob patterns to ignore. |
 | `outOfSupportWithinDays` | `string[]` | The number of days in advance to monitor for. |
-| `actionType` | `ActionType` <br><br> &nbsp;&nbsp; `"createIssue"` <br> &nbsp;&nbsp; `"pullRequest"` <br> &nbsp;&nbsp; `"all"` | The type of action to take, defaults to `CreateIssue`.  |
+| `actionType` | `ActionType` <br><br> &nbsp;&nbsp; `"CreateIssue"` <br> &nbsp;&nbsp; `"PullRequest"` <br> &nbsp;&nbsp; `"All"` | The type of action to take, defaults to `CreateIssue`.  |
 
 ## Label auto-generation
 
