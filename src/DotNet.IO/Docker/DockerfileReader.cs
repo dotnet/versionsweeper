@@ -3,15 +3,8 @@
 
 namespace DotNet.IO;
 
-public sealed class DockerfileReader : IDockerfileReader
+public sealed partial class DockerfileReader : IDockerfileReader
 {
-    static readonly RegexOptions _options =
-        RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.ExplicitCapture;
-    static readonly Regex _fromInstructionRegex =
-        new(@"FROM (?<image>.+?dotnet.+?):(?<tag>.+?)[\s|\n]", _options);
-    static readonly Regex _copyInstructionRegex =
-        new(@"COPY --from=(?<image>.+?dotnet.+?):(?<tag>.+?)[\s|\n]", _options);
-
     public async ValueTask<Dockerfile> ReadDockerfileAsync(string dockerfilePath)
     {
         Dockerfile dockerfile = new()
@@ -22,14 +15,14 @@ public sealed class DockerfileReader : IDockerfileReader
         if (SystemFile.Exists(dockerfilePath))
         {
             string dockerfileContent = await SystemFile.ReadAllTextAsync(dockerfilePath);
-            MatchCollection fromMatches = _fromInstructionRegex.Matches(dockerfileContent);
-            foreach (Match match in fromMatches)
+            MatchCollection fromMatches = FromRegex().Matches(dockerfileContent);
+            foreach (Match match in fromMatches.Cast<Match>())
             {
                 dockerfile = ParseMatch(dockerfile, dockerfileContent, match);
             }
 
-            MatchCollection copyMatches = _copyInstructionRegex.Matches(dockerfileContent);
-            foreach (Match match in copyMatches)
+            MatchCollection copyMatches = CopyRegex().Matches(dockerfileContent);
+            foreach (Match match in copyMatches.Cast<Match>())
             {
                 dockerfile = ParseMatch(dockerfile, dockerfileContent, match);
             }
@@ -80,4 +73,16 @@ public sealed class DockerfileReader : IDockerfileReader
         }
         return lineNumber;
     }
+
+    [GeneratedRegex(
+        pattern: @"FROM (?<image>.+?dotnet.+?):(?<tag>.+?)[\s|\n]",
+        options: RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.ExplicitCapture,
+        cultureName: "en-US")]
+    private static partial Regex FromRegex();
+
+    [GeneratedRegex(
+        pattern: @"COPY --from=(?<image>.+?dotnet.+?):(?<tag>.+?)[\s|\n]",
+        options: RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.ExplicitCapture,
+        cultureName: "en-US")]
+    private static partial Regex CopyRegex();
 }

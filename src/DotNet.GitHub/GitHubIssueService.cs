@@ -24,7 +24,7 @@ public sealed class GitHubIssueService : IGitHubIssueService
         IIssuesClient issuesClient = GetIssuesClient(token);
         Issue issue = await issuesClient.Create(owner, name, newIssue);
 
-        _logger.LogInformation($"Issue created: {issue.HtmlUrl}");
+        _logger.LogInformation("Issue created: {HtmlUrl}", issue.HtmlUrl);
 
         return issue;
     }
@@ -40,7 +40,7 @@ public sealed class GitHubIssueService : IGitHubIssueService
         Issue issue = await issuesClient.Update(
             owner, name, unchecked((int)number), issueUpdate);
 
-        _logger.LogInformation($"Issue updated: {issue.HtmlUrl}");
+        _logger.LogInformation("Issue updated: {HtmlUrl}", issue.HtmlUrl);
 
         return issue;
     }

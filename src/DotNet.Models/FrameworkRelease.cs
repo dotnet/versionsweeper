@@ -10,22 +10,25 @@ public record FrameworkRelease(
     string IncludedIn,
     string EndOfLife,
     FrameworkRuntime Runtime,
-    Developerpack DeveloperPack) : IRelease
+    DeveloperPack DeveloperPack) : IRelease
 {
     // https://docs.microsoft.com/dotnet/standard/frameworks#supported-target-frameworks
     public string TargetFrameworkMoniker => Version.Split("-")[0] switch
     {
         "3.5.0" => "net35",
+
         var version when version.StartsWith("v", StringComparison.OrdinalIgnoreCase) =>
             $"net{version[1..].Replace(".", "")}",
+
         var version when version.StartsWith("net", StringComparison.OrdinalIgnoreCase) =>
             version.Replace(".", ""),
+
         _ => $"net{Version.Split("-")[0].Replace(".", "")}"
     };
 
     public SupportPhase SupportPhase => EndOfLifeDate switch
     {
-        var date when date is null && Version == "4.8" => SupportPhase.Active,
+        var date when date is null && Version is "4.8" => SupportPhase.Active,
         var date when date > DateTimeOffset.UtcNow => SupportPhase.GoLive,
 
         _ => SupportPhase.EOL
@@ -41,4 +44,4 @@ public record FrameworkRuntime(
     string OfflineInstaller,
     Dictionary<string, string> LanguagePacks);
 
-public record Developerpack(string OfflineInstaller);
+public record DeveloperPack(string OfflineInstaller);

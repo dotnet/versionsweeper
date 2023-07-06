@@ -15,7 +15,7 @@ public record Project
     /// <summary>
     /// Gets a value indicating whether the project is the new SDK-style format.
     /// </summary>
-    public bool IsSdkStyle => Sdk is not null and { Length: > 0 };
+    public bool IsSdkStyle => Sdk is { Length: > 0 };
 
     /// <summary>
     /// The fully qualified path of the project.

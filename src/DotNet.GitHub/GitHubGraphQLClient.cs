@@ -72,7 +72,7 @@ public sealed class GitHubGraphQLClient
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, ex.Message);
+            _logger.LogWarning(ex, "⚠️ {Message}", ex.Message);
 
             return (true, default);
         }

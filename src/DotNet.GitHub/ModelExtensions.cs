@@ -51,7 +51,7 @@ public static class ModelExtensions
                 })));
 
         document.AppendParagraph(
-            "Consider upgrading projects to either the current release, or the nearest LTS TFM version.");
+            "Consider upgrading projects to either the Standard Term Support (STS) or Long Term Support (LTS) versions.");
 
         document.AppendParagraph($"""
             If any of these projects listed in this issue are intentionally targeting an unsupported version,
@@ -122,7 +122,7 @@ public static class ModelExtensions
                     })));
 
         document.AppendParagraph(
-            "Consider upgrading Dockerfile images to either the current release, or the nearest LTS TFM version.");
+            "Consider upgrading Dockerfile images to either the Standard Term Support (STS) or Long Term Support (LTS) versions.");
 
         document.AppendParagraph($"""
             If any of these Dockerfile(s) listed in this issue are intentionally targeting an unsupported version,
