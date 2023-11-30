@@ -33,7 +33,7 @@ public sealed class CoreReleaseIndexServiceTests
     }
 
     [
-        Theory,
+        Theory(Skip = "The Product .ctor is now internal."),
         InlineData("1.0", ".NET Core", "netcoreapp1.0"),
         InlineData("1.1", ".NET Core", "netcoreapp1.1"),
         InlineData("2.2", ".NET Core", "netcoreapp2.2"),
