@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace DotNet.IO;
@@ -6,7 +6,7 @@ namespace DotNet.IO;
 internal sealed class ProjectJson
 {
     [JsonPropertyName("frameworks")]
-    public Dictionary<string, Framework> Frameworks { get; set; } = new();
+    public Dictionary<string, Framework> Frameworks { get; set; } = [];
 }
 
 internal sealed class Framework

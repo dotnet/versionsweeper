@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace DotNet.GitHub;
@@ -9,7 +9,7 @@ public record GraphQLRequest
     public string Query { get; init; } = "";
 
     [JsonPropertyName("variables")]
-    public Dictionary<string, string> Variables { get; init; } = new();
+    public Dictionary<string, string> Variables { get; init; } = [];
 
     public override string ToString() => this.ToJson()!;
 }

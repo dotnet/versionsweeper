@@ -1,26 +1,20 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace DotNet.Releases;
 
-internal sealed class FrameworkReleaseService : IFrameworkReleaseService
+public sealed class FrameworkReleaseService(
+    IFrameworkReleaseIndexService indexService,
+    IMemoryCache cache) : IFrameworkReleaseService
 {
-    readonly IMemoryCache _cache;
-    readonly IFrameworkReleaseIndexService _indexService;
-    readonly Assembly _executingAssembly;
-
-    public FrameworkReleaseService(
-        IFrameworkReleaseIndexService indexService,
-        IMemoryCache cache) =>
-        (_indexService, _cache, _executingAssembly) =
-            (indexService, cache, Assembly.GetExecutingAssembly());
+    readonly Assembly _executingAssembly = Assembly.GetExecutingAssembly();
 
     async IAsyncEnumerable<FrameworkRelease> IFrameworkReleaseService.GetAllReleasesAsync()
     {
-        foreach (string releaseName in _indexService.FrameworkReseaseFileNames)
+        foreach (var releaseName in indexService.FrameworkReleaseFileNames)
         {
-            FrameworkRelease? frameworkRelease =
-                await _cache.GetOrCreateAsync(
+            var frameworkRelease =
+                await cache.GetOrCreateAsync(
                     releaseName,
                     async entry =>
                     {

@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using DotNet.GitHub;
@@ -94,10 +94,6 @@ public sealed class GitHubLabelServiceTests
     }
 }
 
-public sealed class TestLabel : Label
+public sealed class TestLabel(string name) : Label(id: 7, url: "", name, nodeId: "", color: "", description: "test description", @default: false)
 {
-    public TestLabel(string name) :
-        base(id: 7, url: "", name, nodeId: "", color: "", description: "test description", @default: false)
-    {        
-    }
 }

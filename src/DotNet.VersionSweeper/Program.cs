@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
@@ -39,7 +39,51 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                     <IUnsupportedProjectReporter, IUnsupportedDockerfileReporter,
                         RateLimitAwareQueue, GitHubGraphQLClient>();
 
-        HashSet<ModelProject> nonSdkStyleProjects = new();
+        static async Task CreateAndEnqueueAsync(
+            GitHubGraphQLClient client,
+            RateLimitAwareQueue queue,
+            IJobService job,
+            string title, Options options, Func<Options, string> getBody)
+        {
+            var (isError, existingIssue) =
+                await client.GetIssueAsync(
+                    options.Owner, options.Name, options.Token, title);
+            if (isError)
+            {
+                job.Debug($"Error checking for existing issue, best not to create an issue as it may be a duplicate.");
+            }
+            else if (existingIssue is { State: ItemState.Open })
+            {
+                var markdownBody = getBody(options);
+                if (markdownBody != existingIssue.Body)
+                {
+                    // These updates will overwrite completed tasks in a check list
+                    // They'll be removed when the issue updated.
+                    queue.Enqueue(
+                        new(options.Owner, options.Name, options.Token, existingIssue.Number),
+                        new IssueUpdate
+                        {
+                            Body = markdownBody
+                        });
+                }
+                else
+                {
+                    job.Info($"Re-discovered but ignoring, latent issue: {existingIssue}.");
+                }
+            }
+            else
+            {
+                var markdownBody = getBody(options);
+                queue.Enqueue(
+                    new(options.Owner, options.Name, options.Token),
+                    new NewIssue(title)
+                    {
+                        Body = markdownBody
+                    });
+            }
+        }
+
+        HashSet<ModelProject> nonSdkStyleProjects = [];
         Dictionary<string, HashSet<ProjectSupportReport>> tfmToProjectSupportReports =
             new(StringComparer.OrdinalIgnoreCase);
         Dictionary<string, HashSet<DockerfileSupportReport>> tfmToDockerfileSupportReports =

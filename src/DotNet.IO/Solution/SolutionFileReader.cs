@@ -1,15 +1,10 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace DotNet.IO;
 
-public sealed partial class SolutionFileReader : ISolutionFileReader
+public sealed partial class SolutionFileReader(IProjectFileReader projectFileReader) : ISolutionFileReader
 {
-    readonly IProjectFileReader _projectFileReader;
-
-    public SolutionFileReader(IProjectFileReader projectFileReader) =>
-        _projectFileReader = projectFileReader;
-
     public async ValueTask<Solution> ReadSolutionAsync(string solutionPath)
     {
         Solution solution = new();
@@ -32,7 +27,7 @@ public sealed partial class SolutionFileReader : ISolutionFileReader
                     continue;
                 }
 
-                Project project = await _projectFileReader.ReadProjectAsync(fullPath);
+                var project = await projectFileReader.ReadProjectAsync(fullPath);
                 solution.Projects.Add(project);
             }
         }

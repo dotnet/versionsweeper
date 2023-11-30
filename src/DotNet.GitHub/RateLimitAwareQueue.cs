@@ -1,19 +1,15 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace DotNet.GitHub;
 
-public sealed class RateLimitAwareQueue
+public sealed class RateLimitAwareQueue(IGitHubIssueService gitHubIssueService)
 {
     const int DelayBetweenPostCalls = 1_000;
 
     readonly HashSet<string> _uniqueTitles = new(StringComparer.OrdinalIgnoreCase);
     readonly ConcurrentQueue<(GitHubApiArgs, NewIssue)> _newIssuesQueue = new();
     readonly ConcurrentQueue<(GitHubApiArgs, IssueUpdate)> _updateIssuesQueue = new();
-    readonly IGitHubIssueService _gitHubIssueService;
-
-    public RateLimitAwareQueue(IGitHubIssueService gitHubIssueService) =>
-        _gitHubIssueService = gitHubIssueService;
 
     public void Enqueue(GitHubApiArgs args, NewIssue issue)
     {
@@ -31,8 +27,8 @@ public sealed class RateLimitAwareQueue
         while (_newIssuesQueue is { IsEmpty: false }
             && _newIssuesQueue.TryDequeue(out (GitHubApiArgs, NewIssue) newItem))
         {
-            (GitHubApiArgs args, NewIssue newIssue) = newItem;
-            Issue issue = await _gitHubIssueService.PostIssueAsync(
+            var (args, newIssue) = newItem;
+            var issue = await gitHubIssueService.PostIssueAsync(
                 args.Owner, args.RepoName, args.Token, newIssue);
 
             yield return ("Created issue", issue.HtmlUrl);
@@ -43,8 +39,8 @@ public sealed class RateLimitAwareQueue
         while (_updateIssuesQueue is { IsEmpty: false }
             && _updateIssuesQueue.TryDequeue(out (GitHubApiArgs, IssueUpdate) updatedItem))
         {
-            (GitHubApiArgs args, IssueUpdate newIssue) = updatedItem;
-            Issue issue = await _gitHubIssueService.UpdateIssueAsync(
+            var (args, newIssue) = updatedItem;
+            var issue = await gitHubIssueService.UpdateIssueAsync(
                 args.Owner, args.RepoName, args.Token, args.IssueNumber, newIssue);
 
             yield return ("Updated issue", issue.HtmlUrl);

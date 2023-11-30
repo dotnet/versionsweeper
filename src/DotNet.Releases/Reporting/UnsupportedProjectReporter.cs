@@ -1,27 +1,20 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace DotNet.Releases;
 
-internal sealed class UnsupportedProjectReporter : UnsupportedReporterBase, IUnsupportedProjectReporter
+internal sealed class UnsupportedProjectReporter(
+    ICoreReleaseIndexService coreReleaseIndexService,
+    IFrameworkReleaseService frameworkReleaseService) : UnsupportedReporterBase, IUnsupportedProjectReporter
 {
-    readonly ICoreReleaseIndexService _coreReleaseIndexService;
-    readonly IFrameworkReleaseService _frameworkReleaseService;
-
-    public UnsupportedProjectReporter(
-        ICoreReleaseIndexService coreReleaseIndexService,
-        IFrameworkReleaseService frameworkReleaseService) =>
-        (_coreReleaseIndexService, _frameworkReleaseService) =
-            (coreReleaseIndexService, frameworkReleaseService);
-
     async IAsyncEnumerable<ProjectSupportReport> IUnsupportedProjectReporter.ReportAsync(
         Project project, int outOfSupportWithinDays)
     {
-        HashSet<TargetFrameworkMonikerSupport> resultingSupports = new();
+        HashSet<TargetFrameworkMonikerSupport> resultingSupports = [];
         DateTime outOfSupportWithinDate = DateTimeOffset.UtcNow.Date.AddDays(outOfSupportWithinDays);
 
-        System.Collections.ObjectModel.ReadOnlyDictionary<Product, IReadOnlyCollection<ProductRelease>>? products = await _coreReleaseIndexService.GetReleasesAsync();
-        foreach (Product product in products?.Keys ?? Enumerable.Empty<Product>())
+        var products = await coreReleaseIndexService.GetReleasesAsync();
+        foreach (var product in products?.Keys ?? [])
         {
             IEnumerable<TargetFrameworkMonikerSupport?> tfmSupports =
                 project.Tfms.Select(
@@ -38,7 +31,7 @@ internal sealed class UnsupportedProjectReporter : UnsupportedReporterBase, IUns
                         .Select(
                         async support =>
                         {
-                            Product? release = await _coreReleaseIndexService.GetNextLtsVersionAsync(
+                            var release = await coreReleaseIndexService.GetNextLtsVersionAsync(
                                 product.LatestReleaseVersion.ToString());
 
                             return support! with
@@ -54,8 +47,8 @@ internal sealed class UnsupportedProjectReporter : UnsupportedReporterBase, IUns
             }
         }
 
-        await foreach (FrameworkRelease frameworkRelease
-            in _frameworkReleaseService.GetAllReleasesAsync())
+        await foreach (var frameworkRelease
+            in frameworkReleaseService.GetAllReleasesAsync())
         {
             IEnumerable<TargetFrameworkMonikerSupport?> tfmSupports =
                 project.Tfms.Select(
@@ -72,7 +65,7 @@ internal sealed class UnsupportedProjectReporter : UnsupportedReporterBase, IUns
                     .Select(
                         async support =>
                         {
-                            FrameworkRelease? release = await _frameworkReleaseService.GetNextLtsVersionAsync(
+                            var release = await frameworkReleaseService.GetNextLtsVersionAsync(
                                 (LabeledVersion)frameworkRelease.Version);
 
                             return support! with
@@ -88,7 +81,7 @@ internal sealed class UnsupportedProjectReporter : UnsupportedReporterBase, IUns
             }
         }
 
-        if (resultingSupports.Any())
+        if (resultingSupports.Count != 0)
             yield return new(project, resultingSupports);
     }
 }

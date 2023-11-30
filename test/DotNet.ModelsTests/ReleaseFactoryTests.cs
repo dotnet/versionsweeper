@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using DotNet.Models;
@@ -17,11 +17,11 @@ public sealed class ReleaseFactoryTests
             example,
             _ => "Does this thing work",
             "test",
-            SupportPhase.GoLive,
+            SupportPhase.Active,
             null,
             "some-path.md");
 
-        Assert.Equal(SupportPhase.GoLive, release.SupportPhase);
+        Assert.Equal(SupportPhase.Active, release.SupportPhase);
         Assert.Equal("Does this thing work", release.ToBrandString());
         Assert.Equal("test", release.TargetFrameworkMoniker);
         Assert.Null(release.EndOfLifeDate);
