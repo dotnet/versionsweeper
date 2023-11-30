@@ -12,9 +12,9 @@
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" />
+    <PackageReference Include="GitHub.Actions.Core" />
     <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
   </ItemGroup>
 
   <ItemGroup>

@@ -85,12 +85,10 @@ public sealed class ModelExtensionsTests
     }
 }
 
-internal class TestOptions : IRepoOptions
+internal class TestOptions(string directory) : IRepoOptions
 {
     public string Owner => "dotnet";
     public string Name => "docs";
     public string Branch => "main";
-    public string Directory { get; }
-
-    public TestOptions(string directory) => Directory = directory;
+    public string Directory { get; } = directory;
 }

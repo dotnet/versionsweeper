@@ -39,50 +39,6 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                     <IUnsupportedProjectReporter, IUnsupportedDockerfileReporter,
                         RateLimitAwareQueue, GitHubGraphQLClient>();
 
-        static async Task CreateAndEnqueueAsync(
-            GitHubGraphQLClient client,
-            RateLimitAwareQueue queue,
-            IJobService job,
-            string title, Options options, Func<Options, string> getBody)
-        {
-            var (isError, existingIssue) =
-                await client.GetIssueAsync(
-                    options.Owner, options.Name, options.Token, title);
-            if (isError)
-            {
-                job.Debug($"Error checking for existing issue, best not to create an issue as it may be a duplicate.");
-            }
-            else if (existingIssue is { State: ItemState.Open })
-            {
-                var markdownBody = getBody(options);
-                if (markdownBody != existingIssue.Body)
-                {
-                    // These updates will overwrite completed tasks in a check list
-                    // They'll be removed when the issue updated.
-                    queue.Enqueue(
-                        new(options.Owner, options.Name, options.Token, existingIssue.Number),
-                        new IssueUpdate
-                        {
-                            Body = markdownBody
-                        });
-                }
-                else
-                {
-                    job.Info($"Re-discovered but ignoring, latent issue: {existingIssue}.");
-                }
-            }
-            else
-            {
-                var markdownBody = getBody(options);
-                queue.Enqueue(
-                    new(options.Owner, options.Name, options.Token),
-                    new NewIssue(title)
-                    {
-                        Body = markdownBody
-                    });
-            }
-        }
-
         HashSet<ModelProject> nonSdkStyleProjects = [];
         Dictionary<string, HashSet<ProjectSupportReport>> tfmToProjectSupportReports =
             new(StringComparer.OrdinalIgnoreCase);
@@ -191,7 +147,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
         }
         else // We were instructed to create pull requests.
         {
-            string[] upgradeProjects = 
+            string[] upgradeProjects =
                 tfmToProjectSupportReports.Values
                     .SelectMany(
                         static reports => reports.Select(
@@ -203,7 +159,8 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             hasRemainingWork = upgradeProjects is { Length: > 0 };
             if (hasRemainingWork)
             {
-                await job.SetOutputAsync("upgrade-projects", upgradeProjects);
+                string json = upgradeProjects.ToJson() ?? "";
+                await job.SetOutputAsync("upgrade-projects", json);
             }
         }
 
@@ -223,7 +180,8 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             job.Info($"{message}: {url}");
         }
 
-        await job.SetOutputAsync("has-remaining-work", hasRemainingWork);
+        await job.SetOutputAsync(
+            "has-remaining-work", hasRemainingWork.ToJson() ?? "false");
     }
     catch (Exception ex)
     {

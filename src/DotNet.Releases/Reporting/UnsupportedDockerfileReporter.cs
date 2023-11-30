@@ -5,7 +5,8 @@ namespace DotNet.Releases;
 
 internal sealed class UnsupportedDockerfileReporter(
     ICoreReleaseIndexService coreReleaseIndexService,
-    IFrameworkReleaseService frameworkReleaseService) : UnsupportedReporterBase, IUnsupportedDockerfileReporter
+    IFrameworkReleaseService frameworkReleaseService)
+    : UnsupportedReporterBase, IUnsupportedDockerfileReporter
 {
     async IAsyncEnumerable<DockerfileSupportReport> IUnsupportedDockerfileReporter.ReportAsync(
         Dockerfile dockerfile, int outOfSupportWithinDays)
@@ -14,7 +15,7 @@ internal sealed class UnsupportedDockerfileReporter(
         DateTime outOfSupportWithinDate = DateTimeOffset.UtcNow.Date.AddDays(outOfSupportWithinDays);
 
         var products = await coreReleaseIndexService.GetReleasesAsync();
-        foreach (var product in products?.Keys ?? [])
+        foreach (var product in products?.Keys ?? Enumerable.Empty<Product>())
         {
             IEnumerable<TargetFrameworkMonikerSupport?> tfmSupports =
                 dockerfile.ImageDetails!.Select(

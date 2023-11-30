@@ -5,7 +5,8 @@ namespace DotNet.Releases;
 
 internal sealed class UnsupportedProjectReporter(
     ICoreReleaseIndexService coreReleaseIndexService,
-    IFrameworkReleaseService frameworkReleaseService) : UnsupportedReporterBase, IUnsupportedProjectReporter
+    IFrameworkReleaseService frameworkReleaseService)
+    : UnsupportedReporterBase, IUnsupportedProjectReporter
 {
     async IAsyncEnumerable<ProjectSupportReport> IUnsupportedProjectReporter.ReportAsync(
         Project project, int outOfSupportWithinDays)
@@ -14,7 +15,7 @@ internal sealed class UnsupportedProjectReporter(
         DateTime outOfSupportWithinDate = DateTimeOffset.UtcNow.Date.AddDays(outOfSupportWithinDays);
 
         var products = await coreReleaseIndexService.GetReleasesAsync();
-        foreach (var product in products?.Keys ?? [])
+        foreach (var product in products?.Keys ?? Enumerable.Empty<Product>())
         {
             IEnumerable<TargetFrameworkMonikerSupport?> tfmSupports =
                 project.Tfms.Select(
