@@ -20,7 +20,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@main
-    - name: Setup .NET Core
+    - name: Setup .NET
       uses: actions/setup-dotnet@main
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
