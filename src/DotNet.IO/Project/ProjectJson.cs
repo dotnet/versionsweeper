@@ -6,7 +6,7 @@ namespace DotNet.IO;
 internal sealed class ProjectJson
 {
     [JsonPropertyName("frameworks")]
-    public Dictionary<string, Framework> Frameworks { get; set; } = [];
+    public Dictionary<string, Framework> Frameworks { get; set; } = new();
 }
 
 internal sealed class Framework

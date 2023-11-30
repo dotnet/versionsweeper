@@ -9,7 +9,7 @@ public record GraphQLRequest
     public string Query { get; init; } = "";
 
     [JsonPropertyName("variables")]
-    public Dictionary<string, string> Variables { get; init; } = [];
+    public Dictionary<string, string> Variables { get; init; } = new();
 
     public override string ToString() => this.ToJson()!;
 }
