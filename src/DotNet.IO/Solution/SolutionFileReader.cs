@@ -3,7 +3,8 @@
 
 namespace DotNet.IO;
 
-public sealed partial class SolutionFileReader(IProjectFileReader projectFileReader) : ISolutionFileReader
+public sealed partial class SolutionFileReader(IProjectFileReader projectFileReader)
+    : ISolutionFileReader
 {
     public async ValueTask<Solution> ReadSolutionAsync(string solutionPath)
     {
