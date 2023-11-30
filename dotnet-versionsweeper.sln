@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.github\workflows\build-and-test.yml = .github\workflows\build-and-test.yml
 		CODE-OF-CONDUCT.md = CODE-OF-CONDUCT.md
 		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
+		Directory.Packages.props = Directory.Packages.props
 		Dockerfile = Dockerfile
 		.github\workflows\dog-food.yml = .github\workflows\dog-food.yml
 		dotnet-versionsweeper.json = dotnet-versionsweeper.json

@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace DotNet.Releases;
@@ -8,8 +8,8 @@ internal sealed class FrameworkReleaseIndexService : IFrameworkReleaseIndexServi
     /// <summary>
     /// https://github.com/dotnet/website-resources/tree/master/data/dotnet-framework-releases
     /// </summary>
-    public HashSet<string> FrameworkReseaseFileNames { get; } = new()
-    {
+    public HashSet<string> FrameworkReleaseFileNames { get; } =
+    [
         "net35-sp1.json",
         "net40.json",
         "net45.json",
@@ -22,5 +22,5 @@ internal sealed class FrameworkReleaseIndexService : IFrameworkReleaseIndexServi
         "net471.json",
         "net472.json",
         "net48.json"
-    };
+    ];
 }

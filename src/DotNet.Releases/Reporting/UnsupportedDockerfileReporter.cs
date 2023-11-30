@@ -3,25 +3,19 @@
 
 namespace DotNet.Releases;
 
-internal sealed class UnsupportedDockerfileReporter : UnsupportedReporterBase, IUnsupportedDockerfileReporter
+internal sealed class UnsupportedDockerfileReporter(
+    ICoreReleaseIndexService coreReleaseIndexService,
+    IFrameworkReleaseService frameworkReleaseService)
+    : UnsupportedReporterBase, IUnsupportedDockerfileReporter
 {
-    readonly ICoreReleaseIndexService _coreReleaseIndexService;
-    readonly IFrameworkReleaseService _frameworkReleaseService;
-
-    public UnsupportedDockerfileReporter(
-        ICoreReleaseIndexService coreReleaseIndexService,
-        IFrameworkReleaseService frameworkReleaseService) =>
-        (_coreReleaseIndexService, _frameworkReleaseService) =
-            (coreReleaseIndexService, frameworkReleaseService);
-
     async IAsyncEnumerable<DockerfileSupportReport> IUnsupportedDockerfileReporter.ReportAsync(
         Dockerfile dockerfile, int outOfSupportWithinDays)
     {
-        HashSet<TargetFrameworkMonikerSupport> resultingSupports = new();
+        HashSet<TargetFrameworkMonikerSupport> resultingSupports = [];
         DateTime outOfSupportWithinDate = DateTimeOffset.UtcNow.Date.AddDays(outOfSupportWithinDays);
 
-        System.Collections.ObjectModel.ReadOnlyDictionary<Product, IReadOnlyCollection<ProductRelease>>? products = await _coreReleaseIndexService.GetReleasesAsync();
-        foreach (Product product in products?.Keys ?? Enumerable.Empty<Product>())
+        var products = await coreReleaseIndexService.GetReleasesAsync();
+        foreach (var product in products?.Keys ?? Enumerable.Empty<Product>())
         {
             IEnumerable<TargetFrameworkMonikerSupport?> tfmSupports =
                 dockerfile.ImageDetails!.Select(
@@ -38,7 +32,7 @@ internal sealed class UnsupportedDockerfileReporter : UnsupportedReporterBase, I
                         .Select(
                         async support =>
                         {
-                            Product? release = await _coreReleaseIndexService.GetNextLtsVersionAsync(
+                            var release = await coreReleaseIndexService.GetNextLtsVersionAsync(
                                 product.LatestReleaseVersion.ToString());
 
                             return support! with
@@ -54,8 +48,8 @@ internal sealed class UnsupportedDockerfileReporter : UnsupportedReporterBase, I
             }
         }
 
-        await foreach (FrameworkRelease frameworkRelease
-            in _frameworkReleaseService.GetAllReleasesAsync())
+        await foreach (var frameworkRelease
+            in frameworkReleaseService.GetAllReleasesAsync())
         {
             IEnumerable<TargetFrameworkMonikerSupport?> tfmSupports =
                 dockerfile.ImageDetails!.Select(
@@ -72,7 +66,7 @@ internal sealed class UnsupportedDockerfileReporter : UnsupportedReporterBase, I
                     .Select(
                         async support =>
                         {
-                            FrameworkRelease? release = await _frameworkReleaseService.GetNextLtsVersionAsync(
+                            var release = await frameworkReleaseService.GetNextLtsVersionAsync(
                                 (LabeledVersion)frameworkRelease.Version);
 
                             return support! with
@@ -88,7 +82,7 @@ internal sealed class UnsupportedDockerfileReporter : UnsupportedReporterBase, I
             }
         }
 
-        if (resultingSupports.Any())
+        if (resultingSupports.Count != 0)
             yield return new(dockerfile, resultingSupports);
     }
 }

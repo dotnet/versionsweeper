@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace DotNet.Models;
@@ -29,7 +29,7 @@ public record FrameworkRelease(
     public SupportPhase SupportPhase => EndOfLifeDate switch
     {
         var date when date is null && Version is "4.8" => SupportPhase.Active,
-        var date when date > DateTimeOffset.UtcNow => SupportPhase.GoLive,
+        var date when date > DateTimeOffset.UtcNow => SupportPhase.Active,
 
         _ => SupportPhase.EOL
     };

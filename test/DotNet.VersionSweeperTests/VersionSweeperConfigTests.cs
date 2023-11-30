@@ -9,7 +9,7 @@ using Xunit.Abstractions;
 
 namespace DotNet.VersionSweeperTests;
 
-public class VersionSweeperConfigTests
+public class VersionSweeperConfigTests(ITestOutputHelper output)
 {
     private const string TestConfigJson = """
         {
@@ -22,10 +22,6 @@ public class VersionSweeperConfigTests
         }
         """;
 
-    private readonly ITestOutputHelper _output;
-
-    public VersionSweeperConfigTests(ITestOutputHelper output) => _output = output;
-
     [Fact]
     public async Task ReadsConfigCorrectlyTest()
     {
@@ -35,7 +31,7 @@ public class VersionSweeperConfigTests
         {
             await File.WriteAllTextAsync(fileName, TestConfigJson);
 
-            TestCoreService testJob = new(_output);
+            TestCoreService testJob = new(output);
             VersionSweeperConfig config = await VersionSweeperConfig.ReadAsync(".", testJob);
 
             Assert.NotNull(config);
@@ -51,12 +47,8 @@ public class VersionSweeperConfigTests
     }
 }
 
-file class TestCoreService : ICoreService
+file class TestCoreService(ITestOutputHelper output) : ICoreService
 {
-    private readonly ITestOutputHelper _output;
-
-    public TestCoreService(ITestOutputHelper output) => _output = output;
-
     bool ICoreService.IsDebug { get; }
 
     ValueTask ICoreService.AddPathAsync(string inputPath) => throw new NotImplementedException();
@@ -69,12 +61,12 @@ file class TestCoreService : ICoreService
     string[] ICoreService.GetMultilineInput(string name, InputOptions? options) => throw new NotImplementedException();
     string ICoreService.GetState(string name) => throw new NotImplementedException();
     ValueTask<T> ICoreService.GroupAsync<T>(string name, Func<ValueTask<T>> action) => throw new NotImplementedException();
-    void ICoreService.Info(string message) => _output.WriteLine(message);
+    void ICoreService.Info(string message) => output.WriteLine(message);
     void ICoreService.Notice(string message, AnnotationProperties? properties) => throw new NotImplementedException();
-    ValueTask ICoreService.SaveStateAsync<T>(string name, T value) => throw new NotImplementedException();
+    ValueTask ICoreService.SaveStateAsync(string name, string value) => throw new NotImplementedException();
     void ICoreService.SetCommandEcho(bool enabled) => throw new NotImplementedException();
     void ICoreService.SetFailed(string message) => throw new NotImplementedException();
-    ValueTask ICoreService.SetOutputAsync<T>(string name, T value) => throw new NotImplementedException();
+    ValueTask ICoreService.SetOutputAsync(string name, string value) => throw new NotImplementedException();
     void ICoreService.SetSecret(string secret) => throw new NotImplementedException();
     void ICoreService.StartGroup(string name) => throw new NotImplementedException();
     void ICoreService.Warning(string message, AnnotationProperties? properties) => throw new NotImplementedException();

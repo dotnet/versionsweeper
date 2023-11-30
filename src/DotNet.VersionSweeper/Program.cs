@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
@@ -39,7 +39,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                     <IUnsupportedProjectReporter, IUnsupportedDockerfileReporter,
                         RateLimitAwareQueue, GitHubGraphQLClient>();
 
-        HashSet<ModelProject> nonSdkStyleProjects = new();
+        HashSet<ModelProject> nonSdkStyleProjects = [];
         Dictionary<string, HashSet<ProjectSupportReport>> tfmToProjectSupportReports =
             new(StringComparer.OrdinalIgnoreCase);
         Dictionary<string, HashSet<DockerfileSupportReport>> tfmToDockerfileSupportReports =
@@ -147,7 +147,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
         }
         else // We were instructed to create pull requests.
         {
-            string[] upgradeProjects = 
+            string[] upgradeProjects =
                 tfmToProjectSupportReports.Values
                     .SelectMany(
                         static reports => reports.Select(
@@ -159,7 +159,8 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             hasRemainingWork = upgradeProjects is { Length: > 0 };
             if (hasRemainingWork)
             {
-                await job.SetOutputAsync("upgrade-projects", upgradeProjects);
+                string json = upgradeProjects.ToJson() ?? "";
+                await job.SetOutputAsync("upgrade-projects", json);
             }
         }
 
@@ -179,7 +180,8 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             job.Info($"{message}: {url}");
         }
 
-        await job.SetOutputAsync("has-remaining-work", hasRemainingWork);
+        await job.SetOutputAsync(
+            "has-remaining-work", hasRemainingWork.ToJson() ?? "false");
     }
     catch (Exception ex)
     {

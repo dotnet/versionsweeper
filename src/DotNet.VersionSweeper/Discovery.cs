@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace DotNet.VersionSweeper;
@@ -21,8 +21,8 @@ sealed class Discovery
         (DirectoryInfo directory, HashSet<string> extensions) =
             (options.ToDirectoryInfo(), options.AsFileExtensions());
 
-        ConcurrentBag<Solution> solutions = new();
-        ConcurrentBag<ModelProject> projects = new();
+        ConcurrentBag<Solution> solutions = [];
+        ConcurrentBag<ModelProject> projects = [];
 
         VersionSweeperConfig config = await VersionSweeperConfig.ReadAsync(options.Directory, job);
 
@@ -95,9 +95,9 @@ sealed class Discovery
         ICoreService job,
         Options options)
     {
-        IDockerfileReader dockerfileReader = services.GetRequiredService<IDockerfileReader>();
-        ConcurrentBag<Dockerfile> dockerfiles = new();
-        Matcher dockerfileMatcher = new Matcher().AddInclude("**/Dockerfile");
+        var dockerfileReader = services.GetRequiredService<IDockerfileReader>();
+        ConcurrentBag<Dockerfile> dockerfiles = [];
+        var dockerfileMatcher = new Matcher().AddInclude("**/Dockerfile");
 
         await dockerfileMatcher.GetResultsInFullPath(options.Directory)
             .ForEachAsync(
