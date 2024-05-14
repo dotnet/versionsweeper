@@ -14,7 +14,7 @@ public static class ModelExtensions
         IMarkdownDocument document = new MarkdownDocument();
 
         document.AppendParagraph("""
-            The following project file(s) target a .NET version which is no longer supported.
+            The following project file(s) target a .NET version that's no longer supported.
             This is an auto-generated issue, detailed and discussed in [dotnet/docs#22271](https://github.com/dotnet/docs/issues/22271).
             """);
 
@@ -81,7 +81,7 @@ public static class ModelExtensions
         IMarkdownDocument document = new MarkdownDocument();
 
         document.AppendParagraph("""
-            The following Dockerfile(s) target a .NET version which is no longer supported.
+            The following Dockerfile(s) target a .NET version that's no longer supported.
             This is an auto-generated issue, detailed and discussed in [dotnet/docs#22271](https://github.com/dotnet/docs/issues/22271).
             """);
 
