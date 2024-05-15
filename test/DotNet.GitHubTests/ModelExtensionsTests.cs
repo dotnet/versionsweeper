@@ -36,7 +36,7 @@ public sealed class ModelExtensionsTests
             await foreach (ProjectSupportReport report in reporter.ReportAsync(project, 90))
             {
                 string expected = """
-                    The following project file(s) target a .NET version which is no longer supported.
+                    The following project file(s) target a .NET version that's no longer supported.
                     This is an auto-generated issue, detailed and discussed in [dotnet/docs#22271](https://github.com/dotnet/docs/issues/22271).
 
                     | Target version | End of life | Release notes | Nearest LTS TFM version |
