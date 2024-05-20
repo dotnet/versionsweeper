@@ -33,7 +33,7 @@ public sealed class GitHubLabelServiceTests
     public async Task GetOrCreateLabelAsyncCreatesLabel()
     {
         (IIssuesLabelsClient labelsClient, IIssuesClient _, IResilientGitHubClientFactory factory) = SubstituteWith(
-            Array.Empty<TestLabel>(), new TestLabel("dotnet-target-version"));
+            [], new TestLabel("dotnet-target-version"));
 
         var sut = new GitHubLabelService(factory, _logger, _cache);
         Label label = await sut.GetOrCreateLabelAsync("unit", "test", "fake");
@@ -48,7 +48,7 @@ public sealed class GitHubLabelServiceTests
     public async Task GetOrCreateLabelAsyncOnlyCreatesLabelOnce()
     {
         (IIssuesLabelsClient labelsClient, IIssuesClient _, IResilientGitHubClientFactory factory) = SubstituteWith(
-            Array.Empty<TestLabel>(), new TestLabel("dotnet-target-version"));
+            [], new TestLabel("dotnet-target-version"));
 
         int floodCount = 10_000;
         var sut = new GitHubLabelService(factory, _logger, _cache);

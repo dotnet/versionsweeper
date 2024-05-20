@@ -11,11 +11,11 @@ public sealed class StringExtensionsTests
     public static IEnumerable<object[]> AsMaskedExtensionsInput = new[]
     {
             new object[] { "*.csproj", new string[] { "*.csproj" } },
-            new object[] { "*.csproj|*.fsproj", new string[] { "*.csproj", "*.fsproj" } },
-            new object[] { "*.csproj,*.fsproj", new string[] { "*.csproj", "*.fsproj" } },
-            new object[] { "*.vbproj;*.csproj", new string[] { "*.vbproj", "*.csproj" } },
-            new object[] { "*.csproj;", new string[] { "*.csproj" } },
-            new object[] { "", Array.Empty<string>() }
+            ["*.csproj|*.fsproj", new string[] { "*.csproj", "*.fsproj" }],
+            ["*.csproj,*.fsproj", new string[] { "*.csproj", "*.fsproj" }],
+            ["*.vbproj;*.csproj", new string[] { "*.vbproj", "*.csproj" }],
+            ["*.csproj;", new string[] { "*.csproj" }],
+            ["", Array.Empty<string>()]
         };
 
     [

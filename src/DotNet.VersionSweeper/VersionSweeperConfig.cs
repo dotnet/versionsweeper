@@ -23,7 +23,7 @@ public sealed class VersionSweeperConfig
     internal const string FileName = "dotnet-versionsweeper.json";
 
     [JsonPropertyName("ignore")]
-    public string[] Ignore { get; init; } = Array.Empty<string>();
+    public string[] Ignore { get; init; } = [];
 
     [JsonPropertyName("actionType")]
     public ActionType ActionType { get; init; } = ActionType.CreateIssue;
@@ -47,15 +47,15 @@ public sealed class VersionSweeperConfig
             string fullPath = Path.Combine(root, FileName);
             if (File.Exists(fullPath))
             {
-                job.Info($"Reading '{fullPath}' config file.");
+                job.WriteInfo($"Reading '{fullPath}' config file.");
 
                 string configJson = await File.ReadAllTextAsync(fullPath);
                 VersionSweeperConfig config = configJson.FromJson<VersionSweeperConfig>() ?? new();
 
-                job.Info($"Read {config.Ignore.Length} pattern(s) to ignore:");
-                job.Info($"{string.Join(",", config.Ignore.Select(val => $"\t{val}"))}");
-                job.Info($"Intended version sweeper type: {config.ActionType}");
-                job.Info($"Out of support within days: {config.OutOfSupportWithinDays}");
+                job.WriteInfo($"Read {config.Ignore.Length} pattern(s) to ignore:");
+                job.WriteInfo($"{string.Join(",", config.Ignore.Select(val => $"\t{val}"))}");
+                job.WriteInfo($"Intended version sweeper type: {config.ActionType}");
+                job.WriteInfo($"Out of support within days: {config.OutOfSupportWithinDays}");
 
                 s_cachedConfig = config;
 
@@ -63,12 +63,12 @@ public sealed class VersionSweeperConfig
             }
             else
             {
-                job.Info($"No '{fullPath}' config file to read.");
+                job.WriteInfo($"No '{fullPath}' config file to read.");
             }
         }
         catch
         {
-            job.Warning($"Unable to read '{FileName}'.");
+            job.WriteWarning($"Unable to read '{FileName}'.");
         }
 
         return new();

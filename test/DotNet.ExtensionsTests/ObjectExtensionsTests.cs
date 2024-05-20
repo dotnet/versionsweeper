@@ -14,12 +14,11 @@ public sealed class ObjectExtensionsTests
             {
                 "{ \"value\": \"one\" }", new { Value = TestEnum.ButThisIsAlsoOne }
             },
-            new object[]
-            {
+            [
                 "{ \"test.value\": \"I'm from Wisconsin.\" }",
                 new CustomName { TestValue = "I'm from Wisconsin." },
                 new Func<CustomName, CustomName, bool>((name1, name2) => name1.TestValue == name2.TestValue)
-            },
+            ],
         };
 
     [
@@ -45,11 +44,10 @@ public sealed class ObjectExtensionsTests
                 new { Value = TestEnum.ButThisIsAlsoOne },
                 "{\"value\":\"one\"}",
             },
-            new object[]
-            {
+            [
                 new CustomName { TestValue = "I'm from Wisconsin." },
                 "{\"test.value\":\"I'm from Wisconsin.\"}"
-            },
+            ],
         };
 
     [
@@ -62,10 +60,10 @@ public sealed class ObjectExtensionsTests
     public static IEnumerable<object[]> ToDateTimeInput = new[]
     {
             new object[] { "2021-01-12", new DateTime(2021, 1, 12) },
-            new object[] { "2022-12-03", new DateTime(2022, 12, 3) },
-            new object[] { "2019-02-12", new DateTime(2019, 2, 12) },
-            new object[] { default(string), new DateTime?() },
-            new object[] { "...", null },
+            ["2022-12-03", new DateTime(2022, 12, 3)],
+            ["2019-02-12", new DateTime(2019, 2, 12)],
+            [default(string), new DateTime?()],
+            ["...", null],
         };
 
     [
