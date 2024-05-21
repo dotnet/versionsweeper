@@ -39,7 +39,7 @@ sealed class Discovery
                         if (project is { TfmLineNumber: > -1 })
                         {
                             projects.Add(project);
-                            job.Info($"Parsed TFM(s): '{string.Join(", ", project.Tfms)}' on line {project.TfmLineNumber} in {path}.");
+                            job.WriteInfo($"Parsed TFM(s): '{string.Join(", ", project.Tfms)}' on line {project.TfmLineNumber} in {path}.");
                         }
                     }),
             solutionMatcher.GetResultsInFullPath(options.Directory)
@@ -67,7 +67,7 @@ sealed class Discovery
 
                                 if (solution.Projects.Count > 0)
                                 {
-                                    job.Info($"Read solution with {solution.Projects.Count} projects in it.");
+                                    job.WriteInfo($"Read solution with {solution.Projects.Count} projects in it.");
                                     solutions.Add(solution);
                                 }
                             }
@@ -80,7 +80,7 @@ sealed class Discovery
             projects.Except(solutions.SelectMany(sln => sln.Projects))
                 .ToImmutableHashSet();
 
-        job.Info($"Discovered {solutionSet.Count} solutions and {orphanedProjectSet.Count} orphaned projects.");
+        job.WriteInfo($"Discovered {solutionSet.Count} solutions and {orphanedProjectSet.Count} orphaned projects.");
 
         return
             (
@@ -110,7 +110,7 @@ sealed class Discovery
                         dockerfiles.Add(dockerfile);
                         foreach (ImageDetails imageDetail in dockerfile.ImageDetails)
                         {
-                            job.Info($"Parsed TFM(s): '{imageDetail.TargetFrameworkMoniker}' on line {imageDetail.LineNumber} in {path}.");
+                            job.WriteInfo($"Parsed TFM(s): '{imageDetail.TargetFrameworkMoniker}' on line {imageDetail.LineNumber} in {path}.");
                         }
                     }
                 });

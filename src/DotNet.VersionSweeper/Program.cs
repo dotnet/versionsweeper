@@ -177,7 +177,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
         // All queued items are executed with the rate-limit aware service.
         await foreach ((string message, string url) in queue.ExecuteAllQueuedItemsAsync())
         {
-            job.Info($"{message}: {url}");
+            job.WriteInfo($"{message}: {url}");
         }
 
         await job.SetOutputAsync(
@@ -206,7 +206,7 @@ static async Task CreateAndEnqueueAsync(
             options.Owner, options.Name, options.Token, title);
     if (isError)
     {
-        job.Debug($"Error checking for existing issue, best not to create an issue as it may be a duplicate.");
+        job.WriteDebug($"Error checking for existing issue, best not to create an issue as it may be a duplicate.");
     }
     else if (existingIssue is { State: ItemState.Open })
     {
@@ -224,7 +224,7 @@ static async Task CreateAndEnqueueAsync(
         }
         else
         {
-            job.Info($"Re-discovered but ignoring, latent issue: {existingIssue}.");
+            job.WriteInfo($"Re-discovered but ignoring, latent issue: {existingIssue}.");
         }
     }
     else

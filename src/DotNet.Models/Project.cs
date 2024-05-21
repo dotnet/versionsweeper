@@ -53,5 +53,5 @@ public record Project
     /// </summary>
     public string[] Tfms =>
         RawTargetFrameworkMonikers?.Split(";", StringSplitOptions.RemoveEmptyEntries) ??
-        Array.Empty<string>();
+        [];
 }

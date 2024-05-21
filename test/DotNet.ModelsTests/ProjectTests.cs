@@ -11,11 +11,11 @@ public sealed class ProjectTests
     public static IEnumerable<object[]> NewProjectInput = new[]
     {
             new object[] { "netcoreapp1.1", "project-path.csproj", ".csproj", new[] { "netcoreapp1.1" } },
-            new object[] { "net5.0;netstandard2.0", "some/path.vbproj", ".vbproj", new[] { "net5.0", "netstandard2.0" } },
-            new object[] { ";;net46", "old/bits/sample.fsproj", ".fsproj", new[] { "net46" } },
-            new object[] { null, "project.csproj", ".csproj", Array.Empty<string>() },
-            new object[] { "", "project-path.csproj", ".csproj", Array.Empty<string>() },
-            new object[] { "netcoreapp3.1", null, null, new[] { "netcoreapp3.1" } }
+            ["net5.0;netstandard2.0", "some/path.vbproj", ".vbproj", new[] { "net5.0", "netstandard2.0" }],
+            [";;net46", "old/bits/sample.fsproj", ".fsproj", new[] { "net46" }],
+            [null, "project.csproj", ".csproj", Array.Empty<string>()],
+            ["", "project-path.csproj", ".csproj", Array.Empty<string>()],
+            ["netcoreapp3.1", null, null, new[] { "netcoreapp3.1" }]
         };
 
     [

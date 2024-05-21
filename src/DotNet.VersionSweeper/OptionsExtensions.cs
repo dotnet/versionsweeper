@@ -23,26 +23,27 @@ public static class OptionsExtensions
 
     public static string[] SplitOnExpectedDelimiters(this string? searchPattern) =>
         searchPattern is null or { Length: 0 }
-            ? Array.Empty<string>()
+            ? []
             : (searchPattern.Contains(';'), searchPattern.Contains('|'), searchPattern.Contains(',')) switch
             {
                 (true, _, _) => searchPattern.Split(';', StringSplitOptions.RemoveEmptyEntries),
                 (_, true, _) => searchPattern.Split('|', StringSplitOptions.RemoveEmptyEntries),
                 (_, _, true) => searchPattern.Split(',', StringSplitOptions.RemoveEmptyEntries),
 
-                _ => new string[] { searchPattern }
+                _ => [searchPattern]
             };
 
     public static IEnumerable<string> AsRecursivePatterns(this string[] patterns) =>
         patterns.Select(pattern => $"**/{pattern}");
 
     public static HashSet<string> AsFileExtensions(this Options options) =>
-        options.SearchPattern
-            .SplitOnExpectedDelimiters()
-            .Select(Path.GetExtension)
-            .Where(ext => ext is not null)
-            .Select(ext => ext!)
-            .ToHashSet();
+        [
+            ..options.SearchPattern
+                .SplitOnExpectedDelimiters()
+                .Select(Path.GetExtension)
+                .Where(ext => ext is not null)
+                .Select(ext => ext!)
+        ];
 
     public static DirectoryInfo ToDirectoryInfo(this Options options) => new(options.Directory);
 
@@ -56,10 +57,10 @@ public static class OptionsExtensions
         builder.AppendLine($"current branch: {options.Branch}");
         builder.AppendLine($"root directory to search: {options.Directory}");
         string parsedPatterns = string.Join(", ",
-            options.SearchPattern?.SplitOnExpectedDelimiters().AsRecursivePatterns() ?? Array.Empty<string>());
+            options.SearchPattern?.SplitOnExpectedDelimiters().AsRecursivePatterns() ?? []);
         builder.AppendLine($"parsed patterns: {parsedPatterns}");
         builder.AppendLine($"report non-SDK style projects: {options.ReportNonSdkStyleProjects}");
 
-        job.Info(builder.ToString());
+        job.WriteInfo(builder.ToString());
     }
 }
