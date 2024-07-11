@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -15,10 +15,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" />
     <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="Pathological.ProjectSystem" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DotNet.IO\DotNet.IO.csproj" />
     <ProjectReference Include="..\DotNet.Releases\DotNet.Releases.csproj" />
   </ItemGroup>
 

@@ -3,4 +3,4 @@
 
 global using DotNet.Extensions;
 global using Microsoft.Deployment.DotNet.Releases;
-global using SystemPath = System.IO.Path;
+global using Pathological.ProjectSystem.Models;

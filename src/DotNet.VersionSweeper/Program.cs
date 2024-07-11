@@ -6,7 +6,7 @@ HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddDotNetGitHubServices();
 builder.Services.AddGitHubActionsCore();
 builder.Services.AddDotNetReleaseServices();
-builder.Services.AddDotNetFileSystem();
+builder.Services.AddDotNetProjectSystem();
 
 using IHost host = builder.Build();
 
@@ -28,11 +28,18 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
     {
         options.WriteDebugInfo(job);
 
-        (IImmutableSet<Solution> solutions, IImmutableSet<ModelProject> orphanedProjects, VersionSweeperConfig config) =
-            await Discovery.FindSolutionsAndProjectsAsync(services, job, options);
+        (DirectoryInfo directory, HashSet<string> extensions) =
+            (options.ToDirectoryInfo(), options.AsFileExtensions());
 
-        IImmutableSet<Dockerfile> dockerfiles =
-            await Discovery.FindDockerfilesAsync(services, job, options);
+        VersionSweeperConfig config = await VersionSweeperConfig.ReadAsync(options.Directory, job);
+
+        var discovery = services.GetRequiredService<IDiscoveryService>();
+
+        var results = await discovery.DiscoverAllAsync(directory.FullName);
+
+        var solutions = results.Solutions;
+        var orphanedProjects = results.StandaloneProjects;
+        var dockerfiles = results.Dockerfiles;
 
         (IUnsupportedProjectReporter unsupportedProjectReporter, IUnsupportedDockerfileReporter unsupportedDockerfileReporter, RateLimitAwareQueue queue, GitHubGraphQLClient graphQLClient) =
                 services.GetRequiredServices
@@ -46,7 +53,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             new(StringComparer.OrdinalIgnoreCase);
 
         // Work through all solutions, creating support reports.
-        foreach (Solution? solution in solutions.Where(sln => sln is not null))
+        foreach (Solution solution in solutions.Where(sln => sln is not null))
         {
             SolutionSupportReport solutionSupportReport = new(solution);
 
@@ -164,9 +171,15 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             }
         }
 
+        var projectPaths =
+            nonSdkStyleProjects.DistinctBy(project => project.FullPath)
+                .OrderBy(project => project.FullPath)
+                .Select(project => project.FullPath)
+                .ToList();
+
         // Non-SDK projects are bundled into a single issue.
         if (config.ActionType is not ActionType.PullRequest &&
-            nonSdkStyleProjects.TryCreateIssueContent(
+            projectPaths.TryCreateIssueContent(
             options.Directory, options.Branch, out (string Title, string MarkdownBody) content))
         {
             (string title, string markdownBody) = content;

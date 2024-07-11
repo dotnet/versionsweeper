@@ -29,7 +29,7 @@ public sealed class VersionSweeperConfig
     public ActionType ActionType { get; init; } = ActionType.CreateIssue;
 
     [JsonPropertyName("outOfSupportWithinDays")]
-    public int OutOfSupportWithinDays { get; init; } = 0;
+    public int OutOfSupportWithinDays { get; init; } = 90;
 
     /// <summary>
     /// Returns the read configuration, or a default configuration if the file is not found.

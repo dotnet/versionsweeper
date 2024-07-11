@@ -46,7 +46,7 @@ public static class ModelExtensions
                 psrs.OrderBy(psr => psr.Project.FullPath).Select(psr =>
                 {
                     string anchor = ToLineNumberUrl(
-                        psr.Project.FullPath, psr.Project.TfmLineNumber, options);
+                        psr.Project.FullPath, psr.Project.TargetFrameworkMonikerLineNumber, options);
                     return new MarkdownCheckListItem(false, anchor);
                 })));
 
@@ -163,12 +163,12 @@ public static class ModelExtensions
     }
 
     public static bool TryCreateIssueContent(
-        this ISet<ModelProject> projects,
+        this IList<string> projectPaths,
         string rootDirectory,
         string branch,
         out (string Title, string MarkdownBody) result)
     {
-        if (projects is { Count: 0 })
+        if (projectPaths is { Count: 0 })
         {
             result = (null!, null!);
             return false;
@@ -176,21 +176,16 @@ public static class ModelExtensions
 
         IMarkdownDocument document = new MarkdownDocument();
 
-        var uniqueProjects =
-            projects.DistinctBy(project => project.FullPath)
-                .OrderBy(project => project.FullPath)
-                .ToList();
-
         document.AppendParagraph($"""
-            There are {uniqueProjects.Count} project(s) using the non-SDK-style project format.
+            There are {projectPaths.Count} project(s) using the non-SDK-style project format.
             This is an auto-generated issue, detailed and discussed in [dotnet/docs#22271](https://github.com/dotnet/docs/issues/22271).
             """);
 
         static MarkdownCheckListItem AsCheckListItem(
-            ModelProject project, string root, string branch)
+            string fullPath, string root, string branch)
         {
             string relativePath =
-                Path.GetRelativePath(root, project.FullPath);
+                Path.GetRelativePath(root, fullPath);
 
             string path = $"../blob/{branch}/{relativePath.Replace("\\", "/")}".EscapeUriString();
             string? name = relativePath.ShrinkPath("...");
@@ -203,7 +198,7 @@ public static class ModelExtensions
 
         document.AppendList(
             new MarkdownList(
-                uniqueProjects
+                projectPaths
                     .Select(proj => AsCheckListItem(proj, rootDirectory, branch))));
 
         document.AppendParagraph(

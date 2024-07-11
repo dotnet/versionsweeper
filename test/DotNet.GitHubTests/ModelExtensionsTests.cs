@@ -2,11 +2,13 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using DotNet.GitHub;
-using DotNet.IO;
 using DotNet.Models;
 using DotNet.Releases;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Pathological.ProjectSystem.IO;
+using Pathological.ProjectSystem.Models;
 using Xunit;
 
 namespace DotNet.GitHubTests;
@@ -24,7 +26,12 @@ public sealed class ModelExtensionsTests
         {
             await File.WriteAllTextAsync(projectPath, Constants.TestProjectXml);
 
-            IProjectFileReader reader = new ProjectFileReader();
+            var services = new ServiceCollection()
+                .AddDotNetProjectSystem()
+                .BuildServiceProvider();
+
+            var reader = services.GetRequiredService<IProjectReader>();
+
             Project project = await reader.ReadProjectAsync(projectPath);
             ICoreReleaseIndexService coreService = new CoreReleaseIndexService(_cache);
             IFrameworkReleaseService frameworkService =

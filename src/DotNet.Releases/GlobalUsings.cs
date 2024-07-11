@@ -10,6 +10,7 @@ global using DotNet.Releases;
 global using DotNet.Releases.Extensions;
 global using Microsoft.Deployment.DotNet.Releases;
 global using Microsoft.Extensions.Caching.Memory;
+global using Pathological.ProjectSystem.Models;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DotNet.GitHubTests")]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DotNet.ReleasesTests")]

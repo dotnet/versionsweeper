@@ -18,7 +18,7 @@ internal sealed class UnsupportedProjectReporter(
         foreach (var product in products?.Keys ?? Enumerable.Empty<Product>())
         {
             IEnumerable<TargetFrameworkMonikerSupport?> tfmSupports =
-                project.Tfms.Select(
+                project.TargetFrameworkMonikers.Select(
                     tfm => TryEvaluateDotNetSupport(
                         tfm, product.ProductVersion,
                         product, outOfSupportWithinDate, out TargetFrameworkMonikerSupport? tfmSupport)
@@ -52,7 +52,7 @@ internal sealed class UnsupportedProjectReporter(
             in frameworkReleaseService.GetAllReleasesAsync())
         {
             IEnumerable<TargetFrameworkMonikerSupport?> tfmSupports =
-                project.Tfms.Select(
+                project.TargetFrameworkMonikers.Select(
                     tfm => TryEvaluateDotNetFrameworkSupport(
                         tfm, frameworkRelease!.Version,
                         frameworkRelease, outOfSupportWithinDate, out TargetFrameworkMonikerSupport? tfmSupport)

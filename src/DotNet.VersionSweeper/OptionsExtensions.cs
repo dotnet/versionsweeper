@@ -5,22 +5,6 @@ namespace DotNet.VersionSweeper;
 
 public static class OptionsExtensions
 {
-    public static Matcher AsGlobMatcher(this Options options, string[] ignoreGlobs)
-    {
-        Matcher matcher = new();
-
-        matcher.AddExcludePatterns(ignoreGlobs);
-        if (options.SearchPattern is not null)
-        {
-            matcher.AddIncludePatterns(
-                options.SearchPattern
-                    .SplitOnExpectedDelimiters()
-                    .AsRecursivePatterns());
-        }
-
-        return matcher;
-    }
-
     public static string[] SplitOnExpectedDelimiters(this string? searchPattern) =>
         searchPattern is null or { Length: 0 }
             ? []

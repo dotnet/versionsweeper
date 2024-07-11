@@ -12,13 +12,12 @@
   <ItemGroup>
     <PackageReference Include="CommandLineParser" />
     <PackageReference Include="GitHub.Actions.Core" />
-    <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Pathological.ProjectSystem" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DotNet.GitHub\DotNet.GitHub.csproj" />
-    <ProjectReference Include="..\DotNet.IO\DotNet.IO.csproj" />
     <ProjectReference Include="..\DotNet.Releases\DotNet.Releases.csproj" />
   </ItemGroup>
 
