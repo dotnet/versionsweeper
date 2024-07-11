@@ -64,10 +64,8 @@ jobs:
         dotnet build ./src/DotNet.Extensions/DotNet.Extensions.csproj --configuration Release
         dotnet build ./src/DotNet.GitHub/DotNet.GitHub.csproj --configuration Release
         dotnet build ./src/DotNet.GitHubActions/DotNet.GitHubActions.csproj --configuration Release
-        dotnet build ./src/DotNet.IO/DotNet.IO.csproj --configuration Release
         dotnet build ./src/DotNet.Models/DotNet.Models.csproj --configuration Release
         dotnet build ./src/DotNet.Releases/DotNet.Releases.csproj --configuration Release
-        dotnet build ./src/DotNet.Reporter/DotNet.Reporter.csproj --configuration Release
         dotnet build ./src/DotNet.VersionSweeper/DotNet.VersionSweeper.csproj --configuration Release
 
     - name: Perform CodeQL Analysis
