@@ -152,7 +152,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                     options, o => projectSupportReports.ToMarkdownBody(tfm, o));
             }
         }
-        else // We were instructed to create pull requests.
+        else // We we're instructed to create pull requests.
         {
             string[] upgradeProjects =
                 tfmToProjectSupportReports.Values
