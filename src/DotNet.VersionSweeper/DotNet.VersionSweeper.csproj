@@ -13,6 +13,7 @@
     <PackageReference Include="CommandLineParser" />
     <PackageReference Include="GitHub.Actions.Core" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="Pathological.ProjectSystem" />
   </ItemGroup>
 
