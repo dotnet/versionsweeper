@@ -45,6 +45,7 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="System.Linq.Async" />
   </ItemGroup>
 
