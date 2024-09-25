@@ -5,7 +5,7 @@
   <ItemGroup>
     <PackageVersion Include="Bogus" Version="34.0.2" />
     <PackageVersion Include="CommandLineParser" Version="2.9.1" />
-    <PackageVersion Include="GitHub.Actions.Core" Version="8.1.0" />
+    <PackageVersion Include="GitHub.Actions.Core" Version="8.1.1" />
     <PackageVersion Include="MarkdownBuilder" Version="0.2.0" />
     <PackageVersion Include="Microsoft.Deployment.DotNet.Releases" Version="1.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />
