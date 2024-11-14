@@ -152,7 +152,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                     options, o => projectSupportReports.ToMarkdownBody(tfm, o));
             }
         }
-        else // We we're instructed to create pull requests.
+        else // We were instructed to create pull requests.
         {
             string[] upgradeProjects =
                 tfmToProjectSupportReports.Values
@@ -166,7 +166,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
             hasRemainingWork = upgradeProjects is { Length: > 0 };
             if (hasRemainingWork)
             {
-                string json = upgradeProjects.ToJson() ?? "";
+                string json = upgradeProjects.ToJson(SweeperJsonSerializerContext.Default.StringArray) ?? "";
                 await job.SetOutputAsync("upgrade-projects", json);
             }
         }
@@ -194,7 +194,7 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
         }
 
         await job.SetOutputAsync(
-            "has-remaining-work", hasRemainingWork.ToJson() ?? "false");
+            "has-remaining-work", hasRemainingWork);
     }
     catch (Exception ex)
     {

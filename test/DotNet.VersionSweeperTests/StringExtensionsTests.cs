@@ -8,15 +8,15 @@ namespace DotNet.VersionSweeperTests;
 
 public sealed class StringExtensionsTests
 {
-    public static IEnumerable<object[]> AsMaskedExtensionsInput = new[]
-    {
-            new object[] { "*.csproj", new string[] { "*.csproj" } },
+    public static IEnumerable<object[]> AsMaskedExtensionsInput =
+    [
+            ["*.csproj", new string[] { "*.csproj" }],
             ["*.csproj|*.fsproj", new string[] { "*.csproj", "*.fsproj" }],
             ["*.csproj,*.fsproj", new string[] { "*.csproj", "*.fsproj" }],
             ["*.vbproj;*.csproj", new string[] { "*.vbproj", "*.csproj" }],
             ["*.csproj;", new string[] { "*.csproj" }],
             ["", Array.Empty<string>()]
-        };
+        ];
 
     [
         Theory,

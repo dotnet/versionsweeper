@@ -8,14 +8,14 @@ namespace DotNet.VersionSweeperTests;
 
 public sealed class OptionsTests
 {
-    public static IEnumerable<object[]> NewOptionsSearchPatternInput = new[]
-    {
-        new object[] { "*.csproj|project.json", new[] { "**/*.csproj", "**/project.json" } },
+    public static IEnumerable<object[]> NewOptionsSearchPatternInput =
+    [
+        ["*.csproj|project.json", new[] { "**/*.csproj", "**/project.json" }],
         ["*.fsproj;*.vbproj", new[] { "**/*.fsproj", "**/*.vbproj" }],
         ["*.xproj", new[] { "**/*.xproj" }],
         ["", Array.Empty<string>()],
         [null, Array.Empty<string>()]
-    };
+    ];
 
     [
         Theory,

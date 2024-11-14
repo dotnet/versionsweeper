@@ -9,7 +9,8 @@ public record GraphQLRequest
     public string Query { get; init; } = "";
 
     [JsonPropertyName("variables")]
-    public Dictionary<string, string> Variables { get; init; } = new();
+    public Dictionary<string, string> Variables { get; init; } = [];
 
-    public override string ToString() => this.ToJson()!;
+    public override string ToString() =>
+        this.ToJson(GitHubJsonSerializerContext.Default.GraphQLRequest)!;
 }

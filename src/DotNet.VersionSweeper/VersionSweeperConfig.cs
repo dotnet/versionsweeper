@@ -50,7 +50,7 @@ public sealed class VersionSweeperConfig
                 job.WriteInfo($"Reading '{fullPath}' config file.");
 
                 string configJson = await File.ReadAllTextAsync(fullPath);
-                VersionSweeperConfig config = configJson.FromJson<VersionSweeperConfig>() ?? new();
+                VersionSweeperConfig config = configJson.FromJson<VersionSweeperConfig>(SweeperJsonSerializerContext.Default.VersionSweeperConfig) ?? new();
 
                 job.WriteInfo($"Read {config.Ignore.Length} pattern(s) to ignore:");
                 job.WriteInfo($"{string.Join(",", config.Ignore.Select(val => $"\t{val}"))}");

@@ -25,7 +25,8 @@ public sealed class FrameworkReleaseService(
 
                         string json = await reader.ReadToEndAsync();
 
-                        return json.FromJson<FrameworkRelease>(new());
+                        return json.FromJson<FrameworkRelease>(
+                            ReleasesJsonSerializerContext.Default.FrameworkRelease);
                     });
 
             yield return frameworkRelease!;

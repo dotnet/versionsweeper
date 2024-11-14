@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 global using System.Text;
+global using System.Text.Json;
 global using System.Text.Json.Serialization;
 global using Actions.Core.Extensions;
 global using Actions.Core.Services;

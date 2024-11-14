@@ -29,8 +29,7 @@ public static class ModelExtensions
                 new("End of life"),
                 new("Release notes"),
                 new("Nearest LTS TFM version")),
-            new[]
-            {
+            [
                     new MarkdownTableRow(
                     $"`{tfmSupport.TargetFrameworkMoniker}`",
                     tfmSupport.Release.EndOfLifeDate.HasValue
@@ -39,7 +38,7 @@ public static class ModelExtensions
                         $"{tfmSupport.TargetFrameworkMoniker} release notes", tfmSupport.Release.ReleaseNotesUrl)
                         .ToString(),
                     $"`{tfmSupport.NearestLtsVersion}`")
-            });
+            ]);
 
         document.AppendList(
             new MarkdownList(
@@ -96,8 +95,7 @@ public static class ModelExtensions
                 new("End of life"),
                 new("Release notes"),
                 new("Nearest LTS TFM version")),
-            new[]
-            {
+            [
                     new MarkdownTableRow(
                     $"`{tfmSupport.TargetFrameworkMoniker}`",
                     tfmSupport.Release.EndOfLifeDate.HasValue
@@ -106,7 +104,7 @@ public static class ModelExtensions
                         $"{tfmSupport.TargetFrameworkMoniker} release notes", tfmSupport.Release.ReleaseNotesUrl)
                         .ToString(),
                     $"`{tfmSupport.NearestLtsVersion}`")
-            });
+            ]);
 
         document.AppendList(
             new MarkdownList(

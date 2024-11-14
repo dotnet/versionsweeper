@@ -48,7 +48,7 @@ public sealed class ModelExtensionsTests
 
                     | Target version | End of life | Release notes | Nearest LTS TFM version |
                     | --- | --- | --- | --- |
-                    | `net5.0` | May, 10 2022 | [net5.0 release notes](https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/5.0/releases.json) | `net6.0` |
+                    | `net5.0` | May, 10 2022 | [net5.0 release notes](https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/5.0/releases.json) | `net8.0` |
 
                       - [ ] <a href='https://github.com/dotnet/docs/blob/main/test.csproj#L4' title='test.csproj'>test.csproj</a>
 

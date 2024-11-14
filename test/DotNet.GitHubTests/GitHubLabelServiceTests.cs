@@ -20,7 +20,7 @@ public sealed class GitHubLabelServiceTests
     public async Task GetOrCreateLabelAsyncCorrectlyReadsLabel()
     {
         IResilientGitHubClientFactory factory = SubstituteWith(
-            new[] { new TestLabel("dotnet-target-version") },
+            [new TestLabel("dotnet-target-version")],
             new("Label")).Factory;
 
         var sut = new GitHubLabelService(factory, _logger, _cache);

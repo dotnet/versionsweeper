@@ -25,11 +25,6 @@ public sealed class GitHubGraphQLClient
         """;
 
     static readonly Uri s_graphQLUri = new("https://api.github.com/graphql");
-    static readonly JsonSerializerOptions s_options = new()
-    {
-        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
-        PropertyNameCaseInsensitive = true
-    };
 
     readonly HttpClient _httpClient;
     readonly ILogger<GitHubGraphQLClient> _logger;
@@ -63,7 +58,8 @@ public sealed class GitHubGraphQLClient
             response.EnsureSuccessStatusCode();
 
             string json = await response.Content.ReadAsStringAsync();
-            GraphQLResult<ExistingIssue>? result = json.FromJson<GraphQLResult<ExistingIssue>>(s_options);
+            GraphQLResult<ExistingIssue>? result = json.FromJson<GraphQLResult<ExistingIssue>>(
+                GitHubJsonSerializerContext.Default.GraphQLResultExistingIssue);
 
             return (false, result?.Data?.Search?.Nodes
                 ?.Where(i => i.State == ItemState.Open)

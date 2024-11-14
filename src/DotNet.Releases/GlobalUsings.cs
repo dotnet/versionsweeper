@@ -3,6 +3,7 @@
 
 global using System.Collections.Concurrent;
 global using System.Collections.ObjectModel;
+global using System.Text.Json.Serialization;
 global using System.Reflection;
 global using DotNet.Extensions;
 global using DotNet.Models;

@@ -14,11 +14,11 @@ public sealed class CoreReleaseIndexServiceTests
 
     [
         Theory,
-        InlineData("1.1.0", "6.0"),
-        InlineData("1.0.0", "6.0"),
-        InlineData("2.2.8", "6.0"),
-        InlineData("3.0.3", "6.0"),
-        InlineData("3.1.11", "6.0")
+        InlineData("1.1.0", "8.0"),
+        InlineData("1.0.0", "8.0"),
+        InlineData("2.2.8", "8.0"),
+        InlineData("3.0.3", "8.0"),
+        InlineData("3.1.11", "8.0")
     ]
     public async Task GetNextLtsVersionAsyncTest(
         string releaseVersion, string expectedVersion)

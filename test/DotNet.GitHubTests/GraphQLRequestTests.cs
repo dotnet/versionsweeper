@@ -1,8 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using DotNet.Extensions;
 using DotNet.GitHub;
@@ -13,12 +11,6 @@ namespace DotNet.GitHubTests;
 
 public sealed class GraphQLRequestTests
 {
-    static readonly JsonSerializerOptions s_options = new()
-    {
-        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
-        PropertyNameCaseInsensitive = true
-    };
-
     [Fact]
     public void RequestObjectCorrectlySerializesToJsonTest()
     {
@@ -73,7 +65,8 @@ public sealed class GraphQLRequestTests
         };
 
         ExistingIssue actualIssue =
-            responseJson.FromJson<GraphQLResult<ExistingIssue>>(s_options)
+            responseJson.FromJson<GraphQLResult<ExistingIssue>>(
+                GitHubJsonSerializerContext.Default.GraphQLResultExistingIssue)
                 .Data
                 .Search
                 .Nodes[0];
