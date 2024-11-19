@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
 
 # Copy everything and restore
 WORKDIR /app
@@ -16,6 +16,6 @@ LABEL com.github.actions.icon="alert-circle"
 LABEL com.github.actions.color="yellow"
 
 # Build the runtime image
-FROM mcr.microsoft.com/dotnet/runtime:8.0
+FROM mcr.microsoft.com/dotnet/runtime:9.0
 COPY --from=build-env /app/out .
 ENTRYPOINT [ "dotnet", "/DotNet.VersionSweeper.dll" ]
