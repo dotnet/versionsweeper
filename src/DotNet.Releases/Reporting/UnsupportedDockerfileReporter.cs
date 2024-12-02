@@ -18,12 +18,12 @@ internal sealed class UnsupportedDockerfileReporter(
         foreach (var product in products?.Keys ?? Enumerable.Empty<Product>())
         {
             IEnumerable<TargetFrameworkMonikerSupport?> tfmSupports =
-                dockerfile.ImageDetails!.Select(
+                dockerfile.ImageDetails?.Select(
                     details => TryEvaluateDotNetSupport(
                         details.TargetFrameworkMoniker, product.ProductVersion,
                         product, outOfSupportWithinDate, out TargetFrameworkMonikerSupport? tfmSupport)
                             ? tfmSupport : null)
-                    .Where(tfmSupport => tfmSupport is not null);
+                    .Where(tfmSupport => tfmSupport is not null) ?? [];
 
             if (tfmSupports.Any())
             {
@@ -52,12 +52,12 @@ internal sealed class UnsupportedDockerfileReporter(
             in frameworkReleaseService.GetAllReleasesAsync())
         {
             IEnumerable<TargetFrameworkMonikerSupport?> tfmSupports =
-                dockerfile.ImageDetails!.Select(
+                dockerfile.ImageDetails?.Select(
                     details => TryEvaluateDotNetFrameworkSupport(
                         details.TargetFrameworkMoniker, frameworkRelease!.Version,
                         frameworkRelease, outOfSupportWithinDate, out TargetFrameworkMonikerSupport? tfmSupport)
                             ? tfmSupport : null)
-                    .Where(tfmSupport => tfmSupport is not null);
+                    .Where(tfmSupport => tfmSupport is not null) ?? [];
 
             if (tfmSupports.Any())
             {
