@@ -11,6 +11,11 @@ internal sealed class UnsupportedDockerfileReporter(
     async IAsyncEnumerable<DockerfileSupportReport> IUnsupportedDockerfileReporter.ReportAsync(
         Dockerfile dockerfile, int outOfSupportWithinDays)
     {
+        if (dockerfile.ImageDetails is null)
+        {
+            yield break;
+        }
+
         HashSet<TargetFrameworkMonikerSupport> resultingSupports = [];
         DateTime outOfSupportWithinDate = DateTimeOffset.UtcNow.Date.AddDays(outOfSupportWithinDays);
 
@@ -23,7 +28,7 @@ internal sealed class UnsupportedDockerfileReporter(
                         details.TargetFrameworkMoniker, product.ProductVersion,
                         product, outOfSupportWithinDate, out TargetFrameworkMonikerSupport? tfmSupport)
                             ? tfmSupport : null)
-                    .Where(tfmSupport => tfmSupport is not null) ?? [];
+                    ?.Where(tfmSupport => tfmSupport is not null) ?? [];
 
             if (tfmSupports.Any())
             {
@@ -51,13 +56,18 @@ internal sealed class UnsupportedDockerfileReporter(
         await foreach (var frameworkRelease
             in frameworkReleaseService.GetAllReleasesAsync())
         {
+            if (dockerfile.ImageDetails is null)
+            {
+                continue;
+            }
+
             IEnumerable<TargetFrameworkMonikerSupport?> tfmSupports =
                 dockerfile.ImageDetails?.Select(
                     details => TryEvaluateDotNetFrameworkSupport(
                         details.TargetFrameworkMoniker, frameworkRelease!.Version,
                         frameworkRelease, outOfSupportWithinDate, out TargetFrameworkMonikerSupport? tfmSupport)
                             ? tfmSupport : null)
-                    .Where(tfmSupport => tfmSupport is not null) ?? [];
+                    ?.Where(tfmSupport => tfmSupport is not null) ?? [];
 
             if (tfmSupports.Any())
             {

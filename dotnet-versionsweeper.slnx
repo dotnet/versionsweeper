@@ -1,0 +1,48 @@
+<Solution>
+  <Folder Name="/non-lts/">
+    <File Path="non-lts/Dockerfile" />
+    <File Path="non-lts/project.json" />
+    <File Path="non-lts/ReallyOld.xproj" />
+    <Project Path="non-lts/Legacy.vbproj">
+      <Build Project="false" />
+    </Project>
+    <Project Path="non-lts/MultipleTargets.csproj">
+      <Build Project="false" />
+    </Project>
+    <Project Path="non-lts/OldBits.fsproj">
+      <Build Project="false" />
+    </Project>
+    <Project Path="non-lts/ThisShouldNeverBeFlagged.csproj">
+      <Build Project="false" />
+    </Project>
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".dockerignore" />
+    <File Path=".editorconfig" />
+    <File Path=".github/workflows/build-and-test.yml" />
+    <File Path=".github/workflows/codeql-analysis.yml" />
+    <File Path=".github/workflows/dog-food.yml" />
+    <File Path=".gitignore" />
+    <File Path="action.yml" />
+    <File Path="CODE-OF-CONDUCT.md" />
+    <File Path="Directory.Packages.props" />
+    <File Path="Dockerfile" />
+    <File Path="dotnet-versionsweeper.json" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/DotNet.Extensions/DotNet.Extensions.csproj" />
+    <Project Path="src/DotNet.GitHub/DotNet.GitHub.csproj" />
+    <Project Path="src/DotNet.Models/DotNet.Models.csproj" />
+    <Project Path="src/DotNet.Releases/DotNet.Releases.csproj" />
+    <Project Path="src/DotNet.VersionSweeper/DotNet.VersionSweeper.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/DotNet.ExtensionsTests/DotNet.ExtensionsTests.csproj" />
+    <Project Path="test/DotNet.GitHubTests/DotNet.GitHubTests.csproj" />
+    <Project Path="test/DotNet.ModelsTests/DotNet.ModelsTests.csproj" />
+    <Project Path="test/DotNet.ReleasesTests/DotNet.ReleasesTests.csproj" />
+    <Project Path="test/DotNet.VersionSweeperTests/DotNet.VersionSweeperTests.csproj" />
+  </Folder>
+</Solution>
