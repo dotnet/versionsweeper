@@ -10,6 +10,4 @@ namespace DotNet.GitHub;
 [JsonSerializable(typeof(GraphQLRequest))]
 [JsonSerializable(typeof(ExistingIssue))]
 [JsonSerializable(typeof(GraphQLResult<ExistingIssue>))]
-internal partial class GitHubJsonSerializerContext : JsonSerializerContext
-{
-}
+internal partial class GitHubJsonSerializerContext : JsonSerializerContext;

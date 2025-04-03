@@ -16,6 +16,7 @@ global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
 global using Octokit;
 global using Pathological.ProjectSystem.Models;
+global using Pathological.ProjectSystem.Options;
 global using Pathological.ProjectSystem.Services;
 global using static System.Environment;
 global using static CommandLine.Parser;

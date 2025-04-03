@@ -35,7 +35,14 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
 
         var discovery = services.GetRequiredService<IDiscoveryService>();
 
-        var results = await discovery.DiscoverAllAsync(directory.FullName);
+        var discoveryOptions = new DiscoveryOptions
+        {
+            SolutionIgnorePatterns = config.Ignore,
+            ProjectIgnorePatterns = config.Ignore,
+            DockerfileIgnorePatterns = config.Ignore,
+        };
+
+        var results = await discovery.DiscoverAllAsync(directory.FullName, discoveryOptions);
 
         var solutions = results.Solutions;
         var orphanedProjects = results.StandaloneProjects;
@@ -155,12 +162,13 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
         else // We were instructed to create pull requests.
         {
             string[] upgradeProjects =
-                tfmToProjectSupportReports.Values
+            [
+                .. tfmToProjectSupportReports.Values
                     .SelectMany(
                         static reports => reports.Select(
                             static report => report.Project.FullPath))
                     .Distinct()
-                    .ToArray();
+            ];
 
             // Output that we have remaining work, and the projects to upgrade.
             hasRemainingWork = upgradeProjects is { Length: > 0 };

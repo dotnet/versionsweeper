@@ -22,11 +22,23 @@ public sealed class GitHubIssueService : IGitHubIssueService
         newIssue.Labels.Add(label.Name);
 
         IIssuesClient issuesClient = GetIssuesClient(token);
-        Issue issue = await issuesClient.Create(owner, name, newIssue);
 
-        _logger.LogInformation("Issue created: {HtmlUrl}", issue.HtmlUrl);
+        try
+        {
+            Issue issue = await issuesClient.Create(owner, name, newIssue);
 
-        return issue;
+            _logger.LogInformation("Issue created: {HtmlUrl}", issue.HtmlUrl);
+
+            return issue;
+        }
+        catch (Exception ex)
+        {
+
+            _logger.LogError(ex, "Failed to create issue: {Owner}/{Name} {Title}",
+                owner, name, newIssue.Title);
+
+            throw;
+        }
     }
 
     public async ValueTask<Issue> UpdateIssueAsync(
@@ -37,12 +49,22 @@ public sealed class GitHubIssueService : IGitHubIssueService
         // The GitHub GraphQL API returns a long for the issue Id.
         // The GitHub REST API expects an int for the issue Id.
 
-        Issue issue = await issuesClient.Update(
-            owner, name, unchecked((int)number), issueUpdate);
+        try
+        {
+            Issue issue = await issuesClient.Update(
+                owner, name, unchecked((int)number), issueUpdate);
 
-        _logger.LogInformation("Issue updated: {HtmlUrl}", issue.HtmlUrl);
+            _logger.LogInformation("Issue updated: {HtmlUrl}", issue.HtmlUrl);
 
-        return issue;
+            return issue;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to update issue: {Owner}/{Name}#{Number}",
+                owner, name, number);
+
+            throw;
+        }
     }
 
     IIssuesClient GetIssuesClient(string token) => _clientFactory.Create(token).Issue;
