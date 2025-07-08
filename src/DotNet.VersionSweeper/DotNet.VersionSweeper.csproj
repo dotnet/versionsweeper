@@ -6,7 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateRuntimeConfigurationFile>true</GenerateRuntimeConfigurationFile>
     <Nullable>enable</Nullable>
-    <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>

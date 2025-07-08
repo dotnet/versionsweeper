@@ -81,7 +81,7 @@ public sealed class CustomName
 }
 
 [JsonSourceGenerationOptions(
-    Converters = [typeof(JsonStringEnumConverter)])]
+    Converters = [typeof(JsonStringEnumConverter<TestEnum>)])]
 [JsonSerializable(typeof(CustomName))]
 [JsonSerializable(typeof(object[]))]
 [JsonSerializable(typeof(TestEnum))]
