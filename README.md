@@ -46,7 +46,7 @@ A schedule/cron job that runs on the first of every month is detailed below in t
 | `has-remaining-work` | `bool`     | When `true`, the `upgrade-projects` array will be populated with project directories that require upgrade. |
 | `upgrade-projects`   | `string[]` | An array of project directories that are in need of being upgraded.                                        |
 
-> **Note**
+> [!NOTE]
 > Outputs are only present when configured to run as pull request mode. For more information, see [Configure action](#configure-action).
 
 ## Example workflow

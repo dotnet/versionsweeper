@@ -186,7 +186,8 @@ static async Task StartSweeperAsync(Options options, IServiceProvider services, 
                 .ToList();
 
         // Non-SDK projects are bundled into a single issue.
-        if (config.ActionType is not ActionType.PullRequest &&
+        if (options.IsSdkComplianceEnabled &&
+            config.ActionType is not ActionType.PullRequest &&
             projectPaths.TryCreateIssueContent(
             options.Directory, options.Branch, out (string Title, string MarkdownBody) content))
         {

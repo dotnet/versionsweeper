@@ -69,7 +69,10 @@ public sealed class Options : IRepoOptions
     [Option('s', "sdk-compliance",
         HelpText = "Indicates whether or not to report projects that " +
         "are not using the new SDK-style project format.")]
-    public bool ReportNonSdkStyleProjects { get; set; }
+    public string ReportNonSdkStyleProjects { get; set; } = bool.FalseString;
+
+    internal bool IsSdkComplianceEnabled =>
+        bool.TryParse(ReportNonSdkStyleProjects, out bool result) && result;
 
     static void ParseAndAssign(string? value, Action<string> assign)
     {
