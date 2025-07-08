@@ -5,7 +5,9 @@ namespace DotNet.GitHub;
 
 [JsonSourceGenerationOptions(
     PropertyNameCaseInsensitive = true,
-    Converters = [ typeof(JsonStringEnumConverter) ]
+    Converters = [
+        typeof(JsonStringEnumConverter<ItemState>),
+    ]
 )]
 [JsonSerializable(typeof(GraphQLRequest))]
 [JsonSerializable(typeof(ExistingIssue))]
