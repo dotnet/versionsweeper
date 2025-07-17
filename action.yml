@@ -32,7 +32,7 @@ outputs:
     description: 'An array of projects that need to be upgraded.'
 runs:
   using: 'docker'
-  image: 'Dockerfile'
+  image: 'ghcr.io/${{ github.actor }}/versionsweeper:latest'
   args:
   - '-o'
   - ${{ inputs.owner }}
