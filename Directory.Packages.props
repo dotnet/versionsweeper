@@ -8,7 +8,7 @@
     <PackageVersion Include="GitHub.Actions.Core" Version="9.0.0" />
     <PackageVersion Include="MarkdownBuilder" Version="0.2.0" />
     <PackageVersion Include="Microsoft.Deployment.DotNet.Releases" Version="1.0.1" />
-    <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="9.0.10" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="9.0.6" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.6" />
     <PackageVersion Include="Microsoft.Extensions.FileSystemGlobbing" Version="9.0.6" />
