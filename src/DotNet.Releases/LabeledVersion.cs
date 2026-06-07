@@ -58,8 +58,8 @@ public sealed class LabeledVersion : IComparable<LabeledVersion?>
         v1?._parsedVersion <= v2?._parsedVersion;
 
     int IComparable<LabeledVersion?>.CompareTo(LabeledVersion? other) =>
-        _parsedVersion?.CompareTo(other?._parsedVersion) ?? 0 +
-        Label?.CompareTo(other?.Label) ?? 0;
+        (_parsedVersion?.CompareTo(other?._parsedVersion) ?? 0) +
+        (Label?.CompareTo(other?.Label) ?? 0);
 
     public override bool Equals(object? obj) =>
         ReferenceEquals(this, obj)
@@ -69,5 +69,5 @@ public sealed class LabeledVersion : IComparable<LabeledVersion?>
         && Label == other.Label;
 
     public override int GetHashCode() =>
-        _parsedVersion?.GetHashCode() ?? 0 + Label?.GetHashCode() ?? 0;
+        (_parsedVersion?.GetHashCode() ?? 0) + (Label?.GetHashCode() ?? 0);
 }
